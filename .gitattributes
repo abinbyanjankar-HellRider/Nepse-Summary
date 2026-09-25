@@ -1,0 +1,5 @@
+# Keep LF everywhere: the GitHub Action (Linux) and this PC must produce identical files,
+# otherwise every daily commit would rewrite every line.
+* text=auto eol=lf
+*.png binary
+*.zip binary

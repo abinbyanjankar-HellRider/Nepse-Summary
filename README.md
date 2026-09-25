@@ -1,0 +1,129 @@
+# NEPSE Wyckoff Technical Analysis Dashboard
+
+Single-file dashboard (`index.html`) for NEPSE Wyckoff analysis, market summary, today's share prices and NRB macro data — updated automatically every trading day by GitHub Actions.
+
+**Live site:** `https://YOUR-USERNAME.github.io/nepse-dashboard/`
+
+## How the daily update works
+
+| When (NPT) | What happens |
+|---|---|
+| Mon–Fri 4:00 PM | GitHub Action runs `scripts/fetch_nepse.py`: price list from ShareSansar, NEPSE index from public pages, Claude API fallback if a source fails |
+| Mon–Fri 4:45 PM | Retry run — does nothing if 4:00 PM already succeeded |
+| After a successful run | Data is written into `index.html` + `data/latest.json`, committed, and GitHub Pages redeploys (~1 min) |
+| Public holiday | Script sees ShareSansar still shows the previous day and keeps existing data |
+| Sat–Sun | No run (NEPSE trades Mon–Fri since 6 Apr 2026) |
+
+What the dashboard shows when you open it:
+
+| Time you open it | Close shown |
+|---|---|
+| Mon–Fri before 3:45 PM (incl. 11 AM–3 PM market hours) | Previous trading day |
+| Mon–Fri after the 4:00 PM update | Today |
+| Sat–Sun | Friday |
+
+The banner at the top always states which date's close is displayed and where it came from. If the page is left open, it picks up the 4:00 PM update by itself (checks `data/latest.json` every 5 minutes after 3:45 PM).
+
+## Daily use: what runs, what is stored, how it is checked
+
+One command does the whole daily update. The GitHub Action runs it Mon–Fri at 4:00 PM NPT (retry 4:45 PM), and you can run it yourself at any time:
+
+```bash
+python scripts/run_daily.py          # add --force for a re-run, weekend or holiday
+```
+
+| Step | Script | What it does |
+|---|---|---|
+| 1 | `fetch_nepse.py` | Today's close and full price list, with the phantom-day guard and sanity checks |
+| 2 | `market_views.py` | Sector-index and company histories, heatmap, RRG, and the day's RRG snapshot |
+| 3 | `verify_daily.py` | **Compares today with the stored previous session** and across sources (below) |
+| 4 | `validate_data.py` | Final sanity checks. Nothing is committed if this fails. |
+
+Every run is logged in `data/history/runs.csv`.
+
+**Automatic updates, two ways (both set up):**
+
+| Where | How | Notes |
+|---|---|---|
+| **This PC** | Windows Task Scheduler task **"NEPSE Daily Update"** runs `scripts/local_update.py` Mon–Fri 4:15 PM and 4:50 PM NPT. If the PC was off, it runs at the next logon. | Runs the full update and commits the day's data to the local git history. A missed session is caught up under its own date. Log: `logs/local-update.log`. |
+| **GitHub Actions** (after you push; see DEPLOYMENT.md) | `.github/workflows/nepse-daily.yml` runs `scripts/run_daily.py` in the cloud, even when the PC is off | Once the `origin` remote exists, the PC task **stops updating and only pulls**, so there is only ever one updater. |
+
+Manage the PC task: *Task Scheduler → Task Scheduler Library → NEPSE Daily Update* (Run / Disable / History). To remove it: `Unregister-ScheduledTask -TaskName 'NEPSE Daily Update'`.
+
+**Verification** (the "Daily Data Check" card under the status banner; click it for details):
+- today's index change equals today's index minus the stored previous close
+- no trading day is missing since the previous session
+- ShareSansar's "prev close" equals the LTP stored for the previous session, for every company. A difference only counts as explained when MeroLagani re-adjusted that company's history the same day (a bonus or rights issue); anything else is flagged by symbol.
+- ShareSansar LTP equals the MeroLagani close for the same day, per company
+- all 13 sector indices are updated
+- breadth adds up
+
+The card also lists **what changed since the previous session**: index, turnover, best and weakest sectors, and every company or sector whose RRG quadrant changed (read from the stored snapshot, i.e. exactly what the dashboard showed the previous day).
+
+**Stored permanently** (the daily data commit on GitHub keeps every version):
+
+```
+data/history/index.csv                  NEPSE close, turnover, breadth: one row per trading day since 2020
+data/history/prices/<date>.csv          full price list of every trading day (browse it in Today's Price → date picker)
+data/history/stocks/<SYM>.csv           adjusted daily close per company (since 2024)
+data/history/sectors/<index>.csv        13 sector indices, daily
+data/history/rrg/<date>.csv             RRG positions and quadrants as shown that day
+data/history/checks/<date>.json         verification report and changes vs the previous session
+data/history/checks.csv                 one line per day: ok / warn / error
+data/history/adjustments.csv            corporate-action re-adjustments detected
+data/history/runs.csv                   every run and the result of each step
+data/reference/companies.csv            company → sector map (weekly refresh)
+```
+
+## Repository layout
+
+```
+index.html                         ← the dashboard (single self-contained file)
+scripts/run_daily.py               ← the daily update (all steps, in order)
+scripts/fetch_nepse.py             ← today's close + price list
+scripts/market_views.py            ← heatmap + RRG (sector/company histories)
+scripts/verify_daily.py            ← compare with the previous session
+scripts/validate_data.py           ← sanity checks, run before every commit
+scripts/backfill_history.py        ← one-off: daily index history since 2020 + chart arrays
+docs/rrg-inputs.md                 ← RRG / heatmap inputs, formulas, outputs
+.github/workflows/nepse-daily.yml  ← schedule + GitHub Pages deploy
+```
+
+## Backfilling index history
+
+`data/history/index.csv` is seeded with every NEPSE close since Jan 2020 from MeroLagani's chart API:
+
+```bash
+git pull                                            # keep rows the daily Action already wrote
+python scripts/backfill_history.py --update-chart   # re-runnable; existing rows are never overwritten
+```
+
+`--update-chart` also regenerates the monthly chart arrays (`allData`) in `index.html` from real month-end closes.
+
+## Phantom-day guard
+
+The daily updater never stores a close under a date it cannot confirm. The date must come from ShareSansar's as-of date, a dated MeroLagani bar or Claude's `trade_date`. An index reading equal to the previous close is treated as a stale page and ignored. On a weekend with no confirmed date, the run fails instead of writing a row.
+
+## Data sanity checks
+
+`scripts/validate_data.py` runs in the Action between the fetch and the commit, and `fetch_nepse.py` applies the same checks before writing anything. A failing check means nothing is committed, the site keeps yesterday's data and GitHub emails you. It fails on:
+
+- a trade date on a Saturday, in the future, or on a Sunday after 6 Apr 2026
+- an index move over ±10 % or a close identical to the previous day
+- fewer than 150 price rows, duplicate or invalid symbols, or LTP ≤ 0
+- more than 5 stocks moving over ±20 % (usually shifted columns)
+- turnover outside Rs 0.1–100 B
+- `latest.json`, `index.csv` and the embedded block disagreeing
+
+Run it locally any time: `python scripts/validate_data.py`.
+
+Scraped and AI-generated text is cleaned before display. Markup characters are removed, rows with non-ticker symbols are dropped, and AI output is HTML-escaped.
+
+## Known limits
+
+- Scraping depends on ShareSansar/MeroLagani page layouts. If they change, the run fails (GitHub emails you) and the previous day's data stays online. The optional `ANTHROPIC_API_KEY` secret adds a Claude web-search fallback.
+- Market cap / float market cap are only filled when the Claude fallback runs; otherwise they show "—".
+- The Stock Analyzer's AI tab calls the Claude API from the browser, which only works when the file is opened inside Claude.ai.
+- The Wyckoff phase/scenario text is written by hand; review it periodically.
+
+Educational use only — not financial advice.
