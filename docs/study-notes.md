@@ -1,7 +1,7 @@
 # Study Notes: Heatmap, RRG, and where the data comes from
 
-*Examples use real NEPSE data from **Sep 24, 2026**. The dashboard's **📚 Study
-Notes** menu shows this same text, and the live values in the "Today" box are
+*Examples use real NEPSE data from **Sep 24, 2026**. The dashboard's **Study notes**
+page (Reference menu) shows this same text, and the live values in the "Today" box are
 filled in from the current data.*
 
 ---

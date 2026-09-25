@@ -4,7 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Technical Analysis</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
   // Theme: saved choice, else dark. Set before first paint to avoid a flash.
@@ -1227,7 +1228,8 @@
   .pt-td:first-child { text-align: center; color: var(--text3); font-size: 10px; }
   .pt-td:nth-child(2) { text-align: left; }
   .pt-row:hover .pt-td { background: var(--surface2); }
-  .pt-row:hover .pt-sym-link { color: var(--green); }
+  .pt-row:hover .pt-sym-link { color: var(--text); }
+  .pt-name { color: var(--text3); font-size: 12.5px; margin-left: 8px; white-space: nowrap; }
   .pt-sym-link {
     color: var(--blue);
     text-decoration: none;
@@ -1282,6 +1284,187 @@
     .sa-panel { display: block !important; padding: 0 !important; }
     .chart-section canvas { max-width: 100% !important; }
   }
+
+  /* ════════════════════════════════════════════════════════════════
+     DESIGN SYSTEM v2 — "the evening close report"
+     Last layer of the stylesheet: overrides the older rules above.
+     Colour has meaning:   green/red = price up/down ONLY
+                           indigo    = levels, lines, UI accent
+                           amber     = attention (warnings, trigger met)
+     Type: IBM Plex Sans (text, numbers in tabular figures),
+           Plex Sans Condensed (headings), Plex Mono (code only).
+     ════════════════════════════════════════════════════════════════ */
+  :root {
+    --bg:       #12161D;
+    --bg2:      #151A22;
+    --bg3:      #1E2530;
+    --surface:  #1A2029;
+    --surface2: #222A35;
+    --border:   #28313D;
+    --border2:  #36414F;
+    --text:     #E7EAF0;
+    --text2:    #B4BDC9;
+    --text3:    #939EAD;            /* 5.6:1 on --surface */
+    --green:        #35B37E;  --green-dim: rgba(53,179,126,0.13);  --green-border: rgba(53,179,126,0.40);
+    --red:          #E05A5F;  --red-dim:   rgba(224,90,95,0.13);   --red-border:   rgba(224,90,95,0.40);
+    --amber:        #E2A23A;  --amber-dim: rgba(226,162,58,0.13);  --amber-border: rgba(226,162,58,0.40);
+    --blue:         #8C9CF5;  --blue-dim:  rgba(140,156,245,0.14);
+    --accent:       #8C9CF5;  --accent-dim: rgba(140,156,245,0.14); --accent-border: rgba(140,156,245,0.45);
+    --level:        #8C9CF5;
+    --mono:    'IBM Plex Sans', system-ui, sans-serif;     /* labels no longer monospace */
+    --code:    'IBM Plex Mono', ui-monospace, monospace;
+    --sans:    'IBM Plex Sans', system-ui, sans-serif;
+    --display: 'IBM Plex Sans Condensed', 'IBM Plex Sans', sans-serif;
+    --header-bg:  rgba(18,22,29,0.96);
+    --sidebar-bg: #151A22;
+    --inset:      rgba(255,255,255,0.03);
+    --backdrop:   #12161D;
+    --grid-line:  transparent;
+    --chart-grid:    rgba(255,255,255,0.06);
+    --chart-tick:    #939EAD;
+    --chart-tip-bg:  rgba(26,32,41,0.97);
+    --chart-tip-title: #B4BDC9;
+    --chart-tip-body:  #E7EAF0;
+    --chart-point-border: #12161D;
+    --chart-price: #E7EAF0;
+    color-scheme: dark;
+  }
+  :root[data-theme="light"] {
+    --bg:       #F5F6F8;
+    --bg2:      #EEF0F3;
+    --bg3:      #E8EBEF;
+    --surface:  #FFFFFF;
+    --surface2: #F1F3F6;
+    --border:   #DDE1E7;
+    --border2:  #C7CDD6;
+    --text:     #161B22;
+    --text2:    #3E4754;
+    --text3:    #5B6573;            /* 5.9:1 on white */
+    --green:        #1E8A5C;  --green-dim: rgba(30,138,92,0.10);   --green-border: rgba(30,138,92,0.40);
+    --red:          #C4383E;  --red-dim:   rgba(196,56,62,0.09);   --red-border:   rgba(196,56,62,0.40);
+    --amber:        #A86A0C;  --amber-dim: rgba(168,106,12,0.10);  --amber-border: rgba(168,106,12,0.40);
+    --blue:         #4A55C9;  --blue-dim:  rgba(74,85,201,0.10);
+    --accent:       #4A55C9;  --accent-dim: rgba(74,85,201,0.09); --accent-border: rgba(74,85,201,0.40);
+    --level:        #4A55C9;
+    --header-bg:  rgba(245,246,248,0.96);
+    --sidebar-bg: #FFFFFF;
+    --inset:      rgba(20,30,50,0.035);
+    --backdrop:   #F5F6F8;
+    --chart-grid:    rgba(0,0,0,0.07);
+    --chart-tick:    #5B6573;
+    --chart-tip-bg:  rgba(255,255,255,0.98);
+    --chart-tip-title: #5B6573;
+    --chart-tip-body:  #161B22;
+    --chart-point-border: #FFFFFF;
+    --chart-price: #161B22;
+    color-scheme: light;
+  }
+
+  /* Base */
+  body { font-family: var(--sans); font-size: 15px; line-height: 1.55; font-variant-numeric: tabular-nums;
+         -webkit-font-smoothing: antialiased; background: var(--bg); }
+  body::before, body::after { display: none !important; }        /* no decoration behind data */
+  h1, h2, h3, .mv-title, .chart-title, .summary-title, .pc-title, .ps-title, .event-name, .scenario-label,
+  .level-panel .divider-label { font-family: var(--display); letter-spacing: 0; }
+  code, pre, kbd { font-family: var(--code); }
+  a { color: var(--accent); }
+
+  /* No all-caps labels; letter-spacing only where it helps */
+  body *:not(canvas) { text-transform: none !important; }
+  [style*="letter-spacing"], .nav-section-label, .metric-card .lbl, .ms-stat-lbl, .dc-sec, .ps-sub-title,
+  .hm-table th, .rrg-table th, .event-tag, .mc-label, .divider-label, .sb-label { letter-spacing: 0 !important; }
+
+  /* Minimum readable sizes (the old 9–10.5px labels) */
+  [style*="font-size:9px"], [style*="font-size:9.5px"], [style*="font-size:10px"], [style*="font-size:10.5px"] { font-size: 12px !important; }
+  [style*="font-size:11px"] { font-size: 12.5px !important; }
+  .nav-section-label, .metric-card .lbl, .ms-stat-lbl, .dc-sec, .ps-sub-title, .hm-table th, .rrg-table th,
+  .event-tag, .mc-label, .mv-sub, .mv-note, .ps-note, .ms-stat-sub, .divider-label, .divider-num,
+  .event-level, .vol-note, .vol-lbl, .dc-items, .dc-row .dt, .ps-range, .hm-block-lbl { font-size: 12px !important; }
+  .divider-num { display: none; }                                  /* section numbers were not a sequence */
+  .divider-label { color: var(--text2); font-weight: 600; font-family: var(--display); font-size: 15px !important; }
+
+  /* Focus + motion */
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 3px; }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+  }
+
+  /* Sidebar: quiet, text-only navigation grouped by job */
+  .sidebar { background: var(--sidebar-bg); backdrop-filter: none; border-right: 1px solid var(--border); }
+  .sidebar-logo .logo { font-family: var(--display); font-size: 17px; font-weight: 700; color: var(--text); letter-spacing: 0; }
+  .sidebar-logo .logo span { color: var(--text3); font-weight: 500; }
+  .sidebar-logo .live-badge { display: none; }
+  .sidebar-price { font-family: var(--sans); }
+  .sidebar-price .sp-index { font-family: var(--display); font-size: 22px; font-weight: 600; }
+  .nav-section-label { color: var(--text3); font-weight: 600; padding: 14px 18px 4px; font-family: var(--sans); }
+  .nav-btn { font-family: var(--sans); font-size: 14px; color: var(--text2); padding: 7px 18px; border-left: 3px solid transparent; }
+  .nav-btn .nav-icon { display: none; }
+  .nav-btn:hover { background: var(--inset); color: var(--text); }
+  .nav-btn.active { color: var(--text); background: var(--accent-dim); border-left-color: var(--accent); font-weight: 600; }
+  .theme-toggle { font-family: var(--sans); font-size: 12.5px; }
+  .theme-toggle:hover { border-color: var(--accent-border); }
+
+  /* UI controls use the accent, never price colours */
+  .ctrl-btn.active, .seg button.on, .ms-tab.active { background: var(--accent-dim) !important; color: var(--accent) !important; border-color: var(--accent-border) !important; }
+  .ms-tab.active { border-bottom-color: var(--accent) !important; }
+  .ms-sym, .pt-sym-link { color: var(--accent) !important; text-decoration: none; }
+
+  /* Panels: separation by space and a hairline, one radius for containers */
+  .mv-card, .chart-section, .dc-card, .summary-section, .level-panel, .scenario-card, .money-card, .position-calc,
+  #market-summary-sec, #macro-sec, #links-sec, #price-table-sec > div { border-radius: 10px !important; }
+
+  /* ── Today's close (home) ───────────────────────────────────── */
+  .close-report { padding: 8px 0 18px; }
+  .cr-date { color: var(--text3); font-size: 14px; }
+  .cr-line { display: flex; align-items: baseline; flex-wrap: wrap; gap: 6px 18px; margin: 2px 0 6px; }
+  .cr-name { font-family: var(--display); font-size: 22px; font-weight: 600; color: var(--text2); }
+  .cr-index { font-family: var(--display); font-weight: 700; font-size: clamp(44px, 7vw, 76px); line-height: 1; color: var(--text); letter-spacing: -0.01em; }
+  .cr-change { font-family: var(--display); font-weight: 600; font-size: clamp(20px, 2.6vw, 28px); }
+  .cr-change.up { color: var(--green); } .cr-change.down { color: var(--red); } .cr-change.flat { color: var(--text2); }
+  .cr-sentence { font-size: 16.5px; color: var(--text2); max-width: 72ch; }
+  .cr-sentence b { color: var(--text); font-weight: 600; }
+  .cr-status { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; margin-top: 12px; font-size: 13px; color: var(--text3); }
+  #live-banner { display: flex; align-items: baseline; gap: 4px 12px; flex-wrap: wrap; font-size: 13px; color: var(--text3); }
+  #live-banner #live-icon, #live-banner #live-quality-bar, #live-banner #live-source-tag { display: none !important; }
+  #live-banner #live-status { font-weight: 500; font-size: 13px !important; }
+  #live-banner #live-timestamp { font-size: 13px !important; color: var(--text3) !important; }
+  #live-banner button { all: unset; cursor: pointer; color: var(--accent); font-size: 13px; }
+  #live-banner button:hover { text-decoration: underline; }
+  .today-grid { display: grid; grid-template-columns: 1.15fr 1fr; gap: 18px; margin-bottom: 22px; }
+  .today-panel { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; }
+  .today-panel h2 { font-size: 17px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+  .today-panel .row { display: flex; gap: 10px; align-items: baseline; padding: 7px 0; border-bottom: 1px solid var(--border); font-size: 14px; color: var(--text2); }
+  .today-panel .row:last-child { border-bottom: none; }
+  .today-panel .row .k { color: var(--text3); min-width: 128px; }
+  .today-panel .row b { color: var(--text); font-weight: 600; }
+  .plan-dot { width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--text3); flex: none; transform: translateY(1px); }
+  .plan-dot.met { background: var(--amber); border-color: var(--amber); }
+  .dc-card { margin-bottom: 18px; }
+  .dc-head { font-family: var(--sans); font-size: 13.5px; }
+  @media (max-width: 900px) { .today-grid { grid-template-columns: 1fr; } }
+
+  /* Price table: one line per company, neutral High/Low, scrolls sideways */
+  .pt-table-wrap { overflow-x: auto; }
+  .pt-db-controls { display: none !important; }
+
+  /* ── Emotion cycle page ─────────────────────────────────────── */
+  .emo-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px; margin-bottom: 18px; }
+  .emo-card h2 { font-size: 20px; font-weight: 600; color: var(--text); }
+  .emo-lede { color: var(--text2); max-width: 75ch; margin: 4px 0 12px; }
+  .emo-chart { position: relative; height: 380px; }
+  .emo-ribbon { display: flex; height: 44px; border-radius: 6px; overflow: hidden; margin-top: 10px; }
+  .emo-seg { position: relative; display: flex; align-items: center; justify-content: center; font-size: 11.5px; line-height: 1.15;
+             color: #10151C; text-align: center; padding: 0 4px; cursor: pointer; border-right: 1px solid var(--surface); overflow: hidden; }
+  .emo-seg.on { outline: 2px solid var(--text); outline-offset: -2px; }
+  .emo-legend { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; font-size: 12.5px; color: var(--text3); margin-top: 10px; }
+  .emo-legend i { width: 16px; height: 10px; border-radius: 2px; display: inline-block; }
+  .emo-seg span { white-space: nowrap; font-weight: 500; }
+  .emo-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 18px; }
+  .emo-detail { font-size: 14.5px; color: var(--text2); min-height: 120px; }
+  .emo-detail h3 { font-size: 17px; color: var(--text); margin-bottom: 4px; }
+  .emo-detail .when { color: var(--text3); font-size: 13px; margin-bottom: 6px; }
+  .emo-cycle svg { width: 100%; height: auto; display: block; }
+  @media (max-width: 900px) { .emo-grid { grid-template-columns: 1fr; } .emo-chart { height: 300px; } .emo-seg span { display: none; } }
 </style>
 <style>
   /* Tab System */
@@ -1651,7 +1834,7 @@
   <!-- Logo -->
   <div class="sidebar-logo">
     <span class="logo">NEPSE<span>Analytics</span></span>
-    <div class="live-badge"><div class="live-dot"></div>Live · Option C</div>
+    
   </div>
 
   <!-- Live price strip -->
@@ -1662,62 +1845,37 @@
   </div>
 
   <!-- Nav items -->
-  <nav class="sidebar-nav">
-    <div class="nav-section-label">Market</div>
-    <button class="nav-btn active" onclick="navTo('chart-sec')">
-      <span class="nav-icon">📈</span><span class="nav-label">NEPSE Chart</span>
-    </button>
-    <button class="nav-btn" onclick="navTo('market-summary-sec')">
-      <span class="nav-icon">🏦</span><span class="nav-label">Market Summary</span>
-    </button>
-    <button class="nav-btn" onclick="navTo('price-table-sec')">
-      <span class="nav-icon">📋</span><span class="nav-label">Today's Price</span>
-    </button>
-    <button class="nav-btn" onclick="navTo('heatmap-sec')">
-      <span class="nav-icon">🟩</span><span class="nav-label">Heatmap</span>
-    </button>
-    <button class="nav-btn" onclick="navTo('rrg-sec')">
-      <span class="nav-icon">🧭</span><span class="nav-label">RRG</span>
-    </button>
+  <nav class="sidebar-nav" aria-label="Sections">
+    <div class="nav-section-label">Today</div>
+    <button class="nav-btn active" onclick="navTo('chart-sec')"><span class="nav-label">Close report</span></button>
+    <button class="nav-btn" onclick="navTo('market-summary-sec')"><span class="nav-label">Market summary</span></button>
+    <button class="nav-btn" onclick="navTo('heatmap-sec')"><span class="nav-label">Heatmap</span></button>
+    <button class="nav-btn" onclick="navTo('price-table-sec')"><span class="nav-label">Share prices</span></button>
 
-    <div class="nav-section-label">Wyckoff Analysis</div>
-    <button class="nav-btn" onclick="navTo('events-sec')">
-      <span class="nav-icon">🔍</span><span class="nav-label">Wyckoff Events</span>
-    </button>
-    <button class="nav-btn" onclick="navTo('structure-sec')">
-      <span class="nav-icon">🏗</span><span class="nav-label">Structure</span>
-    </button>
-    <button class="nav-btn" onclick="navTo('trade-sec')">
-      <span class="nav-icon">⚡</span><span class="nav-label">Scenarios</span>
-    </button>
-    <button class="nav-btn" onclick="navTo('money-sec')">
-      <span class="nav-icon">🎯</span><span class="nav-label">Risk / Reward</span>
-    </button>
+    <div class="nav-section-label">Rotation</div>
+    <button class="nav-btn" onclick="navTo('rrg-sec')"><span class="nav-label">Relative rotation (RRG)</span></button>
+
+    <div class="nav-section-label">Wyckoff plan</div>
+    <button class="nav-btn" onclick="navTo('trade-sec')"><span class="nav-label">Scenarios &amp; triggers</span></button>
+    <button class="nav-btn" onclick="navTo('events-sec')"><span class="nav-label">Phase &amp; events</span></button>
+    <button class="nav-btn" onclick="navTo('structure-sec')"><span class="nav-label">Levels &amp; structure</span></button>
+    <button class="nav-btn" onclick="navTo('money-sec')"><span class="nav-label">Risk &amp; position size</span></button>
+    <button class="nav-btn" onclick="navTo('emotion-sec')"><span class="nav-label">Emotion cycle</span></button>
 
     <div class="nav-section-label">Tools</div>
-    <button class="nav-btn" onclick="navTo('stock-analyzer-sec')">
-      <span class="nav-icon">🤖</span><span class="nav-label">Stock Analyzer</span>
-    </button>
-    <button class="nav-btn" onclick="navTo('macro-sec')">
-      <span class="nav-icon">🏛</span><span class="nav-label">NRB Macro</span>
-    </button>
+    <button class="nav-btn" onclick="navTo('stock-analyzer-sec')"><span class="nav-label">Stock analyzer</span></button>
+    <button class="nav-btn" onclick="navTo('macro-sec')"><span class="nav-label">NRB macro</span></button>
 
     <div class="nav-section-label">Reference</div>
-    <button class="nav-btn" onclick="navTo('links-sec')">
-      <span class="nav-icon">🔗</span><span class="nav-label">Resources</span>
-    </button>
-    <button class="nav-btn" onclick="navTo('notes-sec')">
-      <span class="nav-icon">📚</span><span class="nav-label">Study Notes</span>
-    </button>
-    <button class="nav-btn" onclick="navTo('summary-sec')">
-      <span class="nav-icon">📝</span><span class="nav-label">Summary</span>
-    </button>
+    <button class="nav-btn" onclick="navTo('notes-sec')"><span class="nav-label">Study notes</span></button>
+    <button class="nav-btn" onclick="navTo('summary-sec')"><span class="nav-label">Analysis summary</span></button>
+    <button class="nav-btn" onclick="navTo('links-sec')"><span class="nav-label">Resources</span></button>
   </nav>
 
   <!-- Clock footer -->
   <div class="sidebar-footer">
     <div id="ms-npt-clock" style="color:var(--text3);">—</div>
-    <div style="margin-top:4px;color:var(--text3);">GMT +5:45 · Mon–Fri 11AM–3PM</div>
+    <div style="margin-top:4px;color:var(--text3);">Trading hours: Mon–Fri, 11 AM–3 PM NPT</div>
     <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="Switch white / black background"></button>
   </div>
 </aside>
@@ -1725,32 +1883,24 @@
 <!-- MAIN -->
 <main class="main">
 
-  <!-- HERO -->
-  <div class="hero">
-    <div>
-      <h1 class="hero-title">Technical <span class="accent">Analysis</span></h1>
-      <p class="hero-sub" id="hero-sub">// Nepal Stock Exchange · Full Wyckoff Method · <span id="hero-date">Loading…</span> · Data: nepalstock.com, ShareSansar, NRB, CEIC</p>
-    </div>
-    <div class="phase-pill" id="phase-pill">
-      <div class="label">Current Phase</div>
-      <div class="val" id="phase-val">Trading Range — Phase B</div>
-      <div style="font-size:11px;color:var(--green);opacity:0.7;font-family:var(--mono);margin-top:4px;" id="phase-sub">Range 2,487–2,960 · bias Neutral</div>
-    </div>
-  </div>
-
+  <!-- TODAY'S CLOSE — the home page opens with what happened today -->
+  <section class="close-report" id="close-report" aria-labelledby="cr-heading">
+    <div class="cr-date" id="cr-date">Latest close</div>
+    <h1 class="cr-line" id="cr-heading">
+      <span class="cr-name">NEPSE</span>
+      <span class="cr-index" id="cr-index">—</span>
+      <span class="cr-change flat" id="cr-change"></span>
+    </h1>
+    <p class="cr-sentence" id="cr-sentence">Loading the latest close…</p>
+    <div class="cr-status" id="cr-status">
   <!-- LIVE DATA BANNER — Option C: self-updating via Claude API -->
-  <div id="live-banner" style="display:flex;align-items:center;gap:10px;padding:10px 16px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;margin-bottom:16px;font-family:var(--mono);font-size:11px;flex-wrap:wrap;">
-    <span id="live-icon" style="font-size:14px;">⏳</span>
-    <div>
-      <div id="live-status" style="color:var(--amber);font-weight:500;">Fetching latest NEPSE data via AI…</div>
-      <div id="live-timestamp" style="color:var(--text3);font-size:10px;margin-top:1px;">Claude is searching nepalstock.com · ShareSansar · NRB for today's figures</div>
-    </div>
-    <div id="live-quality-bar" style="display:none;flex:1;height:4px;background:var(--surface2);border-radius:2px;overflow:hidden;max-width:120px;"><div id="live-qfill" style="height:4px;background:var(--green);width:0%;transition:width 0.5s;"></div></div>
-    <span style="margin-left:auto;display:flex;gap:8px;align-items:center;">
-      <span id="live-source-tag" style="color:var(--text3);font-size:10px;"></span>
-      <button onclick="manualRefresh()" style="background:var(--green-dim);border:1px solid var(--green-border);color:var(--green);font-family:var(--mono);font-size:10px;padding:4px 10px;border-radius:5px;cursor:pointer;">↻ Refresh Now</button>
-    </span>
+  <div id="live-banner" role="status">
+    <span id="live-status">Checking for the latest close…</span>
+    <span id="live-timestamp"></span>
+    <button onclick="manualRefresh()" title="Look for a newer published close">Check for a newer close</button>
   </div>
+    </div>
+  </section>
 
   <!-- DAILY DATA CHECK (scripts/verify_daily.py) -->
   <div class="dc-card" id="data-check" style="display:none;">
@@ -1765,44 +1915,23 @@
     </div>
   </div>
 
-  <!-- METRICS -->
-  <div class="metrics">
-    <div class="metric-card">
-      <div class="lbl" id="m-index-lbl">NEPSE Index · Last Close</div>
-      <div class="val red" id="m-index">—</div>
-      <div class="sub" id="m-index-chg">Loading…</div>
+  <!-- WHAT CHANGED + PLAN STATUS -->
+  <section class="today-grid" id="today-grid">
+    <div class="today-panel">
+      <h2 id="cr-changes-title">What changed since the previous session</h2>
+      <div id="cr-changes"><div class="row">Changes appear after the daily update has stored two sessions.</div></div>
     </div>
-    <div class="metric-card">
-      <div class="lbl">ATH (Aug 18, 2021)</div>
-      <div class="val red" id="m-ath">3,198.6</div>
-      <div class="sub" id="m-ath-pct">— from ATH</div>
+    <div class="today-panel">
+      <h2>Plan status</h2>
+      <div id="cr-plan"></div>
+      <div class="row" style="border:none;padding-top:10px;"><a href="#/trade-sec" onclick="navTo('trade-sec');return false;">Open scenarios and triggers</a></div>
     </div>
-    <div class="metric-card">
-      <div class="lbl">Range Top · Double Top</div>
-      <div class="val amber" id="m-top">2,960 · 3,002</div>
-      <div class="sub">Mar 24 2026 failed breakout · Jul 2025 high</div>
-    </div>
-    <div class="metric-card">
-      <div class="lbl">Range Low (SC)</div>
-      <div class="val green" id="m-low">2,487</div>
-      <div class="sub" id="m-low-sub">Oct 16 2025 · tested Aug 31 2026 (2,513)</div>
-    </div>
-    <div class="metric-card">
-      <div class="lbl">Creek / AR</div>
-      <div class="val red" id="m-creek">2,772</div>
-      <div class="sub" id="m-creek-sub">Jan 25 2026 · first bull trigger</div>
-    </div>
-    <div class="metric-card">
-      <div class="lbl">NRB Policy Rate</div>
-      <div class="val blue">4.25%</div>
-      <div class="sub">SLF 5.75% · Base 4.83% · NPL 5.66%</div>
-    </div>
-  </div>
+  </section>
 
   <!-- CHART SECTION -->
   <div class="chart-section" id="chart-sec">
     <div class="chart-header">
-      <div class="chart-title">NEPSE Index — Price & Volume Structure</div>
+      <div class="chart-title">NEPSE month-end close since 2021, with range levels</div>
       <div class="chart-controls">
         <div class="ctrl-group">
           <button class="ctrl-btn active" onclick="setView('all',this)">All (since Jan 21)</button>
@@ -1810,20 +1939,16 @@
           <button class="ctrl-btn" onclick="setView('recent',this)">Recent (6M)</button>
         </div>
         <div class="ctrl-group">
-          <button class="ctrl-btn active" id="overlayBtn" onclick="toggleOverlay()">Wyckoff Zones</button>
+          <button class="ctrl-btn active" id="overlayBtn" onclick="toggleOverlay()">Levels</button>
           <button class="ctrl-btn" id="volBtn" onclick="toggleVol()">Volume</button>
         </div>
       </div>
     </div>
     <div class="chart-legend">
-      <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>NEPSE Index (pts)</div>
-      <div class="legend-item"><div class="legend-dot" style="background:rgba(0,212,160,0.65)"></div>Range low / pivot</div>
-      <div class="legend-item"><div class="legend-dot" style="background:rgba(255,90,110,0.6)"></div>Creek / range top</div>
-      <div class="legend-item"><div class="legend-dot" style="background:rgba(255,90,110,0.3)"></div>Double top / ATH</div>
-      <div class="legend-item"><div class="legend-dot" style="background:var(--blue);height:2px;width:20px;border-top:2px dashed var(--blue)"></div>Avg Daily Turnover (Rs B)</div>
-      <div style="margin-left:auto;font-family:var(--mono);font-size:10px;color:var(--text3);">
-        Month-end closing index · since Jan 2021 · Source: MeroLagani daily closes + daily GitHub update
-      </div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--chart-price)"></div>NEPSE close</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--level)"></div>Range levels (dashed)</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--text3)"></div>Average daily turnover, Rs billion (bars)</div>
+      <div style="margin-left:auto;font-size:12px;color:var(--text3);">Source: MeroLagani daily closes, updated each trading day</div>
     </div>
     <div class="chart-body">
       <div id="chartContainer" style="height:380px; position:relative;">
@@ -1834,7 +1959,7 @@
       <span>Chart height:</span>
       <input type="range" min="240" max="600" value="380" id="heightSlider" oninput="resizeChart(this.value)">
       <span id="heightLabel">380px</span>
-      <span style="margin-left:auto;">Scroll to zoom on desktop · Drag to pan</span>
+      
     </div>
   </div>
 
@@ -2246,95 +2371,57 @@
       <div class="pc-result" id="calcResult"></div>
     </div>
 
-    <!-- Emotion section -->
-    <div class="emotion-section" style="margin-top:16px;" id="emotion-sec">
+  </div>
+
+  <!-- ═══ EMOTION CYCLE ═══════════════════════════════════════════ -->
+  <div id="emotion-sec">
+    <div class="emo-card">
+      <h2>NEPSE's emotion cycle, 2021 to 2026</h2>
+      <p class="emo-lede">The market's month-end close with the crowd's mood behind it: warm colours are greed, cool colours are fear. Click a period in the ribbon to read what happened.</p>
+      <div class="emo-chart"><canvas id="emo-canvas" role="img" aria-label="NEPSE month-end close 2021 to 2026 shaded by market emotion"></canvas></div>
+      <div class="emo-ribbon" id="emo-ribbon" role="tablist" aria-label="Emotion periods"></div>
+      <div class="emo-legend" aria-hidden="true">
+        <span>Greed</span><i style="background:#F08A4B"></i><i style="background:#EFA35E"></i><i style="background:#E6C07F"></i>
+        <span style="margin-left:14px;">Fear</span><i style="background:#A3C3DA"></i><i style="background:#73A6CF"></i><i style="background:#4F86C2"></i>
+        <span style="margin-left:14px;">Darker = stronger. Hover or click any period.</span>
+      </div>
+    </div>
+    <div class="emo-grid">
+      <div class="emo-card"><div class="emo-detail" id="emo-detail"></div></div>
+      <div class="emo-card emo-cycle">
+        <h2 style="font-size:17px;">Where the crowd is now</h2>
+        <p class="emo-lede" style="margin-bottom:6px;">The classic cycle of market emotions. The marker is today's reading.</p>
+        <div id="emo-cycle"></div>
+      </div>
+    </div>
+    <div class="emotion-section" style="margin-top:0;">
       <div class="divider" style="margin-bottom:0;">
         <span class="divider-num">08</span>
         <div class="divider-line"></div>
-        <span class="divider-label">Market Emotion Cycle (Wall St. Cheat Sheet)</span>
+        <span class="divider-label">Who did what</span>
         <div class="divider-line"></div>
       </div>
 
       <!-- Smart Money vs Retail panel -->
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px;margin-bottom:16px;">
-        <div style="background:var(--bg3);border:1px solid var(--green-border);border-radius:10px;padding:14px;">
-          <div style="font-family:var(--mono);font-size:10px;color:var(--green);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:10px;">🧠 Smart Money / Composite Operator Behaviour</div>
+        <div style="background:var(--bg3);border:1px solid var(--border2);border-radius:10px;padding:14px;">
+          <div style="font-family:var(--mono);font-size:10px;color:var(--text);font-weight:600;font-size:15px;margin-bottom:10px;">What large holders did</div>
           <div style="font-size:12px;color:var(--text2);line-height:1.7;">
-            <div style="display:flex;gap:8px;margin-bottom:6px;"><span style="color:var(--green);min-width:16px;">▶</span><span><strong style="color:var(--text);">Aug 2021 ATH (3,198.6):</strong> distribution into public euphoria; the peak week traded about 97 Ar.</span></div>
-            <div style="display:flex;gap:8px;margin-bottom:6px;"><span style="color:var(--green);min-width:16px;">▶</span><span><strong style="color:var(--text);">Aug 2024 & Jul 2025 (3,001 / 3,002):</strong> two climactic volume peaks at the same level — large holders sold into strength both times.</span></div>
-            <div style="display:flex;gap:8px;margin-bottom:6px;"><span style="color:var(--green);min-width:16px;">▶</span><span><strong style="color:var(--text);">Oct 2025 (2,487):</strong> range low after the September market closure; buying absorbed the post-closure selling.</span></div>
-            <div style="display:flex;gap:8px;margin-bottom:6px;"><span style="color:var(--green);min-width:16px;">▶</span><span><strong style="color:var(--text);">Mar 2026 (2,960):</strong> the heaviest week of the range (82.5 Ar) and no follow-through — supply met the breakout.</span></div>
-            <div style="display:flex;gap:8px;"><span style="color:var(--green);min-width:16px;">▶</span><span><strong style="color:var(--text);">Sep 2026 (NOW):</strong> the retest of the low came on lighter volume. Whether operators are accumulating (A) or distributing (B) is decided at 2,487 / 2,772.</span></div>
+            <div style="display:flex;gap:8px;margin-bottom:6px;"><span style="color:var(--accent);min-width:16px;">▸</span><span><strong style="color:var(--text);">Aug 2021 ATH (3,198.6):</strong> distribution into public euphoria; the peak week traded about 97 Ar.</span></div>
+            <div style="display:flex;gap:8px;margin-bottom:6px;"><span style="color:var(--accent);min-width:16px;">▸</span><span><strong style="color:var(--text);">Aug 2024 & Jul 2025 (3,001 / 3,002):</strong> two climactic volume peaks at the same level — large holders sold into strength both times.</span></div>
+            <div style="display:flex;gap:8px;margin-bottom:6px;"><span style="color:var(--accent);min-width:16px;">▸</span><span><strong style="color:var(--text);">Oct 2025 (2,487):</strong> range low after the September market closure; buying absorbed the post-closure selling.</span></div>
+            <div style="display:flex;gap:8px;margin-bottom:6px;"><span style="color:var(--accent);min-width:16px;">▸</span><span><strong style="color:var(--text);">Mar 2026 (2,960):</strong> the heaviest week of the range (82.5 Ar) and no follow-through — supply met the breakout.</span></div>
+            <div style="display:flex;gap:8px;"><span style="color:var(--accent);min-width:16px;">▸</span><span><strong style="color:var(--text);">Sep 2026 (NOW):</strong> the retest of the low came on lighter volume. Whether operators are accumulating (A) or distributing (B) is decided at 2,487 / 2,772.</span></div>
           </div>
         </div>
-        <div style="background:var(--bg3);border:1px solid var(--red-border);border-radius:10px;padding:14px;">
-          <div style="font-family:var(--mono);font-size:10px;color:var(--red);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:10px;">👥 Retail Crowd Behaviour</div>
+        <div style="background:var(--bg3);border:1px solid var(--border2);border-radius:10px;padding:14px;">
+          <div style="font-family:var(--mono);font-size:10px;color:var(--text);font-weight:600;font-size:15px;margin-bottom:10px;">What the crowd did</div>
           <div style="font-size:12px;color:var(--text2);line-height:1.7;">
-            <div style="display:flex;gap:8px;margin-bottom:6px;"><span style="color:var(--red);min-width:16px;">▶</span><span><strong style="color:var(--text);">Aug 2021:</strong> FOMO buying at the top; demat accounts surged.</span></div>
-            <div style="display:flex;gap:8px;margin-bottom:6px;"><span style="color:var(--red);min-width:16px;">▶</span><span><strong style="color:var(--text);">2022 markdown:</strong> index −43 % to 1,815; panic selling below cost.</span></div>
-            <div style="display:flex;gap:8px;margin-bottom:6px;"><span style="color:var(--red);min-width:16px;">▶</span><span><strong style="color:var(--text);">Mar 2026:</strong> breakout above 2,838 drew buyers in at 2,850–2,960; they are now under water.</span></div>
-            <div style="display:flex;gap:8px;margin-bottom:6px;"><span style="color:var(--red);min-width:16px;">▶</span><span><strong style="color:var(--text);">Sep 2026 (NOW):</strong> anxiety and doubt after the failed breakout; turnover low (13–19 Ar/week).</span></div>
-            <div style="display:flex;gap:8px;"><span style="color:var(--amber);min-width:16px;">▶</span><span><strong style="color:var(--text);">What to watch:</strong> rising turnover (&gt; 40 Ar/week) on up-days through 2,600 → demand returning; rising turnover on down-days below 2,487 → capitulation.</span></div>
-          </div>
-        </div>
-      </div>
-      <!-- Emotion timeline -->
-      <div style="font-family:var(--mono);font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;">Emotion Cycle Timeline — NEPSE 2021–2026</div>
-      <div class="emotion-timeline">
-        <div class="emotion-item">
-          <div class="emotion-dot-wrap"><div class="emotion-dot" style="background:var(--red);color:#fff;">1</div></div>
-          <div class="emotion-content">
-            <div class="emotion-phase" style="color:var(--red);">Aug 2021 — ATH 3,198.6</div>
-            <div class="emotion-text">Euphoria / thrill — peak retail FOMO; the top week traded about 97 Ar.</div>
-          </div>
-        </div>
-        <div class="emotion-item">
-          <div class="emotion-dot-wrap"><div class="emotion-dot" style="background:var(--amber);color:#fff;">2</div></div>
-          <div class="emotion-content">
-            <div class="emotion-phase" style="color:var(--amber);">Late 2021 — Complacency & Anxiety</div>
-            <div class="emotion-text">Dips are bought, but lower highs form. Volume dries up as price drifts lower.</div>
-          </div>
-        </div>
-        <div class="emotion-item">
-          <div class="emotion-dot-wrap"><div class="emotion-dot" style="background:var(--red);color:#fff;">3</div></div>
-          <div class="emotion-content">
-            <div class="emotion-phase" style="color:var(--red);">2022 — Fear, Panic, Capitulation</div>
-            <div class="emotion-text">Index falls 43 % from the ATH to 1,815 (Sep 25 2022). 2023 stays in a 1,818–2,227 range.</div>
-          </div>
-        </div>
-        <div class="emotion-item">
-          <div class="emotion-dot-wrap"><div class="emotion-dot" style="background:var(--green);color:#fff;">4</div></div>
-          <div class="emotion-content">
-            <div class="emotion-phase" style="color:var(--green);">2024 — Hope → Optimism → Thrill</div>
-            <div class="emotion-text">+37 % in 35 days (Jul 8 → Aug 12 2024); 3,001 on a record Rs 30 B day on Aug 15.</div>
-          </div>
-        </div>
-        <div class="emotion-item">
-          <div class="emotion-dot-wrap"><div class="emotion-dot" style="background:var(--blue);color:#fff;">5</div></div>
-          <div class="emotion-content">
-            <div class="emotion-phase" style="color:var(--blue);">Jul 2025 — 3,002 — Belief / Thrill again</div>
-            <div class="emotion-text">Equal high on the heaviest week of the cycle (96.9 Ar), then a decline — the 3,000 ceiling holds.</div>
-          </div>
-        </div>
-        <div class="emotion-item">
-          <div class="emotion-dot-wrap"><div class="emotion-dot" style="background:var(--red);color:#fff;">6</div></div>
-          <div class="emotion-content">
-            <div class="emotion-phase" style="color:var(--red);">Sep–Oct 2025 — Panic</div>
-            <div class="emotion-text">Market closure Sep 8–18; index falls from 3,002 to 2,487 (Oct 16 2025).</div>
-          </div>
-        </div>
-        <div class="emotion-item">
-          <div class="emotion-dot-wrap"><div class="emotion-dot" style="background:var(--amber);color:#fff;">7</div></div>
-          <div class="emotion-content">
-            <div class="emotion-phase" style="color:var(--amber);">Mar 2026 — Hope, then denial</div>
-            <div class="emotion-text">Breakout to 2,960 on 82.5 Ar/week fails; back inside the range by mid-April.</div>
-          </div>
-        </div>
-        <div class="emotion-item current">
-          <div class="emotion-dot-wrap"><div class="emotion-dot" style="background:var(--amber);color:var(--bg);border:2px solid var(--amber);box-shadow:0 0 10px rgba(240,180,41,0.5);">★</div></div>
-          <div class="emotion-content">
-            <div class="emotion-phase" style="color:var(--amber);">▲ NOW — Sep 2026 — Anxiety / Doubt</div>
-            <div class="emotion-text"><strong style="color:var(--amber);">YOU ARE HERE.</strong> Failed breakout, then a retest of the 2025 low (2,513 on Aug 31). Fear (A: accumulation) or denial (B: distribution) — decided at 2,487 / 2,772.</div>
+            <div style="display:flex;gap:8px;margin-bottom:6px;"><span style="color:var(--text3);min-width:16px;">▸</span><span><strong style="color:var(--text);">Aug 2021:</strong> FOMO buying at the top; demat accounts surged.</span></div>
+            <div style="display:flex;gap:8px;margin-bottom:6px;"><span style="color:var(--text3);min-width:16px;">▸</span><span><strong style="color:var(--text);">2022 markdown:</strong> index −43 % to 1,815; panic selling below cost.</span></div>
+            <div style="display:flex;gap:8px;margin-bottom:6px;"><span style="color:var(--text3);min-width:16px;">▸</span><span><strong style="color:var(--text);">Mar 2026:</strong> breakout above 2,838 drew buyers in at 2,850–2,960; they are now under water.</span></div>
+            <div style="display:flex;gap:8px;margin-bottom:6px;"><span style="color:var(--text3);min-width:16px;">▸</span><span><strong style="color:var(--text);">Sep 2026 (NOW):</strong> anxiety and doubt after the failed breakout; turnover low (13–19 Ar/week).</span></div>
+            <div style="display:flex;gap:8px;"><span style="color:var(--amber);min-width:16px;">▸</span><span><strong style="color:var(--text);">What to watch:</strong> rising turnover (&gt; 40 Ar/week) on up-days through 2,600 → demand returning; rising turnover on down-days below 2,487 → capitulation.</span></div>
           </div>
         </div>
       </div>
@@ -2552,13 +2639,13 @@
       <!-- Header -->
       <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:10px;">
         <div>
-          <div style="font-family:var(--display);font-size:16px;font-weight:700;color:var(--text);">Today's Share Price</div>
-          <div style="font-family:var(--mono);font-size:10px;color:var(--text3);margin-top:2px;" id="pt-subtitle">Data from ShareSansar · <a href="https://www.sharesansar.com/today-share-price" target="_blank" style="color:var(--green);">sharesansar.com/today-share-price ↗</a></div>
+          <div style="font-family:var(--display);font-size:18px;font-weight:600;color:var(--text);">Share prices</div>
+          <div style="font-family:var(--mono);font-size:10px;color:var(--text3);margin-top:2px;" id="pt-subtitle">Data from ShareSansar · <a href="https://www.sharesansar.com/today-share-price" target="_blank" style="color:var(--accent);">sharesansar.com</a></div>
         </div>
         <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
           <div style="font-family:var(--mono);font-size:11px;color:var(--text3);" id="pt-record-count"></div>
-          <button onclick="ptSaveToday()" style="background:var(--green-dim);border:1px solid var(--green-border);color:var(--green);font-family:var(--mono);font-size:11px;padding:5px 12px;border-radius:6px;cursor:pointer;">💾 Save to DB</button>
-          <button onclick="ptLoadDate()" style="background:var(--surface2);border:1px solid var(--border2);color:var(--text2);font-family:var(--mono);font-size:11px;padding:5px 12px;border-radius:6px;cursor:pointer;">📅 Load Date</button>
+          <button class="pt-db-controls" onclick="ptSaveToday()" style="background:var(--green-dim);border:1px solid var(--green-border);color:var(--green);font-family:var(--mono);font-size:11px;padding:5px 12px;border-radius:6px;cursor:pointer;">💾 Save to DB</button>
+          <button class="pt-db-controls" onclick="ptLoadDate()" style="background:var(--surface2);border:1px solid var(--border2);color:var(--text2);font-family:var(--mono);font-size:11px;padding:5px 12px;border-radius:6px;cursor:pointer;">📅 Load Date</button>
           <button onclick="ptExportCSV()" style="background:var(--surface2);border:1px solid var(--border2);color:var(--text2);font-family:var(--mono);font-size:11px;padding:5px 12px;border-radius:6px;cursor:pointer;">⬇ CSV</button>
           <a href="https://www.sharesansar.com/today-share-price" target="_blank" style="background:var(--blue-dim);border:1px solid rgba(79,168,232,0.3);color:var(--blue);font-family:var(--mono);font-size:11px;padding:5px 12px;border-radius:6px;text-decoration:none;">↗ Source</a>
         </div>
@@ -2570,8 +2657,8 @@
         <select id="pt-date-select" onchange="ptSwitchDate(this.value)" style="background:var(--bg);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:var(--mono);font-size:11px;padding:4px 8px;outline:none;">
           <option value="" id="pt-latest-option">Loading latest date…</option>
         </select>
-        <span style="font-family:var(--mono);font-size:10px;color:var(--text3);margin-left:auto;" id="pt-db-info">DB: 0 dates saved</span>
-        <button onclick="ptClearDB()" style="background:var(--red-dim);border:1px solid var(--red-border);color:var(--red);font-family:var(--mono);font-size:10px;padding:3px 8px;border-radius:5px;cursor:pointer;">🗑 Clear DB</button>
+        <span class="pt-db-controls" style="font-family:var(--mono);font-size:10px;color:var(--text3);margin-left:auto;" id="pt-db-info">DB: 0 dates saved</span>
+        <button class="pt-db-controls" onclick="ptClearDB()" style="background:var(--red-dim);border:1px solid var(--red-border);color:var(--red);font-family:var(--mono);font-size:10px;padding:3px 8px;border-radius:5px;cursor:pointer;">🗑 Clear DB</button>
       </div>
 
       <!-- Search + Filter row -->
@@ -3092,8 +3179,8 @@
     <script id="study-notes-md" type="text/markdown">
 # Study Notes: Heatmap, RRG, and where the data comes from
 
-*Examples use real NEPSE data from **Sep 24, 2026**. The dashboard's **📚 Study
-Notes** menu shows this same text, and the live values in the "Today" box are
+*Examples use real NEPSE data from **Sep 24, 2026**. The dashboard's **Study notes**
+page (Reference menu) shows this same text, and the live values in the "Today" box are
 filled in from the current data.*
 
 ---
@@ -3319,6 +3406,7 @@ function toggleTheme() {
   updateThemeButton();
   if (typeof chartInstance !== 'undefined' && chartInstance) buildChart(currentView);
   if (typeof VIEWS !== 'undefined' && VIEWS) { renderHeatmap(); renderRRG(); }
+  if (currentPage === 'emotion-sec') renderEmotion();
 }
 
 // ---- SCROLL NAV ----
@@ -3327,7 +3415,7 @@ function toggleTheme() {
 // target id. Blocks without an entry join the page of the block after them
 // (e.g. the Trading Range ruler joins Wyckoff Events). The disclaimer shows on every page.
 const PAGE_MEMBERS = {
-  'chart-sec':     ['hero', 'live-banner', 'data-check', 'metrics', 'chart-sec'],
+  'chart-sec':     ['close-report', 'data-check', 'today-grid', 'chart-sec'],
   'events-sec':    ['events-sec', 'vol-section'],
   'structure-sec': ['levels-sec', 'structure-sec'],
 };
@@ -3372,6 +3460,7 @@ function showPage(page, push = true) {
   if (page === 'heatmap-sec' && typeof renderHeatmap === 'function') renderHeatmap();
   if (page === 'rrg-sec' && typeof renderRRG === 'function') renderRRG();
   if (page === 'notes-sec' && typeof renderNotes === 'function') renderNotes();
+  if (page === 'emotion-sec' && typeof renderEmotion === 'function') renderEmotion();
   return true;
 }
 
@@ -3398,12 +3487,12 @@ const WYCKOFF_LEVELS = {
   rangeLow:  { v: 2487.17, date: '2025-10-16' },
   test:      { v: 2513.42, date: '2026-08-31' },
   lines: [
-    { v: 2487.17, color: 'rgba(0,212,160,0.65)', dash: [6,4], label: 'Range low / Ice: 2,487 (Oct 2025)' },
-    { v: 2600,    color: 'rgba(0,212,160,0.35)', dash: [4,6], label: 'Pivot: 2,600' },
-    { v: 2772.17, color: 'rgba(255,90,110,0.6)', dash: [6,4], label: 'Creek / AR: 2,772' },
-    { v: 2960.40, color: 'rgba(255,90,110,0.45)', dash: [3,5], label: 'Range top: 2,960 (Mar 2026)' },
-    { v: 3002.07, color: 'rgba(255,90,110,0.3)', dash: [3,6], label: 'Double top: 3,002' },
-    { v: 3198.60, color: 'rgba(255,90,110,0.25)', dash: [2,7], label: 'ATH: 3,198.6 (Aug 2021)' },
+    { v: 2487.17, color: 'rgba(140,156,245,0.85)', dash: [6,4], label: 'Range low 2,487' },
+    { v: 2600,    color: 'rgba(140,156,245,0.55)', dash: [2,5], label: 'Pivot 2,600' },
+    { v: 2772.17, color: 'rgba(140,156,245,0.85)', dash: [6,4], label: 'Creek 2,772' },
+    { v: 2960.40, color: 'rgba(140,156,245,0.7)', dash: [3,5], label: 'Range top 2,960' },
+    { v: 3002.07, color: 'rgba(140,156,245,0.5)', dash: [3,6], label: 'Double top 3,002' },
+    { v: 3198.60, color: 'rgba(140,156,245,0.4)', dash: [2,7], label: 'All-time high 3,198.6' },
   ],
 };
 
@@ -3531,11 +3620,11 @@ function buildChart(view) {
     {
       label: 'NEPSE Index',
       data: price,
-      borderColor: '#00d4a0',
-      backgroundColor: 'rgba(0,212,160,0.06)',
+      borderColor: themeColor('--chart-price'),
+      backgroundColor: 'transparent',
       borderWidth: 2,
       pointRadius: 3,
-      pointBackgroundColor: '#00d4a0',
+      pointBackgroundColor: themeColor('--chart-price'),
       pointBorderColor: C.pointBorder,
       pointBorderWidth: 1.5,
       tension: 0.3,
@@ -3555,12 +3644,9 @@ function buildChart(view) {
       backgroundColor: (() => {
         const sorted = allData.volume.filter(x => x > 0).slice().sort((a, b) => a - b);
         const med = sorted.length ? sorted[Math.floor(sorted.length / 2)] : 1;
-        return vol.map(v => {
-          if (v >= med * 2)   return 'rgba(0,212,160,0.5)';
-          if (v >= med * 1.3) return 'rgba(79,168,232,0.4)';
-          if (v >= med * 0.8) return 'rgba(240,180,41,0.4)';
-          return 'rgba(255,90,110,0.3)';
-        });
+        // one neutral colour; heavier months are more opaque (not price colours)
+        return vol.map(v => v >= med * 2 ? 'rgba(147,158,173,0.55)' : v >= med * 1.3 ? 'rgba(147,158,173,0.40)'
+                          : v >= med * 0.8 ? 'rgba(147,158,173,0.28)' : 'rgba(147,158,173,0.18)');
       })(),
       borderWidth: 0,
       yAxisID: 'y2',
@@ -3574,6 +3660,7 @@ function buildChart(view) {
     options: {
       responsive: true,
       maintainAspectRatio: false,
+      layout: { padding: { left: 6, right: 10, top: 8 } },
       interaction: { mode: 'index', intersect: false },
       plugins: {
         legend: { display: false },
@@ -3648,9 +3735,16 @@ function buildChart(view) {
         const { chartArea: { left, right } } = chart;
         const snap = typeof LIVE_SNAPSHOT !== 'undefined' ? LIVE_SNAPSHOT : { index: 2558 };
 
+        const placed = [];                 // label boxes already drawn: never overlap
         const drawHLine = (val, color, dash, label, labelX, above) => {
           const y = yScale.getPixelForValue(val);
           if (y < chart.chartArea.top || y > chart.chartArea.bottom) return;
+          ctx.save(); ctx.font = '500 12px IBM Plex Sans, sans-serif';
+          const w = ctx.measureText(label).width + 8; ctx.restore();
+          let ly = above ? y - 5 : y + 14;
+          if (ly - 12 < chart.chartArea.top) ly = y + 14;              // too close to the top: below the line
+          while (placed.some(b => Math.abs(b.y - ly) < 14 && labelX < b.x + b.w && labelX + w > b.x)) labelX += 12 + Math.min(w, 170);
+          placed.push({ x: labelX, y: ly, w });
           ctx.save();
           ctx.strokeStyle = color;
           ctx.lineWidth = 1.5;
@@ -3660,9 +3754,9 @@ function buildChart(view) {
           ctx.lineTo(right, y);
           ctx.stroke();
           ctx.setLineDash([]);
-          ctx.fillStyle = color;
-          ctx.font = 'bold 10px DM Mono, monospace';
-          ctx.fillText(label, labelX, above ? y - 4 : y + 12);
+          ctx.fillStyle = color.replace(/[\d.]+\)$/, '1)');
+          ctx.font = '500 12px IBM Plex Sans, sans-serif';
+          ctx.fillText(label, labelX, ly);
           ctx.restore();
         };
 
@@ -3670,7 +3764,7 @@ function buildChart(view) {
         WYCKOFF_LEVELS.lines.forEach(l => drawHLine(l.v, l.color, l.dash, l.label, left + 6, true));
         // Current price — live
         const nowVal = snap.index || WYCKOFF_LEVELS.rangeLow.v;
-        const nowCol = nowVal < WYCKOFF_LEVELS.pivot ? 'rgba(255,90,110,0.9)' : 'rgba(240,180,41,0.9)';
+        const nowCol = 'rgba(226,162,58,0.95)';
         drawHLine(nowVal, nowCol, [4,3], '▼ NOW: ' + nowVal.toLocaleString('en-IN', {maximumFractionDigits:0}), right - 110, nowVal < WYCKOFF_LEVELS.pivot ? false : true);
       }
     }] : []
@@ -6029,6 +6123,8 @@ function renderMarketSummary() {
   renderDataCheck();
   renderRangeRuler();
   renderTriggerStatus();
+  renderCloseReport();
+  if (typeof currentPage !== 'undefined' && currentPage === 'emotion-sec') renderEmotion();
 
   // Market Summary stats grid
   const msGrid = document.getElementById('ms-summary-grid');
@@ -6484,7 +6580,7 @@ function renderRRGSide(blk, syms, isSector) {
   Q_ORDER.forEach(q => {
     const list = syms.filter(s => blk.symbols[s].q === q).sort((a, b) => score(b) - score(a));
     html += `<div class="rrg-qbox" style="border-color:${Q_COLORS[q]}55">
-      <div class="rrg-qhead"><span style="color:${Q_COLORS[q]};font-weight:600;">${q.toUpperCase()}</span><span class="mv-note">${list.length} ${isSector ? 'sectors' : 'symbols'}</span></div>
+      <div class="rrg-qhead"><span style="color:${Q_COLORS[q]};font-weight:600;">${q}</span><span class="mv-note">${list.length} ${isSector ? 'sectors' : 'symbols'}</span></div>
       <div class="rrg-chips">${list.slice(0, isSector ? 20 : 24).map(s => {
         const moved = blk.symbols[s].pq !== q ? ` title="new: was ${blk.symbols[s].pq}"` : '';
         return `<span class="rrg-chip${s === RRG.sel ? ' sel' : ''}" data-s="${esc(s)}"${moved}>${esc(s)}${moved ? ' •' : ''}</span>`;
@@ -6598,6 +6694,263 @@ function renderNotesToday() {
     <b>${sig.length}</b> company quadrant crossovers today (vs their sector index) — see RRG → Signals.`;
 }
 
+// ── Today's close (home) ─────────────────────────────────────
+function triggerRows() {
+  const L = WYCKOFF_LEVELS, now = LIVE_SNAPSHOT.index;
+  const wk = (LIVE_SNAPSHOT.periods && LIVE_SNAPSHOT.periods.weekly || []).slice(-1)[0];
+  const wc = wk ? wk.close : null;
+  return {
+    wk, wc, now,
+    rows: [
+      { label: 'Weekly close below the range low 2,487 (exit)', hit: wc !== null && wc < L.rangeLow.v },
+      { label: 'Daily close below 2,487 (warning)', hit: now < L.rangeLow.v },
+      { label: 'Close in the long zone 2,487–2,560', hit: now >= L.rangeLow.v && now <= 2560 },
+      { label: 'Weekly close above the pivot 2,600', hit: wc !== null && wc > L.pivot },
+      { label: 'Weekly close above the Creek 2,772', hit: wc !== null && wc > L.creek.v },
+      { label: 'Weekly close above the range top 2,960', hit: wc !== null && wc > L.rangeTop.v },
+    ],
+  };
+}
+
+function renderCloseReport() {
+  const s = LIVE_SNAPSHOT;
+  const $ = id => document.getElementById(id);
+  if (!$('cr-index')) return;
+  const f2 = v => typeof v === 'number' ? v.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '—';
+  const pctWord = v => typeof v !== 'number' ? null : (v > 0 ? 'up ' : v < 0 ? 'down ' : 'flat ') + (v === 0 ? '' : Math.abs(v).toFixed(2) + '%');
+  const [y, m, d] = (s.trade_date || '').split('-').map(Number);
+  $('cr-date').textContent = s.trade_date
+    ? 'Close of ' + new Date(y, m - 1, d).toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
+    : 'Latest close';
+  $('cr-index').textContent = f2(s.index);
+  const ch = $('cr-change');
+  ch.className = 'cr-change ' + (typeof s.change !== 'number' || s.change === 0 ? 'flat' : s.change > 0 ? 'up' : 'down');
+  ch.textContent = typeof s.change === 'number'
+    ? (s.change > 0 ? '+' : s.change < 0 ? '−' : '') + f2(Math.abs(s.change)) + (typeof s.changePct === 'number' ? ` (${s.changePct > 0 ? '+' : s.changePct < 0 ? '−' : ''}${Math.abs(s.changePct).toFixed(2)}%)` : '')
+    : '';
+  const P = s.periods || {};
+  const w = (P.weekly || []).slice(-1)[0], mo = (P.monthly || []).slice(-1)[0];
+  const parts = [];
+  if (pctWord(s.changePct)) parts.push(`<b>${pctWord(s.changePct)}</b> on the day`);
+  if (w && pctWord(w.changePct)) parts.push(`${pctWord(w.changePct)} this week`);
+  if (mo && pctWord(mo.changePct)) parts.push(`${pctWord(mo.changePct)} this month`);
+  let sent = parts.length ? parts.join(', ') + '.' : '';
+  sent = sent.charAt(0).toUpperCase() + sent.slice(1);
+  if (typeof s.gainers === 'number' && typeof s.losers === 'number')
+    sent += ` <b>${s.gainers}</b> companies rose and <b>${s.losers}</b> fell` + (typeof s.turnover === 'number' ? ` on turnover of Rs ${(s.turnover / 1e9).toFixed(2)} billion.` : '.');
+  $('cr-sentence').innerHTML = sent || 'Waiting for the first daily update.';
+
+  // What changed since the previous session (from the verification report)
+  const V = s.verification;
+  if (V && V.date === s.trade_date && V.changes) {
+    const prev = V.changes.previous_session;
+    if (prev) {
+      const [py, pm, pd] = prev.split('-').map(Number);
+      $('cr-changes-title').textContent = 'What changed since ' + new Date(py, pm - 1, pd).toLocaleDateString('en-GB', { weekday: 'long' });
+    }
+    $('cr-changes').innerHTML = buildChangesHTML(V.changes, true) ||
+      '<div class="row">No earlier session stored yet. Changes appear from the next update.</div>';
+  }
+  // Plan status
+  const T = triggerRows();
+  $('cr-plan').innerHTML =
+    `<div class="row"><span class="k">Phase</span><span><b>Trading range, phase B</b> (2,487 to 2,960). Bias neutral.</span></div>` +
+    T.rows.map(r => `<div class="row"><span class="plan-dot${r.hit ? ' met' : ''}" aria-hidden="true"></span><span>${r.label}${r.hit ? ' <b style="color:var(--amber);">met</b>' : ''}</span></div>`).join('') +
+    (T.wk && T.wk.days < 5 ? `<div class="row" style="color:var(--text3);">Weekly checks use this week's closes so far (${T.wk.days} session${T.wk.days === 1 ? '' : 's'}).</div>` : '');
+}
+
+// ── Emotion cycle infographic ────────────────────────────────
+// Periods are month-end labels of allData; valence −3 (fear) … +3 (greed).
+// Reviewed with the Wyckoff levels (WYCKOFF_LEVELS.asOf); re-review after a range break.
+const EMO_PERIODS = [
+  { from: 'Jan 21', to: 'May 21', v: 2,  name: 'Optimism, then thrill', short: 'Optimism', when: 'Jan–May 2021',
+    story: 'Low deposit rates and a flood of new demat accounts push NEPSE up month after month.' },
+  { from: 'Jun 21', to: 'Aug 21', v: 3,  name: 'Euphoria', short: 'Euphoria', when: 'Jun–Aug 2021',
+    story: 'The all-time high of 3,198.6 on Aug 18 2021. The top week traded about 97 Arab: the crowd buys at any price while large holders sell into the strength.' },
+  { from: 'Sep 21', to: 'Dec 21', v: 1,  name: 'Complacency, then anxiety', short: 'Complacency', when: 'Sep–Dec 2021',
+    story: 'Dips are still bought, but each rally stops lower. Volume starts to dry up.' },
+  { from: 'Jan 22', to: 'Jun 22', v: -2, name: 'Denial and fear', short: 'Fear', when: 'Jan–Jun 2022',
+    story: 'Tighter liquidity and rate rises. The index keeps falling while many holders wait for a rebound that does not come.' },
+  { from: 'Jul 22', to: 'Sep 22', v: -3, name: 'Panic and capitulation', short: 'Capitulation', when: 'Jul–Sep 2022',
+    story: 'The low of 1,815 on Sep 25 2022 — 43% below the all-time high. Holders sell below cost.' },
+  { from: 'Oct 22', to: 'Jun 24', v: -2, name: 'Depression and disbelief', short: 'Depression', when: 'Oct 2022 – Jun 2024',
+    story: 'Almost two years in a 1,818–2,227 range on thin turnover. Few believe a recovery is possible.' },
+  { from: 'Jul 24', to: 'Aug 24', v: 2,  name: 'Hope turns to thrill', short: 'Thrill', when: 'Jul–Aug 2024',
+    story: '+37% in 35 days after rate cuts, ending at 3,001 on Aug 15 2024 — a record Rs 30 billion session.' },
+  { from: 'Sep 24', to: 'Jul 25', v: 1,  name: 'Belief, and a second thrill', short: 'Belief', when: 'Sep 2024 – Jul 2025',
+    story: 'A wide 2,464–2,890 range, then a return to 3,002 on Jul 29 2025 on the heaviest week of the cycle. 3,000 caps the market for the second time.' },
+  { from: 'Aug 25', to: 'Oct 25', v: -3, name: 'Panic', short: 'Panic', when: 'Aug–Oct 2025',
+    story: 'The market closes Sep 8–18. The index falls from 3,002 to 2,487 (Oct 16 2025), the low of the current range.' },
+  { from: 'Nov 25', to: 'Apr 26', v: 1,  name: 'Hope, then denial', short: 'Hope', when: 'Nov 2025 – Apr 2026',
+    story: 'A rally to 2,772, then a breakout to 2,960 on 82.5 Arab in one week — which fails and falls back into the range by mid-April.' },
+  { from: 'May 26', to: null,     v: -1, name: 'Anxiety and doubt', short: 'Anxiety', when: 'May 2026 – now',
+    story: 'Lower highs, a close below 2,600, and a retest of the 2025 low (2,513 on Aug 31) on lighter volume. Fear or denial is decided at 2,487 and 2,772.' },
+];
+const EMO_COLOR = { 3: '#F08A4B', 2: '#EFA35E', 1: '#E6C07F', '-1': '#A3C3DA', '-2': '#73A6CF', '-3': '#4F86C2' };
+const EMO_CALLOUTS = [
+  ['Aug 21', 'All-time high 3,198.6'], ['Sep 22', 'Low 1,815'], ['Aug 24', '3,001, record day'],
+  ['Jul 25', 'Double top 3,002'], ['Oct 25', 'Range low 2,487'], ['Mar 26', 'Failed breakout 2,960'],
+];
+let emoChart = null, emoSel = EMO_PERIODS.length - 1;
+
+function emoIndex(label) { return allData.labels.indexOf(label); }
+function emoRange(ph) {
+  const a = Math.max(0, emoIndex(ph.from));
+  const b = ph.to ? emoIndex(ph.to) : allData.labels.length - 1;
+  return [a, b < 0 ? allData.labels.length - 1 : b];
+}
+
+function renderEmotion() {
+  const cv = document.getElementById('emo-canvas');
+  if (!cv || typeof allData === 'undefined') return;
+  const tick = themeColor('--chart-tick'), grid = themeColor('--chart-grid'), price = themeColor('--chart-price');
+  const bandPlugin = {
+    id: 'emoBands',
+    beforeDatasetsDraw(chart) {
+      const { ctx, chartArea: a, scales: { x } } = chart;
+      const step = (x.getPixelForValue(1) - x.getPixelForValue(0)) / 2;
+      EMO_PERIODS.forEach((ph, i) => {
+        const [s, e] = emoRange(ph);
+        const x0 = Math.max(a.left, x.getPixelForValue(s) - step), x1 = Math.min(a.right, x.getPixelForValue(e) + step);
+        ctx.save();
+        ctx.globalAlpha = i === emoSel ? 0.42 : 0.16;
+        ctx.fillStyle = EMO_COLOR[ph.v];
+        ctx.fillRect(x0, a.top, x1 - x0, a.bottom - a.top);
+        ctx.restore();
+      });
+    },
+    afterDatasetsDraw(chart) {
+      const { ctx, chartArea: a, scales: { x, y } } = chart;
+      ctx.save();
+      ctx.font = '600 12px IBM Plex Sans, sans-serif';
+      const pts = EMO_CALLOUTS.map(([l, txt]) => [emoIndex(l), txt]).filter(([i]) => i >= 0);
+      pts.push([allData.labels.length - 1, 'Now ' + Math.round(allData.price[allData.price.length - 1]).toLocaleString('en-IN')]);
+      pts.forEach(([i, txt], k) => {
+        const px = x.getPixelForValue(i), py = y.getPixelForValue(allData.price[i]);
+        const up = allData.price[i] > (allData.price[i - 1] || 0);          // label away from the line
+        const ly = up ? py - 16 : py + 22;
+        ctx.fillStyle = price; ctx.strokeStyle = themeColor('--surface'); ctx.lineWidth = 3;
+        ctx.beginPath(); ctx.arc(px, py, 4.5, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+        const w = ctx.measureText(txt).width;
+        const lx = Math.min(Math.max(px - w / 2, a.left + 2), a.right - w - 2);
+        ctx.fillStyle = themeColor('--surface'); ctx.globalAlpha = 0.85; ctx.fillRect(lx - 3, ly - 12, w + 6, 16); ctx.globalAlpha = 1;
+        ctx.fillStyle = themeColor('--text'); ctx.fillText(txt, lx, ly);
+      });
+      ctx.restore();
+    }
+  };
+  if (emoChart) emoChart.destroy();
+  emoChart = new Chart(cv, {
+    type: 'line',
+    data: { labels: allData.labels, datasets: [{ data: allData.price, borderColor: price, borderWidth: 2, pointRadius: 0, tension: 0.25 }] },
+    options: {
+      responsive: true, maintainAspectRatio: false, animation: false,
+      layout: { padding: { top: 18, right: 12, left: 4 } },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: themeColor('--chart-tip-bg'), titleColor: themeColor('--chart-tip-title'), bodyColor: themeColor('--chart-tip-body'),
+          borderColor: themeColor('--border2'), borderWidth: 1,
+          callbacks: {
+            label: it => ' Close ' + it.raw.toLocaleString('en-IN'),
+            afterLabel: it => { const ph = EMO_PERIODS.find(p => { const [s, e] = emoRange(p); return it.dataIndex >= s && it.dataIndex <= e; }); return ph ? ' ' + ph.name : ''; },
+          }
+        }
+      },
+      scales: {
+        x: { grid: { display: false }, ticks: { color: tick, autoSkip: false, maxRotation: 0,
+             callback(v) { const l = this.getLabelForValue(v); return l && l.startsWith('Jan') ? '20' + l.slice(4) : ''; } } },
+        y: { grid: { color: grid }, ticks: { color: tick, callback: v => v.toLocaleString('en-IN') } },
+      },
+      onClick: (e, els, chart) => {
+        const i = chart.scales.x.getValueForPixel(e.x);
+        const k = EMO_PERIODS.findIndex(p => { const [s, en] = emoRange(p); return i >= s && i <= en; });
+        if (k >= 0) selectEmotion(k);
+      }
+    },
+    plugins: [bandPlugin]
+  });
+
+  // Ribbon
+  const rib = document.getElementById('emo-ribbon');
+  rib.innerHTML = EMO_PERIODS.map((ph, i) => {
+    const [s, e] = emoRange(ph);
+    return `<button class="emo-seg${i === emoSel ? ' on' : ''}" role="tab" aria-selected="${i === emoSel}" data-i="${i}"
+      style="flex:${e - s + 1};background:${EMO_COLOR[ph.v]};" title="${esc(ph.name)}, ${esc(ph.when)}" aria-label="${esc(ph.name)}, ${esc(ph.when)}"><span>${esc(ph.short)}</span></button>`;
+  }).join('');
+  rib.querySelectorAll('.emo-seg').forEach(b => {
+    b.onclick = () => selectEmotion(+b.dataset.i);
+    const s = b.querySelector('span');                       // name only where it fits
+    if (s && s.scrollWidth > b.clientWidth - 6) s.style.visibility = 'hidden';
+  });
+  renderEmotionDetail();
+  renderEmotionCycle();
+}
+
+function selectEmotion(i) {
+  emoSel = i;
+  if (emoChart) emoChart.draw();
+  document.querySelectorAll('#emo-ribbon .emo-seg').forEach(b => {
+    const on = +b.dataset.i === i; b.classList.toggle('on', on); b.setAttribute('aria-selected', on);
+  });
+  renderEmotionDetail();
+}
+
+function renderEmotionDetail() {
+  const ph = EMO_PERIODS[emoSel], [s, e] = emoRange(ph);
+  const a = allData.price[Math.max(0, s - 1)], b = allData.price[e];
+  const chg = (b / a - 1) * 100;
+  const f0 = v => Math.round(v).toLocaleString('en-IN');
+  document.getElementById('emo-detail').innerHTML = `
+    <h3><span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:${EMO_COLOR[ph.v]};margin-right:8px;"></span>${esc(ph.name)}</h3>
+    <div class="when">${esc(ph.when)}</div>
+    <p>${esc(ph.story)}</p>
+    <p style="margin-top:8px;color:var(--text3);">Month-end close ${f0(a)} → ${f0(b)}:
+      <b style="color:${chg >= 0 ? 'var(--green)' : 'var(--red)'};">${chg >= 0 ? '+' : '−'}${Math.abs(chg).toFixed(1)}%</b></p>`;
+}
+
+function renderEmotionCycle() {
+  // Classic cycle of market emotions: the crowd's mood over one full cycle
+  const S = [
+    ['Disbelief', 90, 196], ['Hope', 140, 160], ['Optimism', 190, 122], ['Belief', 240, 88], ['Thrill', 292, 60],
+    ['Euphoria', 348, 46], ['Complacency', 404, 62], ['Anxiety', 452, 92], ['Denial', 496, 124], ['Panic', 540, 158],
+    ['Capitulation', 590, 188], ['Depression', 650, 204],
+  ];
+  // smooth path (Catmull-Rom → cubic Bézier)
+  let d = `M${S[0][1]},${S[0][2]}`;
+  for (let i = 0; i < S.length - 1; i++) {
+    const p0 = S[i - 1] || S[i], p1 = S[i], p2 = S[i + 1], p3 = S[i + 2] || p2;
+    const c1x = p1[1] + (p2[1] - p0[1]) / 6, c1y = p1[2] + (p2[2] - p0[2]) / 6;
+    const c2x = p2[1] - (p3[1] - p1[1]) / 6, c2y = p2[2] - (p3[2] - p1[2]) / 6;
+    d += ` C${c1x.toFixed(1)},${c1y.toFixed(1)} ${c2x.toFixed(1)},${c2y.toFixed(1)} ${p2[1]},${p2[2]}`;
+  }
+  const at = n => S.find(s => s[0] === n);
+  const txt = themeColor('--text'), txt3 = themeColor('--text3'), amber = themeColor('--amber');
+  const labels = S.map(([n, x, y], i) => {
+    if (n === 'Anxiety') return `<circle cx="${x}" cy="${y}" r="3" fill="${txt3}"/>`;   // named by the marker
+    const rising = i <= 5;
+    const lx = rising ? x - 6 : x + 8, ly = rising ? y - 9 : y + 4, anchor = rising ? 'end' : 'start';
+    return `<circle cx="${x}" cy="${y}" r="3" fill="${txt3}"/><text x="${lx}" y="${ly}" text-anchor="${anchor}" font-size="16" fill="${txt3}">${n}</text>`;
+  }).join('');
+  const [ax, ay] = [at('Anxiety')[1], at('Anxiety')[2]];
+  const [dx, dy] = [at('Denial')[1], at('Denial')[2]];
+  const [hx, hy] = [at('Hope')[1], at('Hope')[2]];
+  document.getElementById('emo-cycle').innerHTML = `
+  <svg viewBox="0 0 800 260" role="img" aria-label="Cycle of market emotions; NEPSE is at anxiety">
+    <defs><linearGradient id="emoGrad" x1="0" y1="30" x2="0" y2="205" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="${EMO_COLOR[3]}"/><stop offset=".5" stop-color="${EMO_COLOR[1]}"/><stop offset="1" stop-color="${EMO_COLOR[-3]}"/>
+    </linearGradient></defs>
+    <path d="${d}" fill="none" stroke="url(#emoGrad)" stroke-width="5" stroke-linecap="round"/>
+    ${labels}
+    <circle cx="${dx}" cy="${dy}" r="8" fill="none" stroke="${txt3}" stroke-dasharray="3 3"/>
+    <text x="${dx - 14}" y="${dy + 26}" text-anchor="end" font-size="15" fill="${txt3}">If 2,487 breaks</text>
+    <circle cx="${hx}" cy="${hy}" r="8" fill="none" stroke="${txt3}" stroke-dasharray="3 3"/>
+    <text x="${hx + 16}" y="${hy + 30}" font-size="15" fill="${txt3}">If 2,772 is reclaimed: a new cycle</text>
+    <circle cx="${ax}" cy="${ay}" r="10" fill="${amber}" stroke="${themeColor('--surface')}" stroke-width="3"/>
+    <text x="${ax + 18}" y="${ay + 5}" font-size="18" font-weight="600" fill="${txt}">You are here: anxiety</text>
+  </svg>`;
+}
+
 // ── Daily data check (verification vs previous session) ─────
 function renderDataCheck() {
   const card = document.getElementById('data-check');
@@ -6612,7 +6965,7 @@ function renderDataCheck() {
   pill.textContent = label[V.status] || V.status;
   const n = s => V.checks.filter(c => c.status === s).length;
   const C = V.changes || {};
-  const moves = C.rrg_moves || [];
+  const moves = C.rrg_moves || [];   // eslint-disable-line no-unused-vars
   document.getElementById('dc-summary').textContent =
     `${isoToLabel(V.date)} vs ${C.previous_session ? isoToLabel(C.previous_session) : '—'} · ${n('ok')}/${V.checks.length} checks passed` +
     (n('warn') ? ` · ${n('warn')} warning(s)` : '') + (n('error') ? ` · ${n('error')} error(s)` : '') +
@@ -6626,9 +6979,34 @@ function renderDataCheck() {
       ${items ? `<div class="dc-items">${items}${c.items.length > 8 ? ' …' : ''}</div>` : ''}</div></div>`;
   }).join('');
 
+  document.getElementById('dc-changes').innerHTML = buildChangesHTML(C) || '<div class="dt">No earlier session stored yet — changes appear from the next update.</div>';
+}
+
+function buildChangesHTML(C, plain) {
   const f2 = v => typeof v === 'number' ? v.toLocaleString('en-IN', { maximumFractionDigits: 2 }) : '—';
   const sg = v => typeof v === 'number' ? (v > 0 ? '+' : '') + v.toFixed(2) : '—';
   const col = v => typeof v !== 'number' || v === 0 ? 'var(--text2)' : v > 0 ? 'var(--green)' : 'var(--red)';
+  const moves = C.rrg_moves || [];
+  if (plain) {
+    // Home page: plain rows, words first
+    let r = '';
+    if (C.index) r += `<div class="row"><span class="k">NEPSE</span><span>${f2(C.index.prev)} to <b>${f2(C.index.now)}</b> <span style="color:${col(C.index.change)}">${sg(C.index.change)} (${sg(C.index.changePct)}%)</span></span></div>`;
+    if (C.turnover && C.turnover.prev && C.turnover.now) {
+      const d = (C.turnover.now / C.turnover.prev - 1) * 100;
+      r += `<div class="row"><span class="k">Turnover</span><span>Rs ${(C.turnover.prev / 1e9).toFixed(2)} to <b>${(C.turnover.now / 1e9).toFixed(2)} billion</b> (${d > 0 ? '+' : ''}${d.toFixed(0)}%)</span></div>`;
+    }
+    if (C.sectors && C.sectors.length) {
+      const b = C.sectors[0], w = C.sectors[C.sectors.length - 1];
+      r += `<div class="row"><span class="k">Strongest sector</span><span><b>${esc(b.sector)}</b> <span style="color:${col(b.changePct)}">${sg(b.changePct)}%</span></span></div>`;
+      r += `<div class="row"><span class="k">Weakest sector</span><span><b>${esc(w.sector)}</b> <span style="color:${col(w.changePct)}">${sg(w.changePct)}%</span></span></div>`;
+    }
+    const sec = moves.filter(m => m.kind === 'sector');
+    if (sec.length) r += `<div class="row"><span class="k">Sector rotation</span><span>${sec.map(m => `<b>${esc(m.name || m.sym)}</b> ${esc(m.from)} → ${esc(m.to)}`).join('; ')}</span></div>`;
+    const stk = moves.filter(m => m.kind === 'stock');
+    if (stk.length) r += `<div class="row"><span class="k">Companies</span><span>${stk.length} changed RRG quadrant, ${stk.filter(m => m.to === 'Leading').length} into leading. <a href="#/rrg-sec" onclick="navTo('rrg-sec');return false;">See the RRG</a></span></div>`;
+    if (C.rrg_note) r += `<div class="row" style="color:var(--text3);">${esc(C.rrg_note)}</div>`;
+    return r;
+  }
   let h = '';
   if (C.index) h += `<div class="dc-row"><span class="ic">📈</span><div><div class="nm">NEPSE ${f2(C.index.prev)} → ${f2(C.index.now)}
       <span style="color:${col(C.index.change)}">${sg(C.index.change)} (${sg(C.index.changePct)}%)</span></div></div></div>`;
@@ -6652,7 +7030,7 @@ function renderDataCheck() {
           `<span class="rrg-chip" title="${esc(m.from)} → ${esc(m.to)}${m.kind === 'sector' ? ' (sector index)' : ''}" onclick="${m.kind === 'stock' ? `rrgOpenStock('${esc(m.sym)}');navTo('rrg-sec')` : ''}"
              style="${m.kind === 'sector' ? 'font-weight:600;' : ''}">${esc(m.sym || m.name)}</span>`).join('')}</div></div></div>`).join('');
   }
-  document.getElementById('dc-changes').innerHTML = h || '<div class="dt">No earlier session stored yet — changes appear from the next update.</div>';
+  return h;
 }
 
 // ── Weekly / Monthly market summary ──────────────────────────
@@ -6742,28 +7120,28 @@ function startNPTClock() {
     if (!clk) return;
     const timeStr = npt.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:true});
     if (!st.isTradingDay) {
-      clk.textContent = timeStr + ' NPT — Weekend';
+      clk.textContent = timeStr + ' NPT · weekend, market closed';
       clk.style.color = 'var(--text3)';
       clk.title = 'NEPSE closed Sat–Sun. Showing last Friday\'s close.';
     } else if (st.isMarketOpen) {
-      clk.textContent = timeStr + ' NPT — 🟢 Market OPEN (11AM–3PM)';
-      clk.style.color = 'var(--green)';
+      clk.textContent = timeStr + ' NPT · market open until 3 PM';
+      clk.style.color = 'var(--text2)';
       clk.title = 'Market is open. Showing previous day\'s closing price.';
     } else if (st.isDataAvailable && isStale()) {
-      clk.textContent = timeStr + ' NPT — ⏳ Awaiting today\'s close';
+      clk.textContent = timeStr + ' NPT · waiting for today’s close';
       clk.style.color = 'var(--amber)';
       clk.title = 'Market closed. The daily update runs 4:00 PM NPT (retry 4:45 PM); on a public holiday the last close stays.';
     } else if (st.isDataAvailable) {
-      clk.textContent = timeStr + ' NPT — ✅ Data available';
-      clk.style.color = 'var(--green)';
+      clk.textContent = timeStr + ' NPT · today’s close is in';
+      clk.style.color = 'var(--text2)';
       clk.title = 'Market closed. Today\'s final data is available.';
     } else if (st.isPreMarket) {
-      clk.textContent = timeStr + ' NPT — Pre-market';
+      clk.textContent = timeStr + ' NPT · opens at 11 AM';
       clk.style.color = 'var(--amber)';
       clk.title = 'Market opens 11:00 AM NPT. Showing previous day\'s close.';
     } else {
       // 3:00–3:45 PM — closed but data not out yet
-      clk.textContent = timeStr + ' NPT — ⏳ Awaiting close data';
+      clk.textContent = timeStr + ' NPT · waiting for today’s close';
       clk.style.color = 'var(--amber)';
       clk.title = 'Market closed at 3:00 PM. Data available on nepalstock.com after ~3:45 PM NPT.';
     }
@@ -7039,6 +7417,7 @@ function ptSwitchDate(date) {
     }));
   }
   ptCurrentPage = 1;
+  ptSectorOptions();
   ptFilter();
   ptUpdateSubtitle();
 }
@@ -7048,10 +7427,19 @@ function ptUpdateSubtitle() {
   if (!el) return;
   const dObj = new Date(ptActiveDate + 'T00:00:00');   // local date, not UTC midnight
   const lbl  = dObj.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric', year:'numeric' });
-  el.innerHTML = 'Data: ' + lbl + ' · Source: <a href="https://www.sharesansar.com/today-share-price" target="_blank" style="color:var(--green);">sharesansar.com/today-share-price ↗</a>';
+  el.innerHTML = 'Data: ' + lbl + ' · Source: <a href="https://www.sharesansar.com/today-share-price" target="_blank" style="color:var(--accent);">sharesansar.com</a>';
 }
 
 // ── Filtering ────────────────────────────────────────────────
+function ptSectorOptions() {
+  const sel = document.getElementById('pt-sector-filter');
+  if (!sel) return;
+  const cur = sel.value;
+  const secs = [...new Set(ptAllData.map(r => r.sector).filter(Boolean))].sort();
+  sel.innerHTML = '<option value="">All sectors</option>' + secs.map(s => `<option>${esc(s)}</option>`).join('');
+  if (secs.includes(cur)) sel.value = cur;
+}
+
 function ptFilter() {
   const q      = (document.getElementById('pt-search')?.value || '').toLowerCase().trim();
   const sec    = (document.getElementById('pt-sector-filter')?.value || '');
@@ -7137,23 +7525,22 @@ function ptRender() {
     return `<tr class="pt-row">
       <td class="pt-td">${start + idx + 1}</td>
       <td class="pt-td">
-        <a href="${chkUrl}" target="_blank" class="pt-sym-link" title="${r.name} — Chukul">${r.symbol}</a>
-        <div style="font-size:10px;color:var(--text3);margin-top:1px;">${r.name.length > 22 ? r.name.slice(0,22)+'…' : r.name}</div>
-        <div style="font-size:9px;color:var(--text3);">${r.sector}</div>
+        <a href="${chkUrl}" target="_blank" class="pt-sym-link" title="${r.name} · ${r.sector}">${r.symbol}</a>
+        <span class="pt-name" title="${r.name}">${r.name.length > 26 ? r.name.slice(0,26)+'…' : r.name}</span>
       </td>
       <td class="pt-td" style="font-weight:500;">${f2(r.ltp)}</td>
       <td class="pt-td ${cls}">${sgn}${f2(r.change)}<span class="pt-gain-bar" style="width:${barW}px;background:${barCol};"></span></td>
       <td class="pt-td ${cls}">${typeof r.pct === 'number' ? sgn + r.pct.toFixed(2) + '%' : '—'}</td>
       <td class="pt-td">${f2(r.open)}</td>
-      <td class="pt-td" style="color:var(--green);">${f2(r.high)}</td>
-      <td class="pt-td" style="color:var(--red);">${f2(r.low)}</td>
+      <td class="pt-td">${f2(r.high)}</td>
+      <td class="pt-td">${f2(r.low)}</td>
       <td class="pt-td">${f2(r.close)}</td>
       <td class="pt-td" style="color:var(--text3);">${f2(r.vwap)}</td>
       <td class="pt-td">${fi(r.vol)}</td>
       <td class="pt-td" style="color:var(--text3);">${f2(r.prev)}</td>
       <td class="pt-td">${ft(r.turnover)}</td>
-      <td class="pt-td" style="color:var(--green);font-size:11px;">${f2(r.w52h)}</td>
-      <td class="pt-td" style="color:var(--red);font-size:11px;">${f2(r.w52l)}</td>
+      <td class="pt-td" style="color:var(--text2);">${f2(r.w52h)}</td>
+      <td class="pt-td" style="color:var(--text2);">${f2(r.w52l)}</td>
     </tr>`;
   }).join('');
 }
@@ -7200,7 +7587,9 @@ function initPriceTable() {
 
 function setBannerState(state, msg, sub, src) {
   const icons  = { loading:'⏳', success:'✅', fallback:'📋', error:'⚠️' };
-  const colors = { loading:'var(--amber)', success:'var(--green)', fallback:'var(--text3)', error:'var(--red)' };
+  // status colour: neutral when fine, amber when it needs attention (never price colours)
+  const colors = { loading:'var(--text3)', success:'var(--text2)', fallback:'var(--amber)', error:'var(--amber)' };
+  msg = String(msg || '').replace(/^[^\p{L}\p{N}]+/u, '');       // drop leading emoji
   const el_ico = document.getElementById('live-icon');
   const el_st  = document.getElementById('live-status');
   const el_ts  = document.getElementById('live-timestamp');
