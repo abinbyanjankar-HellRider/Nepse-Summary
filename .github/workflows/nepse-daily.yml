@@ -58,7 +58,10 @@ jobs:
 
   deploy:
     needs: update-data
-    if: ${{ !cancelled() && needs.update-data.result != 'failure' }}
+    # GitHub Pages: free for public repos (paid plans for private). Set the repository
+    # variable PAGES_ENABLED=true (Settings → Secrets and variables → Actions →
+    # Variables) once Pages is switched on; until then this job is skipped.
+    if: ${{ !cancelled() && needs.update-data.result != 'failure' && vars.PAGES_ENABLED == 'true' }}
     runs-on: ubuntu-latest
     environment:
       name: github-pages

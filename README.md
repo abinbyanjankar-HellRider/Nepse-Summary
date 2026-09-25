@@ -75,6 +75,23 @@ data/history/runs.csv                   every run and the result of each step
 data/reference/companies.csv            company → sector map (weekly refresh)
 ```
 
+## Changing the look
+
+Everyone can pick a look in the sidebar: **Appearance** → theme (dark/light), font style, accent colour (saved per browser).
+
+To change or add options, edit one object near the top of `index.html`:
+
+```js
+const APPEARANCE = {
+  defaults: { theme: 'dark', font: 'signal', accent: 'indigo' },
+  fonts:   { signal: { label, note, display, text, href }, … },   // add a Google Fonts preset here
+  accents: { indigo: { label, dark, light }, … },                    // UI + level colour per theme
+};
+```
+
+- **Fonts:** `display` is used for headlines and the big close figure, and `text` for everything else, with tabular numbers. `href` is the Google Fonts `family=…` part of the URL. The charts pick up the new font automatically.
+- **Colours:** the tokens live in the `DESIGN SYSTEM v2` block of the stylesheet. Keep the rule that **green and red mean price up and down only**. Accents are for interface elements and level lines; amber is for things that need attention.
+
 ## Repository layout
 
 ```

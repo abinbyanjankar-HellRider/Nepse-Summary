@@ -5,11 +5,65 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Technical Analysis</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
-  // Theme: saved choice, else dark. Set before first paint to avoid a flash.
-  try { if (localStorage.getItem('nepse_theme') === 'light') document.documentElement.dataset.theme = 'light'; } catch (e) {}
+  // ════════════════════════════════════════════════════════════════
+  // APPEARANCE — the one place to change the look.
+  //   fonts:   add a preset = one entry (Google Fonts URL + the two families)
+  //   accents: UI + level colour per theme (never green/red: those mean up/down)
+  //   Colours, spacing and components use the CSS tokens in "DESIGN SYSTEM v2".
+  // Saved per browser (localStorage 'nepse_appearance'); applied before first paint.
+  // ════════════════════════════════════════════════════════════════
+  const APPEARANCE = {
+    defaults: { theme: 'dark', font: 'signal', accent: 'indigo' },
+    fonts: {
+      signal:    { label: 'Signal',    note: 'Bricolage Grotesque + Plex Sans',
+                   display: "'Bricolage Grotesque', 'IBM Plex Sans', sans-serif", text: "'IBM Plex Sans', system-ui, sans-serif",
+                   href: 'family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400' },
+      classic:   { label: 'Classic',   note: 'IBM Plex Sans Condensed + Plex Sans',
+                   display: "'IBM Plex Sans Condensed', 'IBM Plex Sans', sans-serif", text: "'IBM Plex Sans', system-ui, sans-serif",
+                   href: 'family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400' },
+      editorial: { label: 'Editorial', note: 'Fraunces + Source Sans 3',
+                   display: "'Fraunces', Georgia, serif", text: "'Source Sans 3', system-ui, sans-serif",
+                   href: 'family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,800&family=Source+Sans+3:wght@400;500;600;700' },
+      modern:    { label: 'Modern',    note: 'Outfit + Manrope',
+                   display: "'Outfit', system-ui, sans-serif", text: "'Manrope', system-ui, sans-serif",
+                   href: 'family=Outfit:wght@500;600;700;800&family=Manrope:wght@400;500;600;700' },
+    },
+    accents: {
+      indigo: { label: 'Indigo', dark: '#8C9CF5', light: '#4A55C9' },
+      teal:   { label: 'Teal',   dark: '#45C4C0', light: '#0B7A78' },
+      violet: { label: 'Violet', dark: '#B79CF7', light: '#6B45C8' },
+    },
+  };
+  function loadAppearance() {
+    let s = {};
+    try { s = JSON.parse(localStorage.getItem('nepse_appearance') || '{}') || {}; } catch (e) {}
+    try { if (!s.theme && localStorage.getItem('nepse_theme') === 'light') s.theme = 'light'; } catch (e) {}   // older setting
+    const d = APPEARANCE.defaults;
+    return { theme: s.theme === 'light' ? 'light' : 'dark',
+             font: APPEARANCE.fonts[s.font] ? s.font : d.font,
+             accent: APPEARANCE.accents[s.accent] ? s.accent : d.accent };
+  }
+  function hexA(hex, a) { const n = parseInt(hex.slice(1), 16); return `rgba(${n >> 16},${(n >> 8) & 255},${n & 255},${a})`; }
+  function applyAppearance(s) {
+    const root = document.documentElement, f = APPEARANCE.fonts[s.font], ac = APPEARANCE.accents[s.accent][s.theme];
+    if (s.theme === 'light') root.dataset.theme = 'light'; else delete root.dataset.theme;
+    root.dataset.font = s.font;
+    const id = 'font-' + s.font;
+    if (!document.getElementById(id)) {
+      const l = document.createElement('link');
+      l.id = id; l.rel = 'stylesheet'; l.href = 'https://fonts.googleapis.com/css2?' + f.href + '&display=swap';
+      document.head.appendChild(l);
+    }
+    const set = (k, v) => root.style.setProperty(k, v);
+    set('--display', f.display); set('--sans', f.text); set('--mono', f.text);
+    set('--accent', ac); set('--blue', ac); set('--level', ac);
+    set('--accent-dim', hexA(ac, 0.14)); set('--accent-border', hexA(ac, 0.45)); set('--blue-dim', hexA(ac, 0.14));
+    window.APPEARANCE_STATE = s;
+  }
+  applyAppearance(loadAppearance());
 </script>
 <style>
   :root {
@@ -1413,6 +1467,34 @@
   .mv-card, .chart-section, .dc-card, .summary-section, .level-panel, .scenario-card, .money-card, .position-calc,
   #market-summary-sec, #macro-sec, #links-sec, #price-table-sec > div { border-radius: 10px !important; }
 
+  /* ── Appearance panel ──────────────────────────────────────── */
+  .ap-wrap { position: relative; margin-top: 10px; }
+  .ap-btn { width: 100%; padding: 7px 10px; border-radius: 7px; cursor: pointer; background: var(--surface); color: var(--text2);
+            border: 1px solid var(--border2); font: 500 13px var(--sans); text-align: left; display: flex; justify-content: space-between; }
+  .ap-btn:hover { color: var(--text); border-color: var(--accent-border); }
+  .ap-panel { position: fixed; left: 212px; bottom: 16px; width: 320px; max-height: calc(100vh - 32px); overflow-y: auto; z-index: 400; background: var(--surface);
+              border: 1px solid var(--border2); border-radius: 12px; padding: 14px; box-shadow: 0 12px 32px rgba(0,0,0,0.35); display: none; }
+  .ap-panel.open { display: block; }
+  .ap-panel h3 { font: 600 13px var(--sans); color: var(--text3); margin: 10px 0 6px; }
+  .ap-panel h3:first-child { margin-top: 0; }
+  .ap-row { display: flex; gap: 6px; flex-wrap: wrap; }
+  .ap-opt { padding: 6px 10px; border-radius: 7px; cursor: pointer; background: var(--bg3); border: 1px solid var(--border);
+            color: var(--text2); font: 500 13px var(--sans); }
+  .ap-opt[aria-pressed="true"] { border-color: var(--accent); color: var(--text); background: var(--accent-dim); }
+  .ap-font { flex: 1 1 calc(50% - 6px); text-align: left; }
+  .ap-font b { display: block; font-size: 18px; font-weight: 700; color: var(--text); line-height: 1.2; }
+  .ap-font small { color: var(--text3); font-size: 11.5px; }
+  .ap-swatch { width: 14px; height: 14px; border-radius: 50%; display: inline-block; vertical-align: -2px; margin-right: 6px; }
+  @media (max-width: 900px) { .ap-panel { left: 12px; right: 12px; bottom: 12px; width: auto; } }
+
+  /* Display face where the eye should land first */
+  .cr-index, .cr-change, .cr-name, .sidebar-price .sp-index, .sidebar-logo .logo, .today-panel h2, .emo-card h2,
+  .mv-title, .chart-title, .summary-title, .divider-label, .event-name, .scenario-label, .ps-title,
+  .emo-detail h3, .bias-badge, .mc-val { font-family: var(--display) !important; }
+  .cr-index { font-weight: 800; letter-spacing: -0.02em; }
+  .today-panel h2, .mv-title, .chart-title { font-weight: 700; font-size: 19px; }
+  :root[data-font="editorial"] .cr-index { font-weight: 700; letter-spacing: -0.01em; }
+
   /* ── Today's close (home) ───────────────────────────────────── */
   .close-report { padding: 8px 0 18px; }
   .cr-date { color: var(--text3); font-size: 14px; }
@@ -1876,7 +1958,10 @@
   <div class="sidebar-footer">
     <div id="ms-npt-clock" style="color:var(--text3);">—</div>
     <div style="margin-top:4px;color:var(--text3);">Trading hours: Mon–Fri, 11 AM–3 PM NPT</div>
-    <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="Switch white / black background"></button>
+    <div class="ap-wrap">
+      <button class="ap-btn" id="ap-btn" aria-expanded="false" aria-controls="ap-panel" onclick="toggleAppearancePanel()"><span>Appearance</span><span id="ap-summary"></span></button>
+      <div class="ap-panel" id="ap-panel" role="dialog" aria-label="Appearance"></div>
+    </div>
   </div>
 </aside>
 
@@ -3392,22 +3477,58 @@ Sources: GitHub projects [NepseUnofficialApi](https://github.com/basic-bgnr/Neps
 </main>
 
 <script>
-// ---- THEME (white / black) ----
+// ---- APPEARANCE (theme, font preset, accent) — presets live in APPEARANCE in <head> ----
 function isLightTheme() { return document.documentElement.dataset.theme === 'light'; }
-function updateThemeButton() {
-  const b = document.getElementById('theme-toggle');
-  if (b) b.textContent = isLightTheme() ? '☾  Black background' : '☀  White background';
-}
-function toggleTheme() {
-  const light = !isLightTheme();
-  if (light) document.documentElement.dataset.theme = 'light';
-  else delete document.documentElement.dataset.theme;
-  try { localStorage.setItem('nepse_theme', light ? 'light' : 'dark'); } catch (e) {}
+function cssVar(n) { return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }
+function uiFont(weight, size) { return `${weight} ${size}px ${cssVar('--sans')}`; }
+
+function setAppearance(change) {
+  const s = { ...window.APPEARANCE_STATE, ...change };
+  applyAppearance(s);
+  try { localStorage.setItem('nepse_appearance', JSON.stringify(s)); } catch (e) {}
   updateThemeButton();
+  renderAppearancePanel();
+  // canvases don't follow CSS: redraw once the new fonts are ready
+  (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(redrawAll);
+}
+function redrawAll() {
+  if (window.Chart) Chart.defaults.font.family = cssVar('--sans');
   if (typeof chartInstance !== 'undefined' && chartInstance) buildChart(currentView);
   if (typeof VIEWS !== 'undefined' && VIEWS) { renderHeatmap(); renderRRG(); }
-  if (currentPage === 'emotion-sec') renderEmotion();
+  if (typeof currentPage !== 'undefined' && currentPage === 'emotion-sec') renderEmotion();
 }
+function toggleTheme() { setAppearance({ theme: isLightTheme() ? 'dark' : 'light' }); }   // kept for existing callers
+function updateThemeButton() {
+  const s = window.APPEARANCE_STATE || {}, el = document.getElementById('ap-summary');
+  if (el) el.textContent = `${s.theme === 'light' ? 'Light' : 'Dark'} · ${APPEARANCE.fonts[s.font].label}`;
+}
+function toggleAppearancePanel(force) {
+  const p = document.getElementById('ap-panel'), b = document.getElementById('ap-btn');
+  const open = force !== undefined ? force : !p.classList.contains('open');
+  p.classList.toggle('open', open); b.setAttribute('aria-expanded', open);
+  if (open) renderAppearancePanel();
+}
+function renderAppearancePanel() {
+  const p = document.getElementById('ap-panel');
+  if (!p) return;
+  const s = window.APPEARANCE_STATE;
+  const opt = (key, val, html, cls = '') =>
+    `<button class="ap-opt ${cls}" aria-pressed="${s[key] === val}" onclick="setAppearance({${key}:'${val}'})">${html}</button>`;
+  p.innerHTML =
+    `<h3>Theme</h3><div class="ap-row">${opt('theme', 'dark', 'Dark')}${opt('theme', 'light', 'Light')}</div>` +
+    `<h3>Font style</h3><div class="ap-row">${Object.entries(APPEARANCE.fonts).map(([k, f]) =>
+      opt('font', k, `<b style="font-family:${f.display.replace(/"/g, '&quot;')}">${f.label} 2,629</b><small>${f.note}</small>`, 'ap-font')).join('')}</div>` +
+    `<h3>Accent colour</h3><div class="ap-row">${Object.entries(APPEARANCE.accents).map(([k, a]) =>
+      opt('accent', k, `<span class="ap-swatch" style="background:${a[s.theme]}"></span>${a.label}`)).join('')}</div>`;
+  // preview each font preset in its own face
+  Object.keys(APPEARANCE.fonts).forEach(k => { if (!document.getElementById('font-' + k)) {
+    const l = document.createElement('link'); l.id = 'font-' + k; l.rel = 'stylesheet';
+    l.href = 'https://fonts.googleapis.com/css2?' + APPEARANCE.fonts[k].href + '&display=swap'; document.head.appendChild(l); } });
+}
+document.addEventListener('click', e => {
+  if (!e.target.closest('.ap-wrap')) { const p = document.getElementById('ap-panel'); if (p && p.classList.contains('open')) toggleAppearancePanel(false); }
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') toggleAppearancePanel(false); });
 
 // ---- SCROLL NAV ----
 // ---- PAGES: show only the menu section that was clicked ----
@@ -3487,12 +3608,12 @@ const WYCKOFF_LEVELS = {
   rangeLow:  { v: 2487.17, date: '2025-10-16' },
   test:      { v: 2513.42, date: '2026-08-31' },
   lines: [
-    { v: 2487.17, color: 'rgba(140,156,245,0.85)', dash: [6,4], label: 'Range low 2,487' },
-    { v: 2600,    color: 'rgba(140,156,245,0.55)', dash: [2,5], label: 'Pivot 2,600' },
-    { v: 2772.17, color: 'rgba(140,156,245,0.85)', dash: [6,4], label: 'Creek 2,772' },
-    { v: 2960.40, color: 'rgba(140,156,245,0.7)', dash: [3,5], label: 'Range top 2,960' },
-    { v: 3002.07, color: 'rgba(140,156,245,0.5)', dash: [3,6], label: 'Double top 3,002' },
-    { v: 3198.60, color: 'rgba(140,156,245,0.4)', dash: [2,7], label: 'All-time high 3,198.6' },
+    { v: 2487.17, alpha: 0.85, dash: [6,4], label: 'Range low 2,487' },
+    { v: 2600,    alpha: 0.55, dash: [2,5], label: 'Pivot 2,600' },
+    { v: 2772.17, alpha: 0.85, dash: [6,4], label: 'Creek 2,772' },
+    { v: 2960.40, alpha: 0.7, dash: [3,5], label: 'Range top 2,960' },
+    { v: 3002.07, alpha: 0.5, dash: [3,6], label: 'Double top 3,002' },
+    { v: 3198.60, alpha: 0.4, dash: [2,7], label: 'All-time high 3,198.6' },
   ],
 };
 
@@ -3660,7 +3781,7 @@ function buildChart(view) {
     options: {
       responsive: true,
       maintainAspectRatio: false,
-      layout: { padding: { left: 6, right: 10, top: 8 } },
+      layout: { padding: { left: 6, right: 22, top: 8 } },
       interaction: { mode: 'index', intersect: false },
       plugins: {
         legend: { display: false },
@@ -3671,8 +3792,8 @@ function buildChart(view) {
           titleColor: C.tipTitle,
           bodyColor: C.tipBody,
           padding: 12,
-          titleFont: { family: 'DM Mono', size: 11 },
-          bodyFont: { family: 'DM Mono', size: 12 },
+          titleFont: { family: cssVar('--sans'), size: 12 },
+          bodyFont: { family: cssVar('--sans'), size: 12.5 },
           callbacks: {
             title: (items) => items[0].label,
             label: (item) => {
@@ -3687,7 +3808,7 @@ function buildChart(view) {
           grid: { color: C.grid, drawBorder: false },
           ticks: {
             color: C.tick,
-            font: { family: 'DM Mono', size: 10 },
+            font: { family: cssVar('--sans'), size: 11.5 },
             maxRotation: 45,
             autoSkip: false,   // we control display manually via callback
             callback: function(val, index) {
@@ -3707,7 +3828,7 @@ function buildChart(view) {
           grid: { color: C.grid, drawBorder: false },
           ticks: {
             color: C.tick,
-            font: { family: 'DM Mono', size: 10 },
+            font: { family: cssVar('--sans'), size: 11.5 },
             callback: (v) => v.toLocaleString()
           },
           border: { display: false },
@@ -3719,8 +3840,8 @@ function buildChart(view) {
           grid: { display: false },
           ticks: {
             color: C.blue,
-            font: { family: 'DM Mono', size: 10 },
-            callback: (v) => v.toFixed(1) + 'B'
+            font: { family: cssVar('--sans'), size: 11.5 },
+            callback: (v) => Math.round(v) + ' B'
           },
           border: { display: false },
           max: Math.max(...vol) * 5  // push volume bars to bottom 20% of chart
@@ -3739,7 +3860,7 @@ function buildChart(view) {
         const drawHLine = (val, color, dash, label, labelX, above) => {
           const y = yScale.getPixelForValue(val);
           if (y < chart.chartArea.top || y > chart.chartArea.bottom) return;
-          ctx.save(); ctx.font = '500 12px IBM Plex Sans, sans-serif';
+          ctx.save(); ctx.font = uiFont(500, 12);
           const w = ctx.measureText(label).width + 8; ctx.restore();
           let ly = above ? y - 5 : y + 14;
           if (ly - 12 < chart.chartArea.top) ly = y + 14;              // too close to the top: below the line
@@ -3755,13 +3876,14 @@ function buildChart(view) {
           ctx.stroke();
           ctx.setLineDash([]);
           ctx.fillStyle = color.replace(/[\d.]+\)$/, '1)');
-          ctx.font = '500 12px IBM Plex Sans, sans-serif';
+          ctx.font = uiFont(500, 12);
           ctx.fillText(label, labelX, ly);
           ctx.restore();
         };
 
         // Levels come from WYCKOFF_LEVELS (one place to update)
-        WYCKOFF_LEVELS.lines.forEach(l => drawHLine(l.v, l.color, l.dash, l.label, left + 6, true));
+        const lvl = cssVar('--level');
+        WYCKOFF_LEVELS.lines.forEach(l => drawHLine(l.v, hexA(lvl, l.alpha), l.dash, l.label, left + 6, true));
         // Current price — live
         const nowVal = snap.index || WYCKOFF_LEVELS.rangeLow.v;
         const nowCol = 'rgba(226,162,58,0.95)';
@@ -5037,7 +5159,7 @@ function drawShape(ctx, type, start, end, color, preview) {
     ctx.lineTo(ctx.canvas.width, start.y);
     ctx.stroke();
     ctx.setLineDash([]);
-    ctx.font = '11px DM Mono, monospace';
+    ctx.font = uiFont(500, 12);
     ctx.fillText(Math.round(start.y) + ' (H)', 6, start.y - 4);
   } else if (type === 'rect') {
     ctx.strokeRect(start.x, start.y, end.x - start.x, end.y - start.y);
@@ -5073,7 +5195,7 @@ function redrawAnnotations() {
     annCtx.lineWidth = 2;
     annCtx.setLineDash([]);
     annCtx.lineCap = 'round';
-    annCtx.font = 'bold 12px DM Mono, monospace';
+    annCtx.font = uiFont(700, 13);
     if (ann.type === 'stamp' || ann.type === 'text') {
       annCtx.fillStyle = ann.color;
       const bw = annCtx.measureText(ann.text).width + 10;
@@ -6468,7 +6590,7 @@ function rrgQuadrantPlugin() {
       fill(a.left, a.top, cx, cy, Q_COLORS.Improving);
       ctx.strokeStyle = themeColor('--text3'); ctx.lineWidth = 1;
       ctx.beginPath(); ctx.moveTo(cx, a.top); ctx.lineTo(cx, a.bottom); ctx.moveTo(a.left, cy); ctx.lineTo(a.right, cy); ctx.stroke();
-      ctx.font = '600 11px DM Mono, monospace';
+      ctx.font = uiFont(600, 12);
       const lbl = (t, px, py, al, c) => { ctx.fillStyle = c; ctx.textAlign = al; ctx.fillText(t, px, py); };
       lbl('LEADING',   a.right - 8, a.top + 16,    'right', Q_COLORS.Leading);
       lbl('WEAKENING', a.right - 8, a.bottom - 8,  'right', Q_COLORS.Weakening);
@@ -6479,7 +6601,7 @@ function rrgQuadrantPlugin() {
     afterDatasetsDraw(chart) {
       const { ctx } = chart;
       ctx.save();
-      ctx.font = '600 10.5px DM Mono, monospace';
+      ctx.font = uiFont(600, 12);
       ctx.fillStyle = themeColor('--text');
       chart.data.datasets.forEach((ds, i) => {
         if (!ds._label || chart.getDatasetMeta(i).hidden) return;
@@ -6822,7 +6944,7 @@ function renderEmotion() {
     afterDatasetsDraw(chart) {
       const { ctx, chartArea: a, scales: { x, y } } = chart;
       ctx.save();
-      ctx.font = '600 12px IBM Plex Sans, sans-serif';
+      ctx.font = uiFont(600, 12);
       const pts = EMO_CALLOUTS.map(([l, txt]) => [emoIndex(l), txt]).filter(([i]) => i >= 0);
       pts.push([allData.labels.length - 1, 'Now ' + Math.round(allData.price[allData.price.length - 1]).toLocaleString('en-IN')]);
       pts.forEach(([i, txt], k) => {
@@ -7986,6 +8108,7 @@ async function bootLiveData() {
 // ── Single consolidated DOMContentLoaded ────────────────────
 window.addEventListener('DOMContentLoaded', () => {
   updateThemeButton();
+  if (window.Chart) Chart.defaults.font.family = cssVar('--sans');
   initPages();
   buildChart('all');
   calcPos();
