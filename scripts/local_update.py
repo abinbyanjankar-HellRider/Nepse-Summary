@@ -12,7 +12,7 @@ Two modes, chosen automatically:
 
 Log: logs/local-update.log (not committed).
 """
-import datetime as dt, os, subprocess, sys
+import datetime as dt, json, os, subprocess, sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -69,7 +69,9 @@ def main():
         if is_repo:
             git('add', 'index.html', 'data')
             if git('diff', '--cached', '--quiet').returncode != 0:
-                day = dt.datetime.now().strftime('%Y-%m-%d')
+                latest = ROOT / 'data' / 'latest.json'
+                day = (json.loads(latest.read_text(encoding='utf-8')).get('trade_date')
+                       if latest.exists() else None) or dt.datetime.now().strftime('%Y-%m-%d')
                 c = git('-c', 'user.name=nepse-local', '-c', 'user.email=nepse-local@localhost',
                         'commit', '-m', f'data: NEPSE close {day} (local scheduled update)')
                 log('committed to local history' if c.returncode == 0 else 'git commit failed — see log')

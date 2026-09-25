@@ -103,7 +103,7 @@ def refresh_companies(force=False):
         raise SystemExit(f'Company list looks wrong ({len(rows)} rows) — not overwriting {COMPANIES}')
     REF_DIR.mkdir(parents=True, exist_ok=True)
     with COMPANIES.open('w', newline='', encoding='utf-8') as f:
-        w = csv.DictWriter(f, fieldnames=['symbol', 'name', 'sector'])
+        w = csv.DictWriter(f, lineterminator='\n', fieldnames=['symbol', 'name', 'sector'])
         w.writeheader()
         w.writerows(sorted(rows, key=lambda r: (r['sector'], r['symbol'])))
     log(f'companies.csv: {len(rows)} securities in {len({r["sector"] for r in rows})} sectors')
@@ -126,7 +126,7 @@ def load_series(path):
 def save_series(path, rows):
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open('w', newline='', encoding='utf-8') as f:
-        w = csv.writer(f)
+        w = csv.writer(f, lineterminator='\n')
         w.writerow(['date', 'close', 'volume'])
         for d, c, v in rows:
             w.writerow([d, round(c, 2), '' if v is None else round(v)])
@@ -185,7 +185,7 @@ def refresh_histories(companies, full=False):
         day = (read_index_history() or [{}])[-1].get('date', '')
         new = not ADJ_LOG.exists()
         with ADJ_LOG.open('a', newline='', encoding='utf-8') as f:
-            w = csv.writer(f)
+            w = csv.writer(f, lineterminator='\n')
             if new:
                 w.writerow(['date', 'symbol'])
             for s in readjusted:
@@ -410,7 +410,7 @@ def archive_snapshot(payload):
                          'w_quadrant_vs_sector': wvs})
     RRG_ARCHIVE.mkdir(parents=True, exist_ok=True)
     with path.open('w', newline='', encoding='utf-8') as f:
-        w = csv.DictWriter(f, fieldnames=RRG_FIELDS)
+        w = csv.DictWriter(f, lineterminator='\n', fieldnames=RRG_FIELDS)
         w.writeheader()
         w.writerows(rows)
     log(f'archived RRG snapshot {path.relative_to(ROOT)} ({len(rows)} rows)')

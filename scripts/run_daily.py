@@ -14,8 +14,11 @@ Steps (in order)
   4. validate_data.py   sanity checks — nothing should be committed if this fails
 Every run is logged to data/history/runs.csv (time, trade date, result of each step).
 """
-import argparse, csv, datetime as dt, json, subprocess, sys
+import argparse, csv, datetime as dt, json, os, subprocess, sys
 from pathlib import Path
+
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8', errors='replace')
 
 ROOT    = Path(__file__).resolve().parents[1]
 RUN_LOG = ROOT / 'data' / 'history' / 'runs.csv'
@@ -24,7 +27,12 @@ PY      = sys.executable
 
 def step(name, args):
     print(f'\n=== {name} ===', flush=True)
-    r = subprocess.run([PY, str(ROOT / 'scripts' / name), *args], cwd=ROOT)
+    # Capture and re-print: under pythonw (Task Scheduler, no console) a child's
+    # inherited output would otherwise be lost from the log
+    r = subprocess.run([PY, str(ROOT / 'scripts' / name), *args], cwd=ROOT, capture_output=True,
+                       text=True, encoding='utf-8', errors='replace',
+                       env={**os.environ, 'PYTHONIOENCODING': 'utf-8'})
+    print((r.stdout + r.stderr).rstrip(), flush=True)
     return r.returncode
 
 
@@ -45,7 +53,7 @@ def main():
     RUN_LOG.parent.mkdir(parents=True, exist_ok=True)
     new = not RUN_LOG.exists()
     with RUN_LOG.open('a', newline='', encoding='utf-8') as f:
-        w = csv.writer(f)
+        w = csv.writer(f, lineterminator='\n')
         if new:
             w.writerow(['started_utc', 'trade_date', 'fetch', 'views', 'verify', 'validate', 'seconds'])
         w.writerow([started.isoformat(timespec='seconds'), trade,

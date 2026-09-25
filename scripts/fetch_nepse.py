@@ -295,7 +295,7 @@ def read_index_history():
 def write_index_history(rows):
     rows = sorted({r['date']: r for r in rows}.values(), key=lambda r: r['date'])
     with INDEX_CSV.open('w', newline='', encoding='utf-8') as f:
-        w = csv.DictWriter(f, fieldnames=INDEX_CSV_FIELDS, extrasaction='ignore')
+        w = csv.DictWriter(f, lineterminator='\n', fieldnames=INDEX_CSV_FIELDS, extrasaction='ignore')
         w.writeheader()
         w.writerows(rows)
     return rows
@@ -629,7 +629,7 @@ def main():
     payload['monthly'] = [m for m in monthly_from_history(hist) if m['label'] and m['close']]
     if prices:
         with (PRICE_DIR / f'{trade_date}.csv').open('w', newline='', encoding='utf-8') as f:
-            w = csv.DictWriter(f, fieldnames=list(prices[0].keys()))
+            w = csv.DictWriter(f, lineterminator='\n', fieldnames=list(prices[0].keys()))
             w.writeheader()
             w.writerows(prices)
         # index of archived trading days, for the dashboard's date picker

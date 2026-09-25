@@ -201,7 +201,7 @@ def main():
                  'warn': sum(c['status'] == 'warn' for c in checks), 'error': sum(c['status'] == 'error' for c in checks),
                  'rrg_moves': len(changes.get('rrg_moves', [])), 'generated_at': report['generated_at']})
     with CHECK_CSV.open('w', newline='', encoding='utf-8') as f:
-        w = csv.DictWriter(f, fieldnames=list(rows[-1].keys()))
+        w = csv.DictWriter(f, lineterminator='\n', fieldnames=list(rows[-1].keys()))
         w.writeheader()
         w.writerows(sorted(rows, key=lambda r: r['date']))
 
