@@ -18,6 +18,16 @@ The data pipeline lives in `scripts/`. Never hand-edit `data/` files, the
 | `scripts/verify_daily.py` | Compares today with the stored previous session and across sources; writes `data/history/checks/<date>.json`. |
 | `scripts/run_daily.py` | **All of the above, in order.** This is what the GitHub Action runs. Use it for normal daily updates. |
 
+## Automation (already set up)
+
+- **This PC:** the Windows scheduled task "NEPSE Daily Update" runs `scripts/local_update.py`
+  Mon–Fri 4:15 PM and 4:50 PM NPT, and at the next logon if the PC was off. It runs
+  `run_daily.py` and commits to the local git history. Log: `logs/local-update.log`.
+- **GitHub:** once `origin` exists, the Action is the only updater and the PC task only
+  runs `git pull --ff-only`. Never run two updaters against the same data.
+- A session is "stored" only when `data/history/prices/<date>.csv` exists. A late run
+  catches up the newest published session under its own date.
+
 ## Workflow
 
 1. **Sync first.** The GitHub Action commits data every trading day, so run
