@@ -1,0 +1,140 @@
+{
+ "date": "2026-09-24",
+ "generated_at": "2026-09-25T05:43:26+00:00",
+ "status": "warn",
+ "checks": [
+  {
+   "id": "index_continuity",
+   "name": "Index change vs stored previous close",
+   "status": "ok",
+   "detail": "2026-09-23 close 2,618.03 → 2026-09-24 2,629.81: change +11.78",
+   "items": []
+  },
+  {
+   "id": "history_gaps",
+   "name": "No missing trading day since the previous session",
+   "status": "ok",
+   "detail": "Consecutive sessions",
+   "items": []
+  },
+  {
+   "id": "price_continuity",
+   "name": "Today's prev-close = LTP stored for the previous session",
+   "status": "warn",
+   "detail": "No stored price list for the previous session yet (it builds up from the first daily run)",
+   "items": []
+  },
+  {
+   "id": "cross_source",
+   "name": "ShareSansar LTP = MeroLagani close (same day)",
+   "status": "ok",
+   "detail": "278/278 agree within 0.5%",
+   "items": []
+  },
+  {
+   "id": "sector_indices",
+   "name": "All sector indices have today's close",
+   "status": "ok",
+   "detail": "13/13 updated",
+   "items": []
+  },
+  {
+   "id": "breadth",
+   "name": "Gainers + losers + unchanged = scrips traded",
+   "status": "ok",
+   "detail": "208 + 129 + 16 = 353 (scrips traded 353)",
+   "items": []
+  }
+ ],
+ "changes": {
+  "previous_session": "2026-09-23",
+  "index": {
+   "prev": 2618.03,
+   "now": 2629.81,
+   "change": 11.78,
+   "changePct": 0.45
+  },
+  "sectors": [
+   {
+    "sector": "Manufacturing & Processing",
+    "close": 10833.44,
+    "changePct": 1.84
+   },
+   {
+    "sector": "Trading",
+    "close": 3270.07,
+    "changePct": 0.97
+   },
+   {
+    "sector": "Life Insurance",
+    "close": 11884.47,
+    "changePct": 0.71
+   },
+   {
+    "sector": "Microfinance",
+    "close": 4558.7,
+    "changePct": 0.62
+   },
+   {
+    "sector": "Commercial Banks",
+    "close": 1504.77,
+    "changePct": 0.46
+   },
+   {
+    "sector": "Mutual Fund",
+    "close": 19.67,
+    "changePct": 0.46
+   },
+   {
+    "sector": "Hotels & Tourism",
+    "close": 7171.19,
+    "changePct": 0.13
+   },
+   {
+    "sector": "Hydropower",
+    "close": 3603.41,
+    "changePct": 0.13
+   },
+   {
+    "sector": "Finance",
+    "close": 2233.28,
+    "changePct": 0.11
+   },
+   {
+    "sector": "Investment",
+    "close": 96.65,
+    "changePct": 0.11
+   },
+   {
+    "sector": "Others",
+    "close": 1830.6,
+    "changePct": 0.05
+   },
+   {
+    "sector": "Development Banks",
+    "close": 5444.56,
+    "changePct": 0.01
+   },
+   {
+    "sector": "Non-Life Insurance",
+    "close": 9633.81,
+    "changePct": -0.33
+   }
+  ],
+  "turnover": {
+   "prev": 6356611395.73,
+   "now": 5445070568.2
+  },
+  "breadth": {
+   "prev": [
+    null,
+    null
+   ],
+   "now": [
+    208,
+    129
+   ]
+  },
+  "rrg_note": "First archived RRG snapshot — quadrant changes appear from the next session."
+ }
+}
