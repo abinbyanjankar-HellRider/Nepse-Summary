@@ -50,7 +50,10 @@ def main():
     LOCK.write_text(str(os.getpid()))
     try:
         is_repo = git('rev-parse', '--is-inside-work-tree').returncode == 0
-        has_origin = is_repo and git('remote', 'get-url', 'origin').returncode == 0
+        # GitHub mode only once GitHub really has the project (an empty or
+        # unreachable remote must not stop the local update)
+        has_origin = (is_repo and git('remote', 'get-url', 'origin').returncode == 0
+                      and bool(git('ls-remote', '--heads', 'origin', 'main').stdout.strip()))
 
         if has_origin:
             r = git('pull', '--ff-only', 'origin', 'main')
