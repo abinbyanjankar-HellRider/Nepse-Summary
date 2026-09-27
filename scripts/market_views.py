@@ -29,7 +29,7 @@ data: 1.5 quadrant changes per stock per 10 sessions vs 5.9 unsmoothed):
   Leading  ratio ≥ 100, momentum ≥ 100   Weakening ratio ≥ 100, momentum < 100
   Lagging  ratio < 100, momentum < 100   Improving ratio < 100, momentum ≥ 100
 """
-import argparse, csv, datetime as dt, json, re, statistics, sys, time
+import argparse, csv, datetime as dt, json, math, re, statistics, sys, time
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -201,8 +201,11 @@ def zscore_series(vals, n):
         win = vals[i - n + 1:i + 1]
         if any(v is None for v in win):
             continue
-        sd = statistics.pstdev(win)
-        out[i] = 100 + (vals[i] - statistics.fmean(win)) / sd if sd > 0 else 100.0
+        # plain float maths: statistics.pstdev works in exact fractions and made
+        # a full build take minutes (too slow for scripts/live_intraday.py)
+        mean = sum(win) / n
+        sd = math.sqrt(sum((v - mean) ** 2 for v in win) / n)
+        out[i] = 100 + (vals[i] - mean) / sd if sd > 0 else 100.0
     return out
 
 
@@ -311,9 +314,24 @@ def pct_changes(series):
 
 
 # ── Build ───────────────────────────────────────────────────────────────
-def build(companies):
+def add_bar(series, day, close, volume=None):
+    """Put a provisional bar for `day` on the end of a (date, close, volume) list."""
+    if close is None:
+        return
+    if series and series[-1][0] == day:
+        series[-1] = (day, close, volume)
+    elif not series or series[-1][0] < day:
+        series.append((day, close, volume))
+
+
+def build(companies, live=None):
+    """live (scripts/live_intraday.py): today's provisional values added as the
+    last bar — {'date', 'index', 'turnover', 'sectors': {name: close},
+    'stocks': {sym: (ltp, volume)}, 'stock_turnover': {sym: rs}}."""
     hist = [(r['date'], num(r['index']), num(r['turnover'])) for r in read_index_history()
             if num(r['index'])]
+    if live:
+        add_bar(hist, live['date'], live['index'], live.get('turnover'))
     if len(hist) < 60:
         raise SystemExit('data/history/index.csv is too short — run backfill_history.py first')
     dates = [d for d, _, _ in hist[-400:]]
@@ -323,11 +341,16 @@ def build(companies):
     stock_series = {c['symbol']: load_series(STOCK_DIR / f"{c['symbol']}.csv")
                     for c in companies if c['sector'] not in NOT_IN_STOCK_UNIVERSE}
     meta = {c['symbol']: {'name': c['name'], 'sector': c['sector']} for c in companies}
+    if live:
+        for name, s in sector_series.items():
+            add_bar(s, live['date'], live['sectors'].get(name))
+        for sym, s in stock_series.items():
+            add_bar(s, live['date'], *live['stocks'].get(sym, (None, None)))
 
     # Latest turnover for tile sizes, from today's price list (fetch_nepse output)
-    turnover = {}
+    turnover = dict(live['stock_turnover']) if live else {}
     latest = ROOT / 'data' / 'latest.json'
-    if latest.exists():
+    if not live and latest.exists():
         for p in json.loads(latest.read_text(encoding='utf-8')).get('prices', []):
             turnover[p['sym']] = p.get('turnover')
 

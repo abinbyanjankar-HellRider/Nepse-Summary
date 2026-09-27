@@ -75,6 +75,26 @@ data/history/runs.csv                   every run and the result of each step
 data/reference/companies.csv            company → sector map (weekly refresh)
 ```
 
+## Intraday live mode (market hours, on this PC)
+
+During trading hours (11 AM–3 PM NPT) the Market Summary, Heatmap and daily RRG can follow the market minute by minute:
+
+```bash
+start-live.bat                          # double-click: opens the dashboard and starts live mode
+python scripts/live_intraday.py         # same, from a terminal (options: --interval 90, --port 8765, --once)
+```
+
+| What | How |
+|---|---|
+| Source | ShareSansar live-trading page: LTP, change and volume of every traded scrip, NEPSE and all sector indices |
+| Refresh | Every 60 s from 10:50 AM until the market closes; stops by itself on a holiday (no session by 11:45 AM) |
+| Market Summary | Live index, breadth, top gainers/losers/volume/turnover. Per-scrip turnover is estimated as LTP × volume (the NEPSE total is the exchange's own figure) |
+| Heatmap + RRG | Rebuilt each minute from the stored histories with today's LTP as a provisional last bar, using the same maths as the daily build (a build takes ~20 s) |
+| Files | `data/live.json`, `data/live_views.json`: provisional, git-ignored, never added to the history |
+| After the close | The script keeps serving the page until 6 PM. When the 4 PM daily update publishes the official close, the page swaps the live figures for it by itself |
+
+The banner shows **LIVE · as of HH:MM NPT** while live figures are shown, and warns if no update has arrived for more than 5 minutes. Live mode needs this PC to run the script; the GitHub Pages copy only shows official closes.
+
 ## Changing the look
 
 Everyone can pick a look in the sidebar: **Appearance** → theme (dark/light), font style, accent colour (saved per browser).

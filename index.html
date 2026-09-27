@@ -6286,7 +6286,8 @@ function renderMarketSummary() {
   const dlEl = document.getElementById('ms-date-label');
   if (dlEl) {
     let stateLabel;
-    if (!st.isTradingDay)       stateLabel = 'Weekend — last close';
+    if (DATA_SOURCE === 'live') stateLabel = 'LIVE as of ' + (snap.live_time || '?') + ' NPT · ' + (snap.live_status || 'provisional');
+    else if (!st.isTradingDay)  stateLabel = 'Weekend — last close';
     else if (st.isMarketOpen)   stateLabel = 'Market open — showing prev close';
     else if (st.isDataAvailable)stateLabel = isStale() ? 'Awaiting today\'s close (update ~4:05 PM NPT)' : 'Final close data';
     else if (st.isPreMarket)    stateLabel = 'Pre-market — showing prev close';
@@ -6451,6 +6452,29 @@ async function loadViews() {
     } catch (e) { /* embedded copy stays */ }
   }
   initMarketViews();
+  _viewsReady = true;
+}
+
+// Live views (scripts/live_intraday.py) replace VIEWS during market hours;
+// the official market_views.json takes over again once today's close is in.
+function liveViewsTag() {
+  return VIEWS && VIEWS.live ? ` · LIVE ${VIEWS.as_of_time || ''} NPT (provisional)` : '';
+}
+let _viewsReady = false;      // set once loadViews() has built the controls
+function applyViews(d) {
+  const had = !!VIEWS;
+  VIEWS = d;
+  if (!_viewsReady) return;   // loadViews() renders whatever VIEWS holds when it finishes
+  if (!had) initMarketViews();
+  else { renderHeatmap(); renderRRG(); }
+}
+async function reloadOfficialViews() {
+  try {
+    const r = await fetch('data/market_views.json?t=' + Date.now(), { cache: 'no-store' });
+    if (!r.ok) return;
+    const d = cleanPayload(await r.json());
+    if (!VIEWS || !VIEWS.live || (d.as_of || '') >= (VIEWS.as_of || '')) applyViews(d);
+  } catch (e) { /* keep what is shown */ }
 }
 
 function segInit(id, onPick) {
@@ -6565,7 +6589,7 @@ function renderHeatmap() {
   const f2 = v => typeof v === 'number' ? (v > 0 ? '+' : '') + v.toFixed(2) + '%' : '—';
   const fmtTo = v => typeof v === 'number' ? 'Rs ' + (v / 1e7).toFixed(2) + ' Cr' : '—';
   document.getElementById('hm-sub').textContent =
-    `${pname} % change · as of ${isoToLabel(VIEWS.as_of)} · NEPSE ${f2(VIEWS.benchmark?.[key])} · ` +
+    `${pname} % change · as of ${isoToLabel(VIEWS.as_of)}${liveViewsTag()} · NEPSE ${f2(VIEWS.benchmark?.[key])} · ` +
     (HM.view === 'stocks' ? `${H.stocks.length} companies` : `${H.sectors.length} sector indices`);
   document.getElementById('hm-lo').textContent = '−' + scale + '%';
   document.getElementById('hm-hi').textContent = '+' + scale + '%';
@@ -6695,7 +6719,7 @@ function renderRRG() {
   document.getElementById('rrg-tail-wrap').style.display = showGraph ? '' : 'none';
   const par = VIEWS.rrg.params || { n: 14 };
   document.getElementById('rrg-sub').textContent =
-    `${RRG.period === 'daily' ? 'Daily' : 'Weekly'} · vs ${bench} · RS-Ratio / RS-Momentum (${par.n}) · as of ${isoToLabel(blk.as_of || VIEWS.as_of)}`;
+    `${RRG.period === 'daily' ? 'Daily' : 'Weekly'} · vs ${bench} · RS-Ratio / RS-Momentum (${par.n}) · as of ${isoToLabel(blk.as_of || VIEWS.as_of)}${liveViewsTag()}`;
 
   if (tab === 'signals') return renderRRGSignals();
   if (tab === 'table')   return renderRRGTable();
@@ -7948,6 +7972,8 @@ function applyLiveData(live) {
   LIVE_SNAPSHOT.date_bs       = s(live.date_bs, '');
   LIVE_SNAPSHOT.updated_at    = s(live.updated_at, LIVE_SNAPSHOT.updated_at || '');
   LIVE_SNAPSHOT.source        = s(live.source, LIVE_SNAPSHOT.source || '');
+  LIVE_SNAPSHOT.live_status   = live.live ? s(live.status, '') : '';
+  LIVE_SNAPSHOT.live_time     = live.live && typeof live.as_of === 'string' ? live.as_of.slice(11, 16) : '';
 
   // Figures that belong to one trading day fall back to null ("—"), never to
   // the previous payload or the built-in Aug 27 snapshot. Only the index
@@ -8042,12 +8068,24 @@ function showDataBanner() {
   const src  = {
     action:   'Daily GitHub update',
     latest:   'data/latest.json',
+    live:     'Intraday live',
     cache:    'Browser cache',
     claude:   'Claude live fetch',
     fallback: 'Built-in fallback'
   }[DATA_SOURCE] || DATA_SOURCE;
   const upd  = snap.updated_at ? ' · Updated ' + fmtNPT(snap.updated_at) : '';
   const lbl  = snap.date + (snap.day ? ' (' + snap.day + ')' : '');
+
+  if (DATA_SOURCE === 'live') {
+    const age  = snap.updated_at ? Math.round((Date.now() - Date.parse(snap.updated_at)) / 60000) : null;
+    const lag  = st.isMarketOpen && age !== null && age > 5 ? ' · ⚠ no update for ' + age + ' min — is live_intraday.py running?' : '';
+    const stat = snap.live_status ? snap.live_status + ' · ' : '';
+    setBannerState(lag ? 'error' : 'success',
+      '🔴 LIVE — ' + lbl + ' · as of ' + (snap.live_time || '?') + ' NPT',
+      stat + 'Provisional intraday figures (ShareSansar live-trading, refreshed every minute). '
+        + 'The official close replaces them after the 4 PM update.' + lag, src);
+    return;
+  }
 
   if (!isStale()) {
     let note = '';
@@ -8077,6 +8115,7 @@ async function pullLatestJson(manual = false) {
     if (!d || typeof d.index !== 'number') throw new Error('no index in latest.json');
     if (!isNewer(d)) return false;
     ingest(d, 'latest');
+    if (VIEWS && VIEWS.live) reloadOfficialViews();
     console.log('[Data] latest.json applied:', dataTradeISO(d));
     return true;
   } catch (e) {
@@ -8147,12 +8186,49 @@ function startDailyScheduler() {
   setInterval(async () => {
     _tick++;
     const exp = expectedTradeISO();
-    if (isStale() && getNPTStatus().isDataAvailable) {
+    if ((isStale() || DATA_SOURCE === 'live') && getNPTStatus().isDataAvailable) {
       if (CAN_BROWSER_AI && !_aiTried[exp]) { _aiTried[exp] = true; await autoFetchLiveData(); }
       else if (IS_HTTP && _tick % 5 === 0) await pullLatestJson();
     }
     showDataBanner();
   }, 60000);
+}
+
+// ── Intraday live mode (scripts/live_intraday.py) ────────────
+// While the local live script runs, data/live.json and data/live_views.json
+// are rewritten every minute. Checked every 30 s between 10:50 AM and
+// 3:30 PM NPT (and once at page load, so an evening visit still shows the
+// day's last live snapshot until the official close arrives).
+let _liveAsOf = '';
+async function pollIntraday() {
+  if (!IS_HTTP) return false;
+  try {
+    const r = await fetch('data/live.json?t=' + Date.now(), { cache: 'no-store' });
+    if (!r.ok) return false;
+    const d = await r.json();
+    if (!d || !d.live || typeof d.index !== 'number' || !d.trade_date) return false;
+    const cur = LIVE_SNAPSHOT.trade_date || '';
+    if (d.trade_date < cur) return false;
+    // the official close for that day is already shown: never go back to provisional
+    if (d.trade_date === cur && DATA_SOURCE !== 'live') return false;
+    if (d.as_of === _liveAsOf) return false;
+    _liveAsOf = d.as_of;
+    ingest(d, 'live', { noCache: true });
+    const v = await fetch('data/live_views.json?t=' + Date.now(), { cache: 'no-store' });
+    if (v.ok) {
+      const vd = cleanPayload(await v.json());
+      if (vd && vd.live && vd.as_of === d.trade_date) applyViews(vd);
+    }
+    console.log('[Live] intraday', d.as_of, '| NEPSE', d.index);
+    return true;
+  } catch (e) { return false; }
+}
+function startIntradayPoller() {
+  if (!IS_HTTP) return;
+  setInterval(() => {
+    const m = getNPTStatus().mins;
+    if (m >= 10 * 60 + 50 && m <= 15 * 60 + 30) pollIntraday();
+  }, 30000);
 }
 
 // ── Boot ─────────────────────────────────────────────────────
@@ -8163,6 +8239,8 @@ async function bootLiveData() {
   if (DATA_SOURCE === 'fallback') { refreshLiveData(); renderMarketSummary(); showDataBanner(); }
 
   await pullLatestJson();
+  await pollIntraday();
+  startIntradayPoller();
 
   if (CAN_BROWSER_AI && isStale() && getNPTStatus().isDataAvailable) {
     _aiTried[expectedTradeISO()] = true;

@@ -5,3 +5,8 @@ __pycache__/
 .vscode/
 .idea/
 logs/
+
+# intraday live mode (scripts/live_intraday.py) — provisional, never committed
+data/live.json
+data/live_views.json
+data/*.tmp
