@@ -1958,6 +1958,7 @@
   <div class="sidebar-footer">
     <div id="ms-npt-clock" style="color:var(--text3);">—</div>
     <div style="margin-top:4px;color:var(--text3);">Trading hours: Mon–Fri, 11 AM–3 PM NPT</div>
+    <div id="auth-user" style="display:none;margin-top:6px;color:var(--text3);">Signed in as <b id="auth-name" style="color:var(--text2);font-weight:600;"></b> · <a href="/logout" style="color:var(--green);">Sign out</a></div>
     <div class="ap-wrap">
       <button class="ap-btn" id="ap-btn" aria-expanded="false" aria-controls="ap-panel" onclick="toggleAppearancePanel()"><span>Appearance</span><span id="ap-summary"></span></button>
       <div class="ap-panel" id="ap-panel" role="dialog" aria-label="Appearance"></div>
@@ -8231,6 +8232,21 @@ function startIntradayPoller() {
   }, 30000);
 }
 
+// ── Signed-in user (scripts/secure_server.py) ────────────────
+// /whoami exists only on the login-protected local server; elsewhere
+// (GitHub Pages, a file) it fails and nothing is shown.
+async function showSignedInUser() {
+  if (!IS_HTTP) return;
+  try {
+    const r = await fetch('/whoami', { cache: 'no-store' });
+    if (!r.ok) return;
+    const d = await r.json();
+    if (!d || typeof d.user !== 'string') return;
+    document.getElementById('auth-name').textContent = d.user;
+    document.getElementById('auth-user').style.display = '';
+  } catch (e) { /* not behind the login server */ }
+}
+
 // ── Boot ─────────────────────────────────────────────────────
 async function bootLiveData() {
   if (EMBEDDED && typeof EMBEDDED.index === 'number') ingest(EMBEDDED, 'action', { noCache: true });
@@ -8269,6 +8285,7 @@ window.addEventListener('DOMContentLoaded', () => {
   // Boot: embedded Action data → local cache → data/latest.json → scheduler
   bootLiveData();
   loadViews();
+  showSignedInUser();
   ptLoadArchiveIndex();
 
   document.addEventListener('click', e => {

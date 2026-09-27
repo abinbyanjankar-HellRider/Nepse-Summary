@@ -91,9 +91,34 @@ python scripts/live_intraday.py         # same, from a terminal (options: --inte
 | Market Summary | Live index, breadth, top gainers/losers/volume/turnover. Per-scrip turnover is estimated as LTP × volume (the NEPSE total is the exchange's own figure) |
 | Heatmap + RRG | Rebuilt each minute from the stored histories with today's LTP as a provisional last bar, using the same maths as the daily build (a build takes ~20 s) |
 | Files | `data/live.json`, `data/live_views.json`: provisional, git-ignored, never added to the history |
+| Access | Sign-in required (see **Login** below) |
 | After the close | The script keeps serving the page until 6 PM. When the 4 PM daily update publishes the official close, the page swaps the live figures for it by itself |
 
 The banner shows **LIVE · as of HH:MM NPT** while live figures are shown, and warns if no update has arrived for more than 5 minutes. Live mode needs this PC to run the script; the GitHub Pages copy only shows official closes.
+
+## Login (project security)
+
+The dashboard served from this PC (`start-live.bat`, `scripts/live_intraday.py`, or `python scripts/secure_server.py serve`) is only shown to signed-in users. Create at least one user first; the server will not start without one:
+
+```bash
+python scripts/secure_server.py add <username>      # asks for a password (min 10 characters)
+python scripts/secure_server.py passwd <username>   # change a password (signs that user out everywhere)
+python scripts/secure_server.py remove <username>   # delete a user (signs them out immediately)
+python scripts/secure_server.py list
+```
+
+| Protection | Detail |
+|---|---|
+| Passwords | Salted PBKDF2-SHA256, 600,000 iterations, stored only as hashes in `.auth/users.json` (git-ignored, never published) |
+| Sessions | Random token in an HttpOnly, SameSite=Strict cookie; 12 hours; **Sign out** in the sidebar |
+| Everything locked | Pages redirect to the sign-in page; data files return 401 until signed in |
+| Brute force | 5 wrong passwords from one address → locked out for 5 minutes |
+| Never served | `.git`, `.auth` and other hidden paths; directory listings |
+| Audit | Sign-ins, failures, lockouts and user changes in `logs/auth.log` |
+
+By default it listens on `127.0.0.1` (this PC only). `--host 0.0.0.0` shares it on your network, but over plain HTTP, so passwords are not encrypted in transit.
+
+**Not covered:** this login protects the copy served from this PC. The GitHub repository is public, so anything committed to it (including `index.html` and `data/`) can be read there, and a GitHub Pages site would be public too.
 
 ## Changing the look
 

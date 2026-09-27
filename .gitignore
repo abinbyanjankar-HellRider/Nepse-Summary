@@ -10,3 +10,6 @@ logs/
 data/live.json
 data/live_views.json
 data/*.tmp
+
+# dashboard login (scripts/secure_server.py): password hashes — never publish
+.auth/

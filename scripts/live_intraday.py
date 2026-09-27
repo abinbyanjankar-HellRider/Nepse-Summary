@@ -7,7 +7,7 @@ Market Summary, Heatmap and daily RRG follow the market minute by minute.
   python scripts/live_intraday.py --once       # one poll, then exit
   python scripts/live_intraday.py --interval 90 --port 8765 --no-serve
 
-Open http://127.0.0.1:8765/ while it runs. Each poll reads ShareSansar's
+Open http://127.0.0.1:8765/ while it runs and sign in (users: scripts/secure_server.py). Each poll reads ShareSansar's
 live-trading page (LTP of every traded scrip + all indices) and writes
 
   data/live.json         market summary payload (same shape as data/latest.json)
@@ -24,8 +24,7 @@ Timing: polls from 10:50 AM until the page shows the market closed after
 (default 6 PM) so the page can pick up the 4 PM official close. If no session
 has started for today by 11:45 AM (holiday), it stops polling.
 """
-import argparse, datetime as dt, functools, json, os, re, sys, threading, time
-from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
+import argparse, datetime as dt, json, os, re, sys, time
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -33,6 +32,7 @@ from bs4 import BeautifulSoup
 from fetch_nepse import (ROOT, NPT, LATEST, log, num, get, parse_price_table, load_symbol_map,
                          derive_from_prices, read_index_history, clean_payload)
 import market_views as MV
+import secure_server
 
 LIVE_URL   = 'https://www.sharesansar.com/live-trading'
 LIVE_JSON  = ROOT / 'data' / 'live.json'
@@ -166,27 +166,6 @@ def poll(symmap, companies, html=None):
     return 'live', live
 
 
-# ── Local web server ────────────────────────────────────────────────────
-class QuietHandler(SimpleHTTPRequestHandler):
-    def log_message(self, *a):
-        pass
-
-    def end_headers(self):
-        self.send_header('Cache-Control', 'no-store')
-        super().end_headers()
-
-
-def serve(port):
-    try:
-        srv = ThreadingHTTPServer(('127.0.0.1', port), functools.partial(QuietHandler, directory=str(ROOT)))
-    except OSError:
-        log(f'port {port} is already in use — assuming the dashboard is served there already')
-        return None
-    threading.Thread(target=srv.serve_forever, daemon=True).start()
-    log(f'dashboard: http://127.0.0.1:{port}/')
-    return srv
-
-
 def npt_now():
     return dt.datetime.now(NPT)
 
@@ -200,6 +179,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--interval', type=int, default=60, help='seconds between polls (min 30)')
     ap.add_argument('--port', type=int, default=8765)
+    ap.add_argument('--host', default='127.0.0.1', help='127.0.0.1 = this PC only (see secure_server.py)')
     ap.add_argument('--no-serve', action='store_true', help='do not start the local web server')
     ap.add_argument('--once', action='store_true', help='poll once and exit')
     ap.add_argument('--html', help='test: parse this saved live-trading page instead of fetching')
@@ -216,7 +196,8 @@ def main():
         log(f'poll: {state}')
         return 0 if state in ('live', 'no-session') else 1
 
-    srv = None if a.no_serve else serve(a.port)
+    # the dashboard is only served behind the login (scripts/secure_server.py)
+    srv = None if a.no_serve else secure_server.serve(a.port, a.host)
     start, give_up, hard_stop = at(10, 50), at(11, 45), at(15, 30)
     stay = at(*map(int, a.stay_until.split(':')))
 
