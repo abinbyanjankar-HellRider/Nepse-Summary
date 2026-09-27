@@ -121,6 +121,32 @@ def check_history(rows, today=None):
     return errs, warns
 
 
+def check_ohlc(candles, index_rows):
+    """Validate index_ohlc.csv (NEPSE candles for the chart) against index.csv.
+    Returns (errors, warnings)."""
+    errs, warns = [], []
+    dates = [c['date'] for c in candles]
+    if dates != sorted(set(dates)):
+        errs.append('index_ohlc.csv: dates are not unique and ascending')
+    closes = {r['date']: _f(r['index']) for r in index_rows}
+    for c in candles:
+        o, h, l, cl = (_f(c[k]) for k in ('open', 'high', 'low', 'close'))
+        if None in (o, h, l, cl):
+            errs.append(f"index_ohlc.csv {c['date']}: missing open/high/low/close")
+            continue
+        if not (l <= min(o, cl) and h >= max(o, cl)):
+            errs.append(f"index_ohlc.csv {c['date']}: high/low do not contain open/close")
+        ref = closes.get(c['date'])
+        if ref and abs(cl / ref - 1) > 0.005:
+            errs.append(f"index_ohlc.csv {c['date']}: close {cl} differs from index.csv {ref} by >0.5%")
+    if candles and index_rows:
+        missing = [d for d in closes if dates[0] <= d and d not in set(dates)]
+        if missing:
+            warns.append(f'index_ohlc.csv: no candle for {len(missing)} trading day(s), e.g. {missing[-3:]} '
+                         '(chart shows a gap; refreshed by market_views.py)')
+    return errs, warns
+
+
 def main():
     errs, warns = [], []
     rows = []
@@ -153,6 +179,14 @@ def main():
                 errs.append('embedded data in index.html does not match latest.json')
         except json.JSONDecodeError as e:
             errs.append(f'embedded data in index.html is not valid JSON: {e}')
+
+    ohlc_csv = ROOT / 'data' / 'history' / 'index_ohlc.csv'
+    if ohlc_csv.exists():
+        with ohlc_csv.open(newline='', encoding='utf-8') as f:
+            candles = list(csv.DictReader(f))
+        e, w = check_ohlc(candles, rows)
+        errs += e; warns += w
+        print(f'index_ohlc.csv: {len(candles)} candles checked')
 
     views = ROOT / 'data' / 'market_views.json'
     if views.exists():

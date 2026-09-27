@@ -64,6 +64,7 @@ The card also lists **what changed since the previous session**: index, turnover
 
 ```
 data/history/index.csv                  NEPSE close, turnover, breadth: one row per trading day since 2020
+data/history/index_ohlc.csv             NEPSE daily open/high/low/close/turnover (candles for the NEPSE chart)
 data/history/prices/<date>.csv          full price list of every trading day (browse it in Today's Price → date picker)
 data/history/stocks/<SYM>.csv           adjusted daily close per company (since 2024)
 data/history/sectors/<index>.csv        13 sector indices, daily
@@ -74,6 +75,18 @@ data/history/adjustments.csv            corporate-action re-adjustments detected
 data/history/runs.csv                   every run and the result of each step
 data/reference/companies.csv            company → sector map (weekly refresh)
 ```
+
+## NEPSE chart (TradingView Lightweight Charts)
+
+Sidebar → **Today → NEPSE chart**: daily NEPSE candles since January 2020, drawn with TradingView's open-source [Lightweight Charts™](https://www.tradingview.com/lightweight-charts/) (Apache-2.0).
+
+| | |
+|---|---|
+| Data | `data/history/index_ohlc.csv`, from MeroLagani's chart feed. Refreshed by `market_views.py` in every daily run; the closes are checked against `index.csv` by `validate_data.py` |
+| On the chart | Candles or line · turnover bars · MA 20 / 50 / 200 · the Wyckoff levels (ATH, cycle high, creek, range low) · range 1M–All · crosshair legend with O/H/L/C, change and turnover |
+| Live mode | Today's candle updates every minute, marked **LIVE**. Its open/high/low come from MeroLagani's intraday bar when available, otherwise from the live script's own polls |
+
+TradingView itself has no NEPSE data feed, so its embeddable widgets cannot show NEPSE; the chart library is fed with our own data instead. The licence requires the TradingView credit shown under the chart.
 
 ## Intraday live mode (market hours, on this PC)
 

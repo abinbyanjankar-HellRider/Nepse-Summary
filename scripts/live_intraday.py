@@ -30,7 +30,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from bs4 import BeautifulSoup
 from fetch_nepse import (ROOT, NPT, LATEST, log, num, get, parse_price_table, load_symbol_map,
-                         derive_from_prices, read_index_history, clean_payload)
+                         derive_from_prices, read_index_history, clean_payload, merolagani_history)
 import market_views as MV
 import secure_server
 
@@ -107,8 +107,36 @@ def summary_payload(live, prev):
     }
 
 
+# Today's NEPSE candle for the chart. MeroLagani's chart feed is asked for
+# today's bar first; if it has none yet, open/high/low are tracked from this
+# script's own polls (open = first value seen, so it is approximate when the
+# script starts after 11 AM).
+_DAY = {}
+
+
+def live_candle(live):
+    idx = (live['tiles'].get('NEPSE Index') or {}).get('value')
+    to = (live['tiles'].get('NEPSE Index') or {}).get('turnover')
+    if idx is None:
+        return None
+    if _DAY.get('date') != live['date']:
+        _DAY.clear()
+        _DAY.update(date=live['date'], open=idx, high=idx, low=idx, source='polls')
+    _DAY['high'], _DAY['low'] = max(_DAY['high'], idx), min(_DAY['low'], idx)
+    try:
+        bar = next((b for b in merolagani_history(start=live['date'], timeout=15)
+                    if b['date'] == live['date'] and None not in (b['open'], b['high'], b['low'])), None)
+    except Exception:
+        bar = None
+    o, h, l = (bar['open'], bar['high'], bar['low']) if bar else (_DAY['open'], _DAY['high'], _DAY['low'])
+    return {'date': live['date'], 'open': round(o, 2), 'high': round(max(h, idx, o), 2),
+            'low': round(min(l, idx, o), 2), 'close': idx, 'turnover': to,
+            'source': 'merolagani' if bar else 'polls'}
+
+
 def live_bar(live):
     return {
+        'candle': live_candle(live),
         'date': live['date'],
         'index': (live['tiles'].get('NEPSE Index') or {}).get('value'),
         'turnover': (live['tiles'].get('NEPSE Index') or {}).get('turnover'),

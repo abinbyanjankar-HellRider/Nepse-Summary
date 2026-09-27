@@ -194,6 +194,65 @@ def refresh_histories(companies, full=False):
     return stats
 
 
+# ── NEPSE index candles (TradingView Lightweight Charts panel) ──────────
+OHLC_CSV    = ROOT / 'data' / 'history' / 'index_ohlc.csv'
+OHLC_FIELDS = ['date', 'open', 'high', 'low', 'close', 'turnover']
+OHLC_START  = '2020-01-01'
+
+
+def load_ohlc():
+    if not OHLC_CSV.exists():
+        return []
+    with OHLC_CSV.open(newline='', encoding='utf-8') as f:
+        return [{k: (r[k] if k == 'date' else num(r[k])) for k in OHLC_FIELDS} for r in csv.DictReader(f)]
+
+
+def refresh_index_ohlc(full=False):
+    """Daily NEPSE open/high/low/close/turnover from MeroLagani. Incremental:
+    re-reads the last 10 stored sessions (a late correction replaces them)."""
+    old = [] if full else load_ohlc()
+    start = old[-10]['date'] if len(old) > 10 else OHLC_START
+    merged = {r['date']: r for r in old}
+    for b in merolagani_history(start=start):
+        if None in (b['open'], b['high'], b['low'], b['index']):
+            continue
+        o, c = round(b['open'], 2), b['index']
+        # the source occasionally has high/low a rounding step inside open/close
+        # (once, 2021-03-03, the open is 20 pts above the high): widen to contain both
+        h, l = max(round(b['high'], 2), o, c), min(round(b['low'], 2), o, c)
+        if h - b['high'] > 0.5 or b['low'] - l > 0.5:
+            log(f"NEPSE candle {b['date']}: high/low widened to contain open/close "
+                f"(source O {o} H {b['high']} L {b['low']} C {c})")
+        merged[b['date']] = {'date': b['date'], 'open': o, 'high': h, 'low': l, 'close': c,
+                             'turnover': b['turnover']}
+    rows = [merged[d] for d in sorted(merged)]
+    OHLC_CSV.parent.mkdir(parents=True, exist_ok=True)
+    with OHLC_CSV.open('w', newline='', encoding='utf-8') as f:
+        w = csv.DictWriter(f, fieldnames=OHLC_FIELDS, lineterminator='\n')
+        w.writeheader()
+        w.writerows(rows)
+    log(f'NEPSE candles: {len(rows)} stored, last {rows[-1]["date"] if rows else "—"}')
+    return rows
+
+
+def ohlc_block(rows, candle=None):
+    """Compact arrays for the page. candle: today's provisional bar (live mode)."""
+    rows = list(rows)
+    if candle and candle.get('close') is not None:
+        if rows and rows[-1]['date'] == candle['date']:
+            rows[-1] = candle
+        elif not rows or rows[-1]['date'] < candle['date']:
+            rows.append(candle)
+    r2 = lambda v: round(v, 2) if isinstance(v, (int, float)) else None
+    return {
+        'dates': [r['date'] for r in rows],
+        'o': [r2(r['open']) for r in rows], 'h': [r2(r['high']) for r in rows],
+        'l': [r2(r['low']) for r in rows], 'c': [r2(r['close']) for r in rows],
+        'v_cr': [round(r['turnover'] / 1e7, 2) if r.get('turnover') else None for r in rows],   # Rs crore
+        'live': bool(candle and rows and rows[-1] is candle),
+    }
+
+
 # ── RRG maths ───────────────────────────────────────────────────────────
 def zscore_series(vals, n):
     out = [None] * len(vals)
@@ -402,6 +461,7 @@ def build(companies, live=None):
         'sectors': [{'name': n, 'code': c} for n, c in SECTORS.values()],
         'companies': {s: m for s, m in meta.items() if s in stock_series},
         'heatmap': {'stocks': heat_stocks, 'sectors': heat_sectors},
+        'ohlc': ohlc_block(load_ohlc(), (live or {}).get('candle')),
         'rrg': {'params': {'n': N, 'trail': TRAIL, 'rs_ema': RS_EMA, 'roc_lag': ROC_LAG, 'roc_ema': ROC_EMA,
                            'method': 'smoothed z-score approximation of JdK RS-Ratio / RS-Momentum'},
                 **views},
@@ -468,6 +528,10 @@ def main():
     companies = refresh_companies(force=args.backfill)
     if not args.no_fetch:
         refresh_histories(companies, full=args.backfill)
+        try:
+            refresh_index_ohlc(full=args.backfill)
+        except Exception as e:                  # chart keeps the stored candles
+            log(f'NEPSE candles not refreshed: {e}')
     payload = clean_payload(build(companies))
     VIEWS_JSON.write_text(json.dumps(payload, ensure_ascii=False, separators=(',', ':')), encoding='utf-8', newline='\n')
     inject(payload)
