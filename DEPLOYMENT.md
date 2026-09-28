@@ -17,8 +17,17 @@ Check on GitHub that you can see `.github/workflows/nepse-daily.yml` and `data/h
 
 From this moment the PC's scheduled task switches itself to **pull mode**: GitHub does the daily update, and the PC just downloads it. Nothing else to change.
 
-## 3. Turn on GitHub Pages
-**Settings → Pages → Build and deployment → Source: `GitHub Actions`**.
+## 3. (Optional) Turn on GitHub Pages — read this first
+A Pages site is **public to anyone who has the link and has no login**: the
+login in `scripts/secure_server.py` only protects the copy served from your PC.
+Pages would publish the dashboard and all its data (not the scripts — the
+deploy job uploads only `index.html` and `data/`). On a private repository
+Pages also needs a paid GitHub plan.
+
+If you still want it:
+1. **Settings → Pages → Build and deployment → Source: `GitHub Actions`**.
+2. **Settings → Secrets and variables → Actions → Variables → New repository variable**:
+   `PAGES_ENABLED` = `true`. Until this variable exists the deploy job is skipped.
 
 ## 4. Allow the Action to save data
 **Settings → Actions → General → Workflow permissions → `Read and write permissions` → Save**.
@@ -30,6 +39,12 @@ Without it, the update only works while ShareSansar/MeroLagani page layouts stay
 3. Name: `ANTHROPIC_API_KEY` · Value: your key.
 
 The key stays on GitHub's servers; it is never placed in the web page.
+
+For the dashboard's **AI analysis** on your PC, set the same key on the PC
+(`setx ANTHROPIC_API_KEY "sk-ant-..."`, then open a new terminal) before running
+`start-live.bat`. The login server calls Claude for the page (`/api/claude`), so
+the key never reaches the browser. Default model: `claude-opus-5`
+(override with `CLAUDE_MODEL`); limit: 30 requests per user per hour.
 
 ## 6. First run (seeds today's data)
 **Actions → NEPSE daily data → Run workflow → tick "Force update" → Run workflow**.
@@ -51,6 +66,7 @@ claude                      # then describe the change you want
 ```
 Ask Claude Code to commit and push when you are happy; the site redeploys automatically.
 Do not edit the `<script id="nepse-data">` block by hand — the Action rewrites it daily.
+Weekday holidays go in `data/reference/holidays.csv` (`date,name`): the daily check then stops reporting them as missed updates.
 See https://docs.claude.com for Claude Code setup details.
 
 ## Schedule reference

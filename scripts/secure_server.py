@@ -13,21 +13,27 @@ scripts/live_intraday.py (start-live.bat); can also run on its own:
 
 Security model
   • Passwords: salted PBKDF2-SHA256 (600,000 iterations), stored only as hashes
-    in .auth/users.json — git-ignored, never published (the repository is public).
+    in .auth/users.json — git-ignored, never committed.
   • Sessions: random 256-bit token in an HttpOnly, SameSite=Strict cookie,
     12-hour lifetime, kept in server memory (a restart signs everyone out).
   • Brute force: 5 failed sign-ins from one address → locked out for 5 minutes.
-  • Audit: sign-ins, failures and lockouts are appended to logs/auth.log.
+  • Audit: sign-ins, failures, lockouts and AI requests go to logs/auth.log.
+  • Browser hardening: Content-Security-Policy (scripts only from this server
+    and the two pinned CDNs, requests only back to this server), no framing.
+  • AI analysis: POST /api/claude (signed-in, same-origin, JSON only, 30 per
+    user per hour). The server holds ANTHROPIC_API_KEY and picks the model
+    (scripts/claude_client.py); the key never reaches the browser.
   • Served: only index.html and files under data/ (checked on the decoded
     path). Never: hidden paths (.git, .auth, …), scripts/, logs/, listings.
   • The server refuses to start while no user exists (fails closed).
   • Plain HTTP: keep the default host 127.0.0.1 (this PC only). --host 0.0.0.0
     shares it on your network, but passwords then cross the network unencrypted.
 
-This protects the copy served from this PC only. The public GitHub repository
-and any GitHub Pages site are not covered by this login.
+This protects the copy served from this PC only. It does not cover the GitHub
+repository (private) or a GitHub Pages site, which would publish the dashboard
+and its data to anyone with the link — see DEPLOYMENT.md before enabling Pages.
 """
-import argparse, base64, datetime as dt, functools, getpass, hashlib, hmac, html, json, os, re
+import argparse, base64, copy, datetime as dt, functools, getpass, hashlib, hmac, html, json, os, re
 import secrets, sys, threading, time
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -45,6 +51,15 @@ LOCKOUT_SECS  = 300
 COOKIE        = 'nepse_session'
 USER_RE       = re.compile(r'^[A-Za-z0-9_.-]{3,32}$')
 MIN_PASSWORD  = 10
+AI_PER_HOUR   = 30                  # /api/claude calls per user (each one costs money)
+AI_MAX_BODY   = 12 * 1024 * 1024    # chart screenshots, base64
+AI_IMAGE_TYPES = {'image/png', 'image/jpeg', 'image/gif', 'image/webp'}
+
+CSP = ("default-src 'self'; "
+       "script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; "
+       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
+       "font-src https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self'; "
+       "object-src 'none'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'")
 
 
 # ── Password hashing ────────────────────────────────────────────────────
@@ -72,10 +87,20 @@ _DUMMY_HASH = hash_password('not-a-real-password', salt=b'\0' * 16)
 
 
 # ── User store ──────────────────────────────────────────────────────────
+_users_cache = (None, {})
+
+
 def load_users():
-    if not USERS_FILE.exists():
+    """Users from .auth/users.json. Every request checks its session against
+    this, so the parsed file is cached and re-read only when it changes."""
+    global _users_cache
+    try:
+        stamp = USERS_FILE.stat().st_mtime_ns
+    except FileNotFoundError:
         return {}
-    return json.loads(USERS_FILE.read_text(encoding='utf-8')).get('users', {})
+    if _users_cache[0] != stamp:
+        _users_cache = (stamp, json.loads(USERS_FILE.read_text(encoding='utf-8')).get('users', {}))
+    return copy.deepcopy(_users_cache[1])
 
 
 def save_users(users):
@@ -114,12 +139,26 @@ class Guard:
         self.lock = threading.Lock()
         self.sessions = {}      # token → (user, password hash at sign-in, expires_epoch)
         self.fails = {}         # ip → (count, first_fail_epoch, locked_until_epoch)
+        self.ai_calls = {}      # user → [epoch of each /api/claude call in the last hour]
 
     def new_session(self, user, pw_hash):
         token = secrets.token_urlsafe(32)
+        now = time.time()
         with self.lock:
-            self.sessions[token] = (user, pw_hash, time.time() + SESSION_HOURS * 3600)
+            # drop expired sessions so the table does not grow for the life of the server
+            self.sessions = {t: s for t, s in self.sessions.items() if s[2] > now}
+            self.sessions[token] = (user, pw_hash, now + SESSION_HOURS * 3600)
         return token
+
+    def ai_allowed(self, user):
+        now = time.time()
+        with self.lock:
+            calls = [t for t in self.ai_calls.get(user, []) if now - t < 3600]
+            ok = len(calls) < AI_PER_HOUR
+            if ok:
+                calls.append(now)
+            self.ai_calls[user] = calls
+            return ok
 
     def user_for(self, token):
         if not token:
@@ -217,6 +256,39 @@ def servable(raw_path):
     return not segs or segs == ['index.html'] or (segs[0] == 'data' and len(segs) > 1)
 
 
+def parse_ai_request(req):
+    """Validate the page's request → (system, content, web_search). Raises
+    ValueError. Only plain text and base64 images get through."""
+    system = req.get('system') or ''
+    msgs = req.get('messages')
+    if not isinstance(system, str) or len(system) > 30_000:
+        raise ValueError('system must be text (≤ 30,000 characters)')
+    if not (isinstance(msgs, list) and len(msgs) == 1 and msgs[0].get('role') == 'user'):
+        raise ValueError('exactly one user message expected')
+    content = msgs[0].get('content')
+    if isinstance(content, str):
+        content = [{'type': 'text', 'text': content}]
+    if not isinstance(content, list) or not 1 <= len(content) <= 4:
+        raise ValueError('content must be 1–4 blocks')
+    blocks, images = [], 0
+    for b in content:
+        if b.get('type') == 'text' and isinstance(b.get('text'), str) and len(b['text']) <= 60_000:
+            blocks.append({'type': 'text', 'text': b['text']})
+        elif b.get('type') == 'image':
+            src = b.get('source') or {}
+            if (src.get('type') != 'base64' or src.get('media_type') not in AI_IMAGE_TYPES
+                    or not isinstance(src.get('data'), str)):
+                raise ValueError('images must be base64 PNG/JPEG/GIF/WebP')
+            images += 1
+            blocks.append({'type': 'image', 'source': {'type': 'base64', 'media_type': src['media_type'],
+                                                       'data': src['data']}})
+        else:
+            raise ValueError('only text and image blocks are accepted')
+    if images > 3:
+        raise ValueError('at most 3 images')
+    return system, blocks, bool(req.get('web_search'))
+
+
 # ── HTTP handler ────────────────────────────────────────────────────────
 class SecureHandler(SimpleHTTPRequestHandler):
     server_version = 'NEPSE'
@@ -230,6 +302,7 @@ class SecureHandler(SimpleHTTPRequestHandler):
         self.send_header('X-Content-Type-Options', 'nosniff')
         self.send_header('X-Frame-Options', 'DENY')
         self.send_header('Referrer-Policy', 'no-referrer')
+        self.send_header('Content-Security-Policy', CSP)
         super().end_headers()
 
     # helpers
@@ -252,6 +325,29 @@ class SecureHandler(SimpleHTTPRequestHandler):
             self.send_header(k, v)
         self.end_headers()
         self.wfile.write(data)
+
+    def send_json(self, code, obj):
+        data = json.dumps(obj).encode('utf-8')
+        self.send_response(code)
+        self.send_header('Content-Type', 'application/json')
+        self.send_header('Content-Length', str(len(data)))
+        self.end_headers()
+        self.wfile.write(data)
+
+    def read_body(self, limit):
+        """The request body, or None after answering 400/413. A negative length
+        made rfile.read(-1) wait for EOF, pinning the thread."""
+        try:
+            length = int(self.headers.get('Content-Length') or 0)
+        except ValueError:
+            length = -1
+        if length < 0:
+            self.send_error(400)
+            return None
+        if length > limit:
+            self.send_error(413)
+            return None
+        return self.rfile.read(length)
 
     def redirect(self, where, extra_headers=()):
         self.send_response(303)
@@ -287,13 +383,7 @@ class SecureHandler(SimpleHTTPRequestHandler):
             self.send_error(401, 'Sign in required')
             return
         if path == '/whoami':
-            body = json.dumps({'user': user}).encode()
-            self.send_response(200)
-            self.send_header('Content-Type', 'application/json')
-            self.send_header('Content-Length', str(len(body)))
-            self.end_headers()
-            self.wfile.write(body)
-            return
+            return self.send_json(200, {'user': user})
         if not servable(path):
             self.send_error(404)
             return
@@ -309,19 +399,17 @@ class SecureHandler(SimpleHTTPRequestHandler):
         super().do_HEAD()
 
     def do_POST(self):
-        if urlsplit(self.path).path != '/login':
+        path = urlsplit(self.path).path
+        if path == '/api/claude':
+            return self.api_claude()
+        if path != '/login':
             self.send_error(405)
             return
         ip = self.client_ip()
-        # a negative length made rfile.read(-1) wait for EOF, pinning the thread
-        try:
-            length = int(self.headers.get('Content-Length') or 0)
-        except ValueError:
-            length = -1
-        if not 0 <= length <= 4096:
-            self.send_error(400)
+        body = self.read_body(4096)
+        if body is None:
             return
-        form = parse_qs(self.rfile.read(length).decode('utf-8', 'replace'))
+        form = parse_qs(body.decode('utf-8', 'replace'))
         user = (form.get('username') or [''])[0].strip()
         pw = (form.get('password') or [''])[0]
         nxt = (form.get('next') or ['/'])[0]
@@ -340,6 +428,36 @@ class SecureHandler(SimpleHTTPRequestHandler):
         audit('login', user, ip)
         cookie = f'{COOKIE}={token}; Path=/; Max-Age={SESSION_HOURS * 3600}; HttpOnly; SameSite=Strict'
         self.redirect(safe_next(nxt), [('Set-Cookie', cookie)])
+
+    def api_claude(self):
+        """The dashboard's AI analysis. Accepts one user turn (text and up to
+        three chart images) plus a system prompt; model, token budget and tools
+        are decided here, not by the page."""
+        user = GUARD.user_for(self.token())
+        if not user:
+            return self.send_json(401, {'error': {'message': 'Sign in required'}})
+        origin = self.headers.get('Origin')
+        if origin and urlsplit(origin).netloc != self.headers.get('Host'):
+            return self.send_json(403, {'error': {'message': 'Cross-origin request refused'}})
+        if not (self.headers.get('Content-Type') or '').startswith('application/json'):
+            return self.send_json(415, {'error': {'message': 'JSON body required'}})
+        body = self.read_body(AI_MAX_BODY)
+        if body is None:
+            return
+        try:
+            system, content, web_search = parse_ai_request(json.loads(body))
+        except (ValueError, TypeError, KeyError, AttributeError) as e:
+            return self.send_json(400, {'error': {'message': f'Invalid request: {e}'}})
+        if not GUARD.ai_allowed(user):
+            return self.send_json(429, {'error': {'message': f'Limit of {AI_PER_HOUR} AI requests per hour reached'}})
+        audit('ai-request' + (' +web' if web_search else ''), user, self.client_ip())
+        import claude_client
+        try:
+            text = claude_client.ask(system, content, web_search=web_search)
+        except claude_client.ClaudeError as e:
+            return self.send_json(502, {'error': {'message': str(e)}})
+        # same shape as the Messages API, so the page reads it either way
+        self.send_json(200, {'model': claude_client.MODEL, 'content': [{'type': 'text', 'text': text}]})
 
     def list_directory(self, path):
         self.send_error(404)

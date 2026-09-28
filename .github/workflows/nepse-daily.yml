@@ -13,10 +13,8 @@ on:
   push:
     branches: [main]          # your own edits to index.html redeploy immediately
 
-permissions:
-  contents: write
-  pages: write
-  id-token: write
+# Least privilege: nothing by default; each job asks for what it needs
+permissions: {}
 
 concurrency:
   group: nepse-daily
@@ -27,6 +25,8 @@ jobs:
     if: github.event_name != 'push'
     runs-on: ubuntu-latest
     timeout-minutes: 25
+    permissions:
+      contents: write         # commit the day's data
     steps:
       - uses: actions/checkout@v4
 
@@ -37,6 +37,9 @@ jobs:
           cache-dependency-path: scripts/requirements.txt
 
       - run: pip install -r scripts/requirements.txt
+
+      - name: Unit tests (parsers, sanity checks, RRG maths, server rules)
+        run: python -m unittest discover -s tests -v
 
       - name: Daily update (fetch → heatmap/RRG → verify vs previous session → validate)
         env:
@@ -62,7 +65,13 @@ jobs:
     # variable PAGES_ENABLED=true (Settings → Secrets and variables → Actions →
     # Variables) once Pages is switched on; until then this job is skipped.
     if: ${{ !cancelled() && needs.update-data.result != 'failure' && vars.PAGES_ENABLED == 'true' }}
+    # WARNING: a Pages site is public to anyone with the link and has no login —
+    # it publishes the dashboard and all market data (see DEPLOYMENT.md).
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -70,9 +79,16 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: main
+      # Only what the page loads: index.html + data/ (never scripts/, docs/, .claude/, logs)
+      - name: Stage the site
+        run: |
+          mkdir _site
+          cp index.html _site/
+          cp -r data _site/
+          rm -f _site/data/live.json _site/data/live_views.json
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: '.'
+          path: '_site'
       - id: deployment
         uses: actions/deploy-pages@v4

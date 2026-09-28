@@ -113,6 +113,7 @@ def summary_payload(live, prev):
 # script's own polls (open = first value seen, so it is approximate when the
 # script starts after 11 AM).
 _DAY = {}
+BAR_REFRESH = 300
 
 
 def live_candle(live):
@@ -124,11 +125,16 @@ def live_candle(live):
         _DAY.clear()
         _DAY.update(date=live['date'], open=idx, high=idx, low=idx, source='polls')
     _DAY['high'], _DAY['low'] = max(_DAY['high'], idx), min(_DAY['low'], idx)
-    try:
-        bar = next((b for b in merolagani_history(start=live['date'], timeout=15)
-                    if b['date'] == live['date'] and None not in (b['open'], b['high'], b['low'])), None)
-    except Exception:
-        bar = None
+    # MeroLagani's bar changes slowly — ask at most every BAR_REFRESH seconds,
+    # not on every 60-second poll (each ask can take up to 15 s)
+    if time.time() - _DAY.get('bar_at', 0) >= BAR_REFRESH:
+        try:
+            _DAY['bar'] = next((b for b in merolagani_history(start=live['date'], timeout=15)
+                                if b['date'] == live['date'] and None not in (b['open'], b['high'], b['low'])), None)
+        except Exception:
+            _DAY['bar'] = None
+        _DAY['bar_at'] = time.time()
+    bar = _DAY.get('bar')
     o, h, l = (bar['open'], bar['high'], bar['low']) if bar else (_DAY['open'], _DAY['high'], _DAY['low'])
     return {'date': live['date'], 'open': round(o, 2), 'high': round(max(h, idx, o), 2),
             'low': round(min(l, idx, o), 2), 'close': idx, 'turnover': to,

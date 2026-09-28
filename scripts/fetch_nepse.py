@@ -48,7 +48,6 @@ HEADERS = {
                   '(KHTML, like Gecko) Chrome/126.0 Safari/537.36',
     'Accept-Language': 'en-US,en;q=0.9',
 }
-MODEL = os.getenv('CLAUDE_MODEL', 'claude-sonnet-4-6')
 INDEX_CSV_FIELDS = ['date', 'index', 'change', 'changePct', 'turnover', 'traded_shares',
                     'transactions', 'scrips_traded', 'gainers', 'losers', 'unchanged', 'source']
 
@@ -180,6 +179,24 @@ def parse_price_table(html, symmap):
     return []
 
 
+def prices_follow_last_session(prices, before):
+    """For a price list with no as-of date: it belongs to the session after the
+    last stored one only if its previous-close column matches that session's
+    stored LTPs. A stale page (yesterday's list again) fails this, so it can
+    never be stored under today's date. Returns (ok, reason)."""
+    days = sorted(p.stem for p in PRICE_DIR.glob('*.csv') if p.stem < before)
+    if not days:
+        return True, 'no stored session to compare with (first run)'
+    with (PRICE_DIR / f'{days[-1]}.csv').open(newline='', encoding='utf-8') as f:
+        stored = {r['sym']: num(r['ltp']) for r in csv.DictReader(f)}
+    pairs = [(r['prev'], stored[r['sym']]) for r in prices if r.get('prev') and stored.get(r['sym'])]
+    if len(pairs) < 50:
+        return False, f'only {len(pairs)} symbols comparable with {days[-1]}'
+    share = sum(abs(p / s - 1) <= 0.005 for p, s in pairs) / len(pairs)
+    return (share >= 0.8,
+            f"previous closes match the stored {days[-1]} closes for {share:.0%} of {len(pairs)} symbols")
+
+
 def find_as_of_date(html):
     pats = [r'As\s*(?:of|on)\s*:?\s*(\d{4}-\d{2}-\d{2})',
             r'id=["\']fromdate["\'][^>]*value=["\'](\d{4}-\d{2}-\d{2})',
@@ -269,31 +286,36 @@ CLAUDE_SYSTEM = (
 )
 
 
+# Only these keys from the model's JSON may reach the payload (anything else —
+# e.g. a 'prices' or 'source' key — is dropped, never merged)
+CLAUDE_KEYS = {'trade_date', 'index', 'change', 'changePct', 'turnover', 'traded_shares',
+               'transactions', 'scrips_traded', 'market_cap', 'float_mkt_cap', 'gainers',
+               'losers', 'unchanged', 'sector_leader', 'sector_lagger', 'nrb_repo', 'nrb_slf',
+               'top_gainers', 'top_losers', 'top_turnover', 'top_volume', 'top_transactions'}
+
+
 def claude_fetch(expected_date):
-    key = os.getenv('ANTHROPIC_API_KEY', '').strip()
-    if not key:
+    if not os.getenv('ANTHROPIC_API_KEY', '').strip():
         log('Claude fallback skipped — ANTHROPIC_API_KEY secret not set')
         return None
+    from claude_client import ClaudeError, ask
     prompt = (f'Report the official NEPSE closing market summary for {expected_date} '
               f'(or the most recent completed trading day before it if the market was closed). '
               f'Set trade_date to the date the figures belong to.')
     try:
-        r = requests.post('https://api.anthropic.com/v1/messages', timeout=180, headers={
-            'x-api-key': key, 'anthropic-version': '2023-06-01', 'content-type': 'application/json'},
-            json={'model': MODEL, 'max_tokens': 2500, 'system': CLAUDE_SYSTEM,
-                  'tools': [{'type': 'web_search_20250305', 'name': 'web_search', 'max_uses': 6}],
-                  'messages': [{'role': 'user', 'content': prompt}]})
-        r.raise_for_status()
-        text = ''.join(b.get('text', '') for b in r.json().get('content', []) if b.get('type') == 'text')
-        text = re.sub(r'```(?:json)?', '', text)
+        text = re.sub(r'```(?:json)?', '', ask(CLAUDE_SYSTEM, prompt, web_search=True))
         a, b = text.find('{'), text.rfind('}')
-        data = json.loads(text[a:b + 1])
+        data = json.loads(text[a:b + 1]) if 0 <= a < b else None
+        if not isinstance(data, dict):
+            log('Claude returned no JSON object')
+            return None
+        data = {k: v for k, v in data.items() if k in CLAUDE_KEYS}
         if not isinstance(data.get('index'), (int, float)) or not 1000 <= data['index'] <= 6000:
             log('Claude returned no valid index')
             return None
         log(f"Claude fallback OK: index {data['index']} for {data.get('trade_date')}")
         return data
-    except Exception as e:
+    except (ClaudeError, ValueError) as e:
         log(f'Claude fallback failed: {e}')
         return None
 
@@ -506,6 +528,11 @@ def main():
         ss_html = Path(args.ss_html).read_text(encoding='utf-8') if args.ss_html else get(SS_PRICE_URL)
         prices, as_of = parse_price_table(ss_html, symmap), find_as_of_date(ss_html)
         log(f'ShareSansar: {len(prices)} rows · as-of {as_of}')
+        if prices and not as_of:
+            ok, why = prices_follow_last_session(prices, today)
+            log(f'Price list has no as-of date: {why}' + ('' if ok else ' — prices not used'))
+            if not ok:
+                prices = []
         if prices:
             sources.append('sharesansar.com')
     except Exception as e:

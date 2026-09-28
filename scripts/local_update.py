@@ -28,6 +28,27 @@ def log(msg):
     print(line, flush=True)
 
 
+def take_lock():
+    """One run at a time (the 4:50 PM retry can overlap a slow 4:15 PM run).
+    O_EXCL makes check-and-create one step, so two starts cannot both win;
+    a lock older than an hour is from a crashed run and is replaced."""
+    for _ in range(2):
+        try:
+            fd = os.open(LOCK, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+        except FileExistsError:
+            try:
+                if dt.datetime.now().timestamp() - LOCK.stat().st_mtime < 3600:
+                    return False
+                LOCK.unlink()
+            except FileNotFoundError:
+                pass            # released meanwhile: try again
+            continue
+        with os.fdopen(fd, 'w') as f:
+            f.write(str(os.getpid()))
+        return True
+    return False
+
+
 def run(cmd, **kw):
     r = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True, encoding='utf-8', errors='replace', **kw)
     out = (r.stdout + r.stderr).strip()
@@ -65,11 +86,9 @@ def roll_back():
 
 def main():
     LOG.parent.mkdir(exist_ok=True)
-    # one run at a time (the 4:50 PM retry can overlap a slow 4:15 PM run)
-    if LOCK.exists() and (dt.datetime.now().timestamp() - LOCK.stat().st_mtime) < 3600:
+    if not take_lock():
         log('another update is still running — skipped')
         return 0
-    LOCK.write_text(str(os.getpid()))
     try:
         is_repo = git('rev-parse', '--is-inside-work-tree').returncode == 0
         # GitHub mode only once GitHub really has the project (an empty or

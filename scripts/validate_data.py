@@ -8,7 +8,7 @@ Also imported by fetch_nepse.py, which validates each new day's payload
 before writing it. Exit code 1 = at least one error (details are printed);
 warnings never fail the run.
 """
-import csv, datetime as dt, json, re, sys
+import csv, datetime as dt, functools, json, re, sys
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
@@ -19,6 +19,7 @@ ROOT       = Path(__file__).resolve().parents[1]
 INDEX_HTML = ROOT / 'index.html'
 LATEST     = ROOT / 'data' / 'latest.json'
 INDEX_CSV  = ROOT / 'data' / 'history' / 'index.csv'
+HOLIDAYS_CSV = ROOT / 'data' / 'reference' / 'holidays.csv'
 NPT        = ZoneInfo('Asia/Kathmandu')
 
 MON_FRI_SINCE = '2026-04-06'   # NEPSE moved from Sun–Thu to Mon–Fri
@@ -33,6 +34,19 @@ def _f(v):
         return float(v)
     except (TypeError, ValueError):
         return None
+
+
+@functools.lru_cache(maxsize=1)
+def load_holidays():
+    """{date: name} from data/reference/holidays.csv — NEPSE closures on
+    weekdays. verify_daily.py stops reporting a listed day as a missed update.
+    Advisory only: a close found on a listed day is a warning, never a refusal,
+    so a wrong entry (the list comes partly from secondary sources) cannot
+    block a real session."""
+    if not HOLIDAYS_CSV.exists():
+        return {}
+    with HOLIDAYS_CSV.open(newline='', encoding='utf-8') as f:
+        return {r['date']: r.get('name', '') for r in csv.DictReader(f) if r.get('date')}
 
 
 def check_trade_date(d, today=None):
@@ -59,6 +73,9 @@ def check_payload(p, prev_close=None, today=None):
     if idx is None or not 1000 <= idx <= 6000:
         errs.append(f'index {p.get("index")!r} outside 1000–6000')
     errs += check_trade_date(p.get('trade_date'), today)
+    if p.get('trade_date') in load_holidays():
+        warns.append(f"{p['trade_date']} is listed as a holiday ({load_holidays()[p['trade_date']]}) "
+                     'but has a close — check data/reference/holidays.csv')
     if idx and prev_close:
         move = idx / prev_close - 1
         if abs(move) > MAX_DAY_MOVE:
@@ -107,6 +124,8 @@ def check_history(rows, today=None):
     for r in rows:
         for e in check_trade_date(r['date'], today):
             errs.append(f'index.csv {e}')
+        if r['date'] in load_holidays():
+            warns.append(f"index.csv {r['date']}: listed as a holiday but has a close — check holidays.csv")
         v = _f(r['index'])
         if v is None or not 500 <= v <= 6000:
             errs.append(f'index.csv {r["date"]}: index {r["index"]!r} out of range')

@@ -6,7 +6,8 @@
 <title>Technical Analysis</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"
+        integrity="sha384-dug+JxfBvklEQdJ4AYuBBAIScUz0bVN73xpy273gcAwHjb3qI0fXmuYNaNfdyYJG" crossorigin="anonymous"></script>
 <!-- TradingView Lightweight Charts™ (Apache-2.0) — NEPSE daily candles -->
 <script src="https://cdn.jsdelivr.net/npm/lightweight-charts@5.2.1/dist/lightweight-charts.standalone.production.js"
         integrity="sha384-KkYqTZlM13Zya6fVUF3IGCBOQ1ehFeJVVgxaVvD/0MebineF9EI8Jkd3NnWNChqN" crossorigin="anonymous"></script>
@@ -5504,15 +5505,10 @@ Reference and recommend verification at: chukul.com · sharesansar.com · nepsea
     }
     msgContent.push({ type: 'text', text: userPrompt });
 
-    const resp = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model:      'claude-sonnet-4-6',
-        max_tokens: 2000,
-        system:     systemPrompt,
-        messages:   [{ role: 'user', content: msgContent }]
-      })
+    const resp = await claudeRequest({
+      max_tokens: 2000,
+      system:     systemPrompt,
+      messages:   [{ role: 'user', content: msgContent }]
     });
 
     if (!resp.ok) {
@@ -5554,10 +5550,10 @@ Reference and recommend verification at: chukul.com · sharesansar.com · nepsea
     document.getElementById('ai-output-body').innerHTML =
       `<div style="color:var(--red);font-family:var(--mono);font-size:12px;padding:12px;background:var(--red-dim);border-radius:8px;border:1px solid var(--red-border);">
         <strong>⚠ Analysis error</strong><br><br>
-        ${err.message}<br><br>
+        ${esc(err.message)}<br><br>
         <span style="color:var(--text2);">Troubleshooting steps:<br>
         1. Check your internet connection<br>
-        2. Ensure you are logged into Claude.ai<br>
+        2. Served from this PC: set ANTHROPIC_API_KEY before starting start-live.bat (the key stays on the server). Inside Claude.ai: make sure you are logged in<br>
         3. Try refreshing the page and re-entering data (use Save Session first)<br>
         4. If image is very large (&gt;4MB), try a smaller screenshot</span>
       </div>`;
@@ -7103,6 +7099,8 @@ function renderNotes() {
   if (window.marked) return put();
   const s = document.createElement('script');
   s.src = 'https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js';
+  s.integrity = 'sha384-/TQbtLCAerC3jgaim+N78RZSDYV7ryeoBCVqTuzRrFec2akfBkHS7ACQ3PQhvMVi';
+  s.crossOrigin = 'anonymous';
   s.onload = put; s.onerror = put;                                    // offline → plain text
   document.head.appendChild(s);
 }
@@ -8088,6 +8086,26 @@ const IS_HTTP        = location.protocol === 'http:' || location.protocol === 'h
 const CACHE_KEY      = 'nepse_live_cache';
 const CACHE_VER      = 3;
 
+// ── Claude requests ──────────────────────────────────────────
+// Served from this PC (scripts/secure_server.py): POST /api/claude — the
+// server holds ANTHROPIC_API_KEY and chooses the model; the key never
+// reaches the browser. Inside Claude.ai: a direct call (Claude.ai supplies
+// the auth). Both return the Messages API shape ({content: [...]}).
+const CLAUDE_AI_MODEL = 'claude-sonnet-4-6';   // only used inside Claude.ai
+function claudeRequest(body) {
+  if (CAN_BROWSER_AI) {
+    return fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: CLAUDE_AI_MODEL, ...body })
+    });
+  }
+  return fetch('/api/claude', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ system: body.system, messages: body.messages,
+                           web_search: (body.tools || []).some(t => t.name === 'web_search') })
+  });
+}
+
 let LIVE_PRICES      = null;   // price rows from Action / latest.json
 let LIVE_PRICES_DATE = null;   // ISO trade date of LIVE_PRICES
 let DATA_SOURCE      = 'fallback';
@@ -8346,16 +8364,11 @@ async function autoFetchLiveData(force = false) {
   _busy = true;
   setBannerState('loading', '⏳ Fetching live NEPSE data…', 'Claude is searching nepalstock.com · ShareSansar · NRB (15–30 sec)', '');
   try {
-    const resp = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
-        max_tokens: 1500,
-        system: LIVE_SYSTEM_PROMPT,
-        tools: [{ type: 'web_search_20250305', name: 'web_search' }],
-        messages: [{ role: 'user', content: buildLiveUserPrompt() }]
-      })
+    const resp = await claudeRequest({
+      max_tokens: 1500,
+      system: LIVE_SYSTEM_PROMPT,
+      tools: [{ type: 'web_search_20250305', name: 'web_search' }],
+      messages: [{ role: 'user', content: buildLiveUserPrompt() }]
     });
     if (!resp.ok) throw new Error('API ' + resp.status);
     const data  = await resp.json();

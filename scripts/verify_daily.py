@@ -29,6 +29,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from fetch_nepse import ROOT, LATEST, PRICE_DIR, log, num, read_index_history, inject_into_html, clean_payload, write_atomic
 from market_views import SECTORS, slug
+from validate_data import MON_FRI_SINCE, load_holidays
 SECTOR_NAME = {slug(code): name for name, code in SECTORS.values()}
 
 CHECK_DIR  = ROOT / 'data' / 'history' / 'checks'
@@ -91,16 +92,23 @@ def main():
         checks.append(check('index_continuity', 'Index change vs stored previous close', 'warn',
                              'No earlier close stored — first day of history'))
 
-    # 2. Gaps between the previous stored day and today (weekday calendar)
+    # 2. Gaps between the previous stored day and today (weekday calendar,
+    #    minus the holidays listed in data/reference/holidays.csv)
     if prev_day:
         d0, d1 = dt.date.fromisoformat(prev_day), dt.date.fromisoformat(day)
-        weekdays = [(d0 + dt.timedelta(days=i)).isoformat() for i in range(1, (d1 - d0).days)
-                    if (d0 + dt.timedelta(days=i)).weekday() < 5 and (d0 + dt.timedelta(days=i)).isoformat() >= '2026-04-06']
+        between = [d0 + dt.timedelta(days=i) for i in range(1, (d1 - d0).days)]
+        holidays = load_holidays()
+        closed = [d.isoformat() for d in between if d.isoformat() in holidays]
+        weekdays = [d.isoformat() for d in between
+                    if d.weekday() < 5 and d.isoformat() >= MON_FRI_SINCE and d.isoformat() not in holidays]
         checks.append(check('history_gaps', 'No missing trading day since the previous session',
                             'ok' if not weekdays else 'warn',
-                            'Consecutive sessions' if not weekdays else
-                            f'{len(weekdays)} weekday(s) without a stored close: {", ".join(weekdays)} '
-                            '(public holiday, or a missed update — check the Actions log)', weekdays))
+                            ('Consecutive sessions' if not weekdays else
+                             f'{len(weekdays)} weekday(s) without a stored close: {", ".join(weekdays)} '
+                             '(a missed update — check the Actions log — or a holiday not yet in '
+                             'data/reference/holidays.csv)')
+                            + (f' · holiday: {", ".join(f"{d} {holidays[d]}" for d in closed)}' if closed else ''),
+                            weekdays))
 
     # 3. Price continuity: today's "prev close" vs yesterday's stored LTP
     prices = today.get('prices') or []
