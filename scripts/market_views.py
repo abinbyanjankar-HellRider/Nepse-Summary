@@ -34,7 +34,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from fetch_nepse import (ROOT, INDEX_HTML, HEADERS, NPT, log, num, get, merolagani_history,
-                         read_index_history, period_key, clean_payload)
+                         read_index_history, period_key, clean_payload, write_atomic)
 from bs4 import BeautifulSoup
 
 REF_DIR     = ROOT / 'data' / 'reference'
@@ -505,7 +505,7 @@ def inject(payload):
     pat = re.compile(r'(<script id="nepse-views" type="application/json">)(.*?)(</script>)', re.S)
     if not pat.search(html):
         raise SystemExit('index.html has no <script id="nepse-views"> block')
-    INDEX_HTML.write_text(pat.sub(lambda m: m.group(1) + blob + m.group(3), html, count=1), encoding='utf-8', newline='\n')
+    write_atomic(INDEX_HTML, pat.sub(lambda m: m.group(1) + blob + m.group(3), html, count=1))
 
 
 def main():
@@ -533,7 +533,7 @@ def main():
         except Exception as e:                  # chart keeps the stored candles
             log(f'NEPSE candles not refreshed: {e}')
     payload = clean_payload(build(companies))
-    VIEWS_JSON.write_text(json.dumps(payload, ensure_ascii=False, separators=(',', ':')), encoding='utf-8', newline='\n')
+    write_atomic(VIEWS_JSON, json.dumps(payload, ensure_ascii=False, separators=(',', ':')))
     inject(payload)
     archive_snapshot(payload)
     r = payload['rrg']['daily']

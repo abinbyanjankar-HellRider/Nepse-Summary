@@ -5254,12 +5254,15 @@ function redrawAnnotations() {
 
 function updateAnnList() {
   const list = document.getElementById('ann-label-list');
+  // annotation text is typed by the user and restored from saved sessions: escape it
   list.innerHTML = saState.annotations.map((ann, i) => {
+    const type = esc(String(ann.type || '').toUpperCase());
     const label = ann.type === 'stamp' || ann.type === 'text'
-      ? `${ann.type.toUpperCase()}: "${ann.text}"`
-      : `${ann.type.toUpperCase()} (${Math.round(ann.x1||ann.x)},${Math.round(ann.y1||ann.y)})`;
+      ? `${type}: "${esc(ann.text)}"`
+      : `${type} (${Math.round(ann.x1||ann.x)},${Math.round(ann.y1||ann.y)})`;
+    const color = /^#[0-9a-fA-F]{3,8}$/.test(ann.color) ? ann.color : 'var(--text3)';
     return `<div class="ann-label-item">
-      <span style="color:${ann.color};">■</span>
+      <span style="color:${color};">■</span>
       <span style="flex:1;">${label}</span>
       <span class="del-ann" onclick="deleteAnnotation(${i})">×</span>
     </div>`;

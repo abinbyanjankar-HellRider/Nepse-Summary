@@ -27,7 +27,7 @@ import csv, datetime as dt, json, sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from fetch_nepse import ROOT, LATEST, PRICE_DIR, log, num, read_index_history, inject_into_html, clean_payload
+from fetch_nepse import ROOT, LATEST, PRICE_DIR, log, num, read_index_history, inject_into_html, clean_payload, write_atomic
 from market_views import SECTORS, slug
 SECTOR_NAME = {slug(code): name for name, code in SECTORS.values()}
 
@@ -209,7 +209,7 @@ def main():
     summary = clean_payload({**report, 'checks': [{**c, 'items': c['items'][:12]} for c in checks],
                              'changes': {**changes, 'rrg_moves': changes.get('rrg_moves', [])[:60]}})
     today['verification'] = summary
-    LATEST.write_text(json.dumps(today, ensure_ascii=False, indent=1), encoding='utf-8', newline='\n')
+    write_atomic(LATEST, json.dumps(today, ensure_ascii=False, indent=1))
     inject_into_html(today)
 
     for c in checks:

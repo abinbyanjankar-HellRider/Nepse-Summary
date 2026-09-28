@@ -16,7 +16,7 @@ Exit codes: 0 = updated or nothing to do (weekend/holiday/already done)
             1 = could not get the NEPSE index — the workflow fails and
                 GitHub emails you, and yesterday's data stays live.
 """
-import argparse, csv, datetime as dt, json, os, re, statistics, sys
+import argparse, csv, datetime as dt, json, os, re, statistics, sys, time
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
@@ -72,6 +72,20 @@ def num(v):
         return -f if neg else f
     except ValueError:
         return None
+
+
+def write_atomic(path, text):
+    """Write via a temp file + rename, so a reader (the local web server) or a
+    crash never sees a half-written file."""
+    tmp = path.with_name(path.name + '.tmp')
+    tmp.write_text(text, encoding='utf-8', newline='\n')
+    for _ in range(10):                 # Windows: the file may be open by the web server for a moment
+        try:
+            os.replace(tmp, path)
+            return
+        except PermissionError:
+            time.sleep(0.2)
+    raise PermissionError(f'could not replace {path}')
 
 
 def get(url, timeout=30):
@@ -447,7 +461,7 @@ def inject_into_html(payload):
     if not pat.search(html):
         raise SystemExit('index.html has no <script id="nepse-data"> block — cannot inject data')
     html = pat.sub(lambda m: m.group(1) + blob + m.group(3), html, count=1)
-    INDEX_HTML.write_text(html, encoding='utf-8', newline='\n')
+    write_atomic(INDEX_HTML, html)
 
 
 # ── Main ─────────────────────────────────────────────────────
@@ -644,7 +658,7 @@ def main():
         'month_movers': period_movers(monthly[-1]['start'], trade_date) if monthly else None,
     })
 
-    LATEST.write_text(json.dumps(payload, ensure_ascii=False, indent=1), encoding='utf-8', newline='\n')
+    write_atomic(LATEST, json.dumps(payload, ensure_ascii=False, indent=1))
     inject_into_html(payload)
     log(f"Done: {trade_date} · NEPSE {payload['index']} ({payload['change']}) · "
         f"{len(prices)} prices · source {payload['source']}")

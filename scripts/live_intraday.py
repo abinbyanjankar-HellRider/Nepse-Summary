@@ -24,13 +24,14 @@ Timing: polls from 10:50 AM until the page shows the market closed after
 (default 6 PM) so the page can pick up the 4 PM official close. If no session
 has started for today by 11:45 AM (holiday), it stops polling.
 """
-import argparse, datetime as dt, json, os, re, sys, time
+import argparse, datetime as dt, json, re, sys, time
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from bs4 import BeautifulSoup
 from fetch_nepse import (ROOT, NPT, LATEST, log, num, get, parse_price_table, load_symbol_map,
-                         derive_from_prices, read_index_history, clean_payload, merolagani_history)
+                         derive_from_prices, read_index_history, clean_payload, merolagani_history,
+                         write_atomic)
 import market_views as MV
 import secure_server
 
@@ -156,15 +157,7 @@ def sane(live, last_close):
 
 
 def write_json(path, obj):
-    tmp = path.with_suffix('.tmp')
-    tmp.write_text(json.dumps(obj, ensure_ascii=False, separators=(',', ':')), encoding='utf-8', newline='\n')
-    for _ in range(10):                 # Windows: the file may be open by the web server for a moment
-        try:
-            os.replace(tmp, path)
-            return
-        except PermissionError:
-            time.sleep(0.2)
-    raise PermissionError(f'could not replace {path}')
+    write_atomic(path, json.dumps(obj, ensure_ascii=False, separators=(',', ':')))
 
 
 # ── One poll ────────────────────────────────────────────────────────────

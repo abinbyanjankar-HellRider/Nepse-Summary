@@ -13,3 +13,6 @@ data/*.tmp
 
 # dashboard login (scripts/secure_server.py): password hashes — never publish
 .auth/
+
+# atomic writes (fetch_nepse.write_atomic) — only ever present mid-write
+*.tmp

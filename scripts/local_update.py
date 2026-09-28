@@ -41,6 +41,28 @@ def git(*args):
     return run(['git', *args])
 
 
+# What a daily run may change. The run log and the check reports are kept
+# even when a run fails — they are how you find out why.
+DATA_PATHS = ['index.html', 'data']
+KEEP_PATHS = [':(exclude)data/history/runs.csv', ':(exclude)data/history/checks.csv',
+              ':(exclude)data/history/checks']
+
+
+def dirty_data():
+    r = git('status', '--porcelain', '--', *DATA_PATHS, *KEEP_PATHS)
+    return r.stdout.strip() if r.returncode == 0 else 'git status failed'
+
+
+def roll_back():
+    """A failed run must leave nothing behind: otherwise the next run sees
+    'already updated' and the next commit sweeps in the unverified files."""
+    git('restore', '--source=HEAD', '--staged', '--worktree', '--', *DATA_PATHS, *KEEP_PATHS)
+    git('clean', '-fdq', '--', *DATA_PATHS, *KEEP_PATHS)
+    left = dirty_data()
+    log('rolled index.html and data/ back to the last commit' if not left else
+        f'ROLLBACK INCOMPLETE — still changed:\n{left}')
+
+
 def main():
     LOG.parent.mkdir(exist_ok=True)
     # one run at a time (the 4:50 PM retry can overlap a slow 4:15 PM run)
@@ -61,12 +83,22 @@ def main():
                 'GitHub mode: git pull failed — see log above (local edits not committed?)')
             return r.returncode
 
+        if is_repo:
+            left = dirty_data()
+            if left:
+                # never sweep hand edits (e.g. the NRB blocks in index.html) into a
+                # data commit, and never roll them back after a failed run
+                log(f'uncommitted changes in index.html/data — commit or discard them first; update skipped:\n{left}')
+                return 1
+
         log('local mode: running scripts/run_daily.py')
         env = {**os.environ, 'PYTHONIOENCODING': 'utf-8'}
         r = run([sys.executable, str(ROOT / 'scripts' / 'run_daily.py')], env=env)
         log(f'run_daily exit code {r.returncode}')
         if r.returncode != 0:
             log('update or verification failed — nothing committed; open data/history/checks/ and the log above')
+            if is_repo:
+                roll_back()
             return r.returncode
 
         if is_repo:

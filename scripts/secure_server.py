@@ -18,7 +18,8 @@ Security model
     12-hour lifetime, kept in server memory (a restart signs everyone out).
   • Brute force: 5 failed sign-ins from one address → locked out for 5 minutes.
   • Audit: sign-ins, failures and lockouts are appended to logs/auth.log.
-  • Never served: hidden paths (.git, .auth, …) and directory listings.
+  • Served: only index.html and files under data/ (checked on the decoded
+    path). Never: hidden paths (.git, .auth, …), scripts/, logs/, listings.
   • The server refuses to start while no user exists (fails closed).
   • Plain HTTP: keep the default host 127.0.0.1 (this PC only). --host 0.0.0.0
     shares it on your network, but passwords then cross the network unencrypted.
@@ -30,7 +31,7 @@ import argparse, base64, datetime as dt, functools, getpass, hashlib, hmac, html
 import secrets, sys, threading, time
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from urllib.parse import parse_qs, urlsplit, quote
+from urllib.parse import parse_qs, urlsplit, quote, unquote
 
 ROOT       = Path(__file__).resolve().parents[1]
 AUTH_DIR   = ROOT / '.auth'
@@ -203,6 +204,19 @@ def safe_next(target):
     return target
 
 
+def servable(raw_path):
+    """Allowlist of what the page needs: index.html and files under data/.
+    Checked on the *decoded* path — the file lookup decodes %2E to '.', so a
+    check on the raw path let /%2Eauth/users.json and /%2Egit/config through."""
+    path = unquote(raw_path)
+    if '\\' in path or '\0' in path:
+        return False
+    segs = [s for s in path.split('/') if s]
+    if any(s.startswith('.') for s in segs):     # also rules out '..'
+        return False
+    return not segs or segs == ['index.html'] or (segs[0] == 'data' and len(segs) > 1)
+
+
 # ── HTTP handler ────────────────────────────────────────────────────────
 class SecureHandler(SimpleHTTPRequestHandler):
     server_version = 'NEPSE'
@@ -280,7 +294,7 @@ class SecureHandler(SimpleHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(body)
             return
-        if any(seg.startswith('.') for seg in path.split('/') if seg):
+        if not servable(path):
             self.send_error(404)
             return
         super().do_GET()
@@ -289,6 +303,9 @@ class SecureHandler(SimpleHTTPRequestHandler):
         if not GUARD.user_for(self.token()):
             self.send_error(401)
             return
+        if not servable(urlsplit(self.path).path):
+            self.send_error(404)
+            return
         super().do_HEAD()
 
     def do_POST(self):
@@ -296,7 +313,14 @@ class SecureHandler(SimpleHTTPRequestHandler):
             self.send_error(405)
             return
         ip = self.client_ip()
-        length = min(int(self.headers.get('Content-Length') or 0), 4096)
+        # a negative length made rfile.read(-1) wait for EOF, pinning the thread
+        try:
+            length = int(self.headers.get('Content-Length') or 0)
+        except ValueError:
+            length = -1
+        if not 0 <= length <= 4096:
+            self.send_error(400)
+            return
         form = parse_qs(self.rfile.read(length).decode('utf-8', 'replace'))
         user = (form.get('username') or [''])[0].strip()
         pw = (form.get('password') or [''])[0]
