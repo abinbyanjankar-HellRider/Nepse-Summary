@@ -66,7 +66,8 @@ claude                      # then describe the change you want
 ```
 Ask Claude Code to commit and push when you are happy; the site redeploys automatically.
 Do not edit the `<script id="nepse-data">` block by hand — the Action rewrites it daily.
-Weekday holidays go in `data/reference/holidays.csv` (`date,name`): the daily check then stops reporting them as missed updates.
+Trading week: **Mon–Fri since 2026-04-06** — after the Government of Nepal changed the weekly holiday, Sunday became a weekly holiday and Friday a trading day (before: Sun–Thu). Saturday is always closed.
+Festival/extra closures on Mon–Fri go in `data/reference/holidays.csv` (`date,name,source`): the daily check then stops reporting them as missed updates. Never list a Saturday or Sunday there — they are weekly holidays already (`validate_data.py` warns if one is listed).
 See https://docs.claude.com for Claude Code setup details.
 
 ## Schedule reference

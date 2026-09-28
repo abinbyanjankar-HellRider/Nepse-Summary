@@ -22,7 +22,11 @@ INDEX_CSV  = ROOT / 'data' / 'history' / 'index.csv'
 HOLIDAYS_CSV = ROOT / 'data' / 'reference' / 'holidays.csv'
 NPT        = ZoneInfo('Asia/Kathmandu')
 
-MON_FRI_SINCE = '2026-04-06'   # NEPSE moved from Sun–Thu to Mon–Fri
+# Trading week. After the Government of Nepal changed the weekly holiday, NEPSE
+# moved from Sun–Thu to Mon–Fri: from this date Sunday is a weekly holiday and
+# Friday a trading day (last Sunday session 2026-04-05, first Friday 2026-04-10).
+# Saturday is always closed.
+MON_FRI_SINCE = '2026-04-06'
 MAX_DAY_MOVE  = 0.10           # index circuit breakers halt trading long before ±10 %
 MIN_PRICES    = 150            # a normal day has 300+ traded scrips
 MAX_PCT_ROWS  = 5              # more rows beyond ±20 % means misaligned columns
@@ -38,8 +42,11 @@ def _f(v):
 
 @functools.lru_cache(maxsize=1)
 def load_holidays():
-    """{date: name} from data/reference/holidays.csv — NEPSE closures on
-    weekdays. verify_daily.py stops reporting a listed day as a missed update.
+    """{date: name} from data/reference/holidays.csv — closures on days NEPSE
+    would otherwise trade (Mon–Fri since MON_FRI_SINCE). Weekly holidays
+    (Saturday, and Sunday since the Mon–Fri change) never go in this file —
+    see weekly_holiday(). verify_daily.py stops reporting a listed day as a
+    missed update.
     Advisory only: a close found on a listed day is a warning, never a refusal,
     so a wrong entry (the list comes partly from secondary sources) cannot
     block a real session."""
@@ -47,6 +54,20 @@ def load_holidays():
         return {}
     with HOLIDAYS_CSV.open(newline='', encoding='utf-8') as f:
         return {r['date']: r.get('name', '') for r in csv.DictReader(f) if r.get('date')}
+
+
+def weekly_holiday(d):
+    """True for NEPSE's weekly off days: Saturday always; Sunday from
+    MON_FRI_SINCE (the Government's weekly-holiday change)."""
+    wd = dt.date.fromisoformat(d).weekday()              # Mon=0 … Sun=6
+    return wd == 5 or (wd == 6 and d >= MON_FRI_SINCE)
+
+
+def check_holiday_list(holidays):
+    """Warnings for holidays.csv rows that are weekly holidays anyway —
+    listing them would blur 'closed every week' with 'festival closure'."""
+    return [f'holidays.csv {d} ({n}) is a {dt.date.fromisoformat(d):%A} — already a weekly holiday, remove it'
+            for d, n in sorted(holidays.items()) if weekly_holiday(d)]
 
 
 def check_trade_date(d, today=None):
@@ -62,7 +83,7 @@ def check_trade_date(d, today=None):
     if wd == 5:
         errs.append(f'{d} is a Saturday — NEPSE never trades on Saturday')
     if wd == 6 and d >= MON_FRI_SINCE:
-        errs.append(f'{d} is a Sunday — NEPSE trades Mon–Fri since {MON_FRI_SINCE}')
+        errs.append(f'{d} is a Sunday — a weekly holiday since {MON_FRI_SINCE} (NEPSE trades Mon–Fri)')
     return errs
 
 
@@ -168,6 +189,7 @@ def check_ohlc(candles, index_rows):
 
 def main():
     errs, warns = [], []
+    warns += check_holiday_list(load_holidays())
     rows = []
     if INDEX_CSV.exists():
         with INDEX_CSV.open(newline='', encoding='utf-8') as f:

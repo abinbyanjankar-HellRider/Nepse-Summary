@@ -31,6 +31,19 @@ class TradeDate(unittest.TestCase):
         self.assertTrue(V.check_trade_date('2026-09-29', TODAY))            # future
         self.assertTrue(V.check_trade_date('not-a-date', TODAY))
 
+    def test_weekly_holidays(self):
+        # Sunday: trading day before the Government's weekly-holiday change,
+        # weekly holiday after it; Friday: trading day after it; Saturday: never
+        self.assertFalse(V.weekly_holiday('2026-04-05'))    # last Sunday session
+        self.assertTrue(V.weekly_holiday('2026-04-12'))     # Sunday after the change
+        self.assertFalse(V.weekly_holiday('2026-04-10'))    # first Friday session
+        self.assertTrue(V.weekly_holiday('2026-09-26'))     # Saturday
+
+    def test_repo_holiday_list_has_no_weekly_holidays(self):
+        # holidays.csv lists only closures on trading weekdays (Mon–Fri)
+        self.assertEqual(V.check_holiday_list(V.load_holidays()), [])
+        self.assertTrue(V.check_holiday_list({'2026-10-11': 'Ghatasthapana (a Sunday)'}))
+
     def test_listed_holiday_is_advisory(self):
         # a close on a listed day is a warning, never a refusal: a wrong list
         # entry must not block a real session
