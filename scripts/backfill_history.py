@@ -4,13 +4,13 @@ One-off (re-runnable) backfill of NEPSE daily index history.
 
   python scripts/backfill_history.py                 # fill data/history/index.csv
   python scripts/backfill_history.py --update-chart  # …and rewrite the monthly
-                                                     #    chart arrays in index.html
+                                                     #    chart arrays in app.js
 
 Source: MeroLagani's chart API (dated daily bars: close + turnover), from 2020.
 Rows already in index.csv are kept as they are — they come from the daily
 Action and also carry breadth/transactions. Use --overwrite to replace them.
 
-The chart arrays (allData in index.html) become real month-end closes and
+The chart arrays (allData in app.js) become real month-end closes and
 average daily turnover (Rs B), so the fallback chart no longer depends on
 interpolated values.
 """
@@ -18,11 +18,12 @@ import argparse, json, re, sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from fetch_nepse import (INDEX_CSV, INDEX_HTML, HIST_DIR, log, merolagani_history,
+from fetch_nepse import (INDEX_CSV, ROOT, HIST_DIR, log, merolagani_history,
                          parse_merolagani_bars, read_index_history, write_index_history,
                          monthly_from_history)
 
 SOURCE = 'merolagani-history'
+APP_JS = ROOT / 'app.js'
 CHART_RE = re.compile(r'// ---- CHART DATA ----\n.*?(?=// ── Verify counts at runtime)', re.S)
 
 
@@ -73,7 +74,7 @@ def main():
     ap.add_argument('--start', default='2020-01-01', help='first date to fetch (YYYY-MM-DD)')
     ap.add_argument('--from-file', help='use a saved MeroLagani JSON response instead of the network')
     ap.add_argument('--overwrite', action='store_true', help='replace rows already in index.csv')
-    ap.add_argument('--update-chart', action='store_true', help='rewrite allData in index.html')
+    ap.add_argument('--update-chart', action='store_true', help='rewrite allData in app.js')
     ap.add_argument('--chart-start', default='Jan 21', help='first month label on the chart')
     args = ap.parse_args()
 
@@ -99,13 +100,13 @@ def main():
 
     if args.update_chart:
         monthly = [m for m in monthly_from_history(rows) if m['close']]
-        html = INDEX_HTML.read_text(encoding='utf-8')
-        if not CHART_RE.search(html):
-            log('ERROR: chart data block not found in index.html')
+        src = APP_JS.read_text(encoding='utf-8')
+        if not CHART_RE.search(src):
+            log('ERROR: chart data block not found in app.js')
             return 1
         block = chart_block(monthly, args.chart_start)
-        INDEX_HTML.write_text(CHART_RE.sub(lambda m: block, html, count=1), encoding='utf-8', newline='\n')
-        log(f'index.html chart arrays rewritten from month-end closes ({args.chart_start} onward)')
+        APP_JS.write_text(CHART_RE.sub(lambda m: block, src, count=1), encoding='utf-8', newline='\n')
+        log(f'app.js chart arrays rewritten from month-end closes ({args.chart_start} onward)')
     return 0
 
 
