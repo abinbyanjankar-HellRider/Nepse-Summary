@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="referrer" content="no-referrer">
+<title>NEPSE Dashboard · Unlock</title>
+<style>
+:root { --bg:#F6F7F9; --surface:#FFFFFF; --text:#161B22; --text2:#57606A; --border:#D8DEE4; --accent:#1F883D; --err:#CF222E; }
+@media (prefers-color-scheme: dark) { :root { --bg:#0D1117; --surface:#161B22; --text:#E6EDF3; --text2:#8B949E; --border:#30363D; --accent:#3FB950; --err:#F85149; } }
+* { box-sizing:border-box; }
+body { margin:0; min-height:100vh; display:flex; padding:16px; background:var(--bg); color:var(--text);
+       font:15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+form { margin:auto; width:100%; max-width:360px; background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:28px; }
+h1 { font-size:18px; margin:0 0 4px; }
+p.sub { margin:0 0 20px; color:var(--text2); font-size:13px; }
+label { display:block; font-size:13px; color:var(--text2); margin:14px 0 6px; }
+input { width:100%; padding:10px 12px; border:1px solid var(--border); border-radius:8px; background:var(--bg); color:var(--text); font-size:15px; }
+input:focus { outline:2px solid var(--accent); outline-offset:1px; }
+button { width:100%; margin-top:22px; padding:11px; border:0; border-radius:8px; background:var(--accent); color:#fff; font-size:15px; font-weight:600; cursor:pointer; }
+button:disabled { opacity:.6; cursor:progress; }
+.msg { margin:14px 0 0; font-size:13px; min-height:1.4em; }
+.err { color:var(--err); }
+noscript { color:var(--err); font-size:13px; }
+</style></head>
+<body>
+<form id="f" autocomplete="on">
+  <h1>NEPSE Dashboard</h1>
+  <p class="sub">This page is encrypted. Enter the passphrase to open it.</p>
+  <input type="text" name="username" value="dashboard" autocomplete="username" hidden>
+  <label for="p">Passphrase</label>
+  <input id="p" name="password" type="password" autocomplete="current-password" required autofocus>
+  <div class="msg" id="msg" role="alert" aria-live="polite"></div>
+  <button id="go" type="submit">Unlock</button>
+  <noscript>JavaScript is required to decrypt this page.</noscript>
+</form>
+<script>
+(() => {
+  'use strict';
+  const $ = id => document.getElementById(id);
+  const msg = (t, err) => { $('msg').textContent = t; $('msg').className = 'msg' + (err ? ' err' : ''); };
+
+  // Decrypt site.enc → {path: {t: content type, s: text | b: base64}}
+  // Format: 'NSD1' | iterations u32 | salt 16 | iv 12 | AES-GCM ciphertext+tag; AAD = first 24 bytes
+  async function decrypt(pass) {
+    const res = await fetch('site.enc', { cache: 'no-store' });
+    if (!res.ok) throw new Error('Could not load the encrypted bundle (' + res.status + ')');
+    const buf = new Uint8Array(await res.arrayBuffer());
+    if (String.fromCharCode(...buf.subarray(0, 4)) !== 'NSD1') throw new Error('Unrecognised bundle format');
+    const iterations = new DataView(buf.buffer, buf.byteOffset).getUint32(4);
+    const salt = buf.slice(8, 24), iv = buf.slice(24, 36), aad = buf.slice(0, 24), ct = buf.slice(36);
+    const raw = await crypto.subtle.importKey('raw', new TextEncoder().encode(pass.normalize('NFKC')), 'PBKDF2', false, ['deriveKey']);
+    const key = await crypto.subtle.deriveKey({ name: 'PBKDF2', hash: 'SHA-256', salt, iterations }, raw,
+                                              { name: 'AES-GCM', length: 256 }, false, ['decrypt']);
+    let plain;
+    try { plain = await crypto.subtle.decrypt({ name: 'AES-GCM', iv, additionalData: aad }, key, ct); }
+    catch (e) { const err = new Error('Wrong passphrase.'); err.wrong = true; throw err; }
+    const text = await new Response(new Blob([plain]).stream().pipeThrough(new DecompressionStream('gzip'))).text();
+    return JSON.parse(text);
+  }
+
+  const bytes = b64 => Uint8Array.from(atob(b64), c => c.charCodeAt(0));
+
+  // Serve the dashboard's own fetch() calls (data/*.json, data/history/…) from the decrypted bundle
+  function installFetch(files) {
+    const base = new URL('.', location.href).pathname;
+    const real = window.fetch.bind(window);
+    window.fetch = function (input, init) {
+      try {
+        const url = new URL(typeof input === 'string' ? input : input.url, location.href);
+        if (url.origin === location.origin && url.pathname.startsWith(base)) {
+          const rel = decodeURIComponent(url.pathname.slice(base.length));
+          const f = files[rel];
+          if (f) return Promise.resolve(new Response(f.b ? bytes(f.b) : f.s, { status: 200, headers: { 'Content-Type': f.t } }));
+          if (rel.startsWith('data/')) return Promise.resolve(new Response('Not found', { status: 404 }));
+        }
+      } catch (e) { /* fall through to the network */ }
+      return real(input, init);
+    };
+  }
+
+  function render(files) {
+    const blob = (name, type) => URL.createObjectURL(new Blob([files[name].s], { type }));
+    const html = files['index.html'].s
+      .replace('href="app.css"', 'href="' + blob('app.css', 'text/css') + '"')
+      .replace('src="app-boot.js"', 'src="' + blob('app-boot.js', 'text/javascript') + '"')
+      .replace('src="app.js"', 'src="' + blob('app.js', 'text/javascript') + '"');
+    installFetch(files);
+    document.open(); document.write(html); document.close();
+  }
+
+  $('f').addEventListener('submit', async ev => {
+    ev.preventDefault();
+    const pass = $('p').value;
+    if (!pass) return;
+    $('go').disabled = true; msg('Decrypting…');
+    try {
+      const files = await decrypt(pass);
+      $('p').value = '';
+      render(files);
+    } catch (e) {
+      msg(e.wrong ? 'Wrong passphrase.' : (e.message || 'Could not decrypt.'), true);
+      $('go').disabled = false; $('p').select();
+    }
+  });
+})();
+</script>
+</body></html>
