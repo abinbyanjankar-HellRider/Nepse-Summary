@@ -203,6 +203,14 @@ def main():
               'status': status, 'checks': checks, 'changes': changes}
 
     CHECK_DIR.mkdir(parents=True, exist_ok=True)
+    # A re-run with an identical result keeps the earlier timestamp, so a no-op
+    # retry leaves every file byte-identical and produces no commit.
+    try:
+        old = json.loads((CHECK_DIR / f'{day}.json').read_text(encoding='utf-8'))
+        if {k: v for k, v in old.items() if k != 'generated_at'} == {k: v for k, v in report.items() if k != 'generated_at'}:
+            report['generated_at'] = old['generated_at']
+    except (OSError, ValueError, KeyError):
+        pass
     (CHECK_DIR / f'{day}.json').write_text(json.dumps(report, ensure_ascii=False, indent=1), encoding='utf-8', newline='\n')
     rows = [r for r in read_csv(CHECK_CSV) if r['date'] != day]
     rows.append({'date': day, 'status': status, 'ok': sum(c['status'] == 'ok' for c in checks),
