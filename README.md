@@ -2,7 +2,7 @@
 
 Single-file dashboard (`index.html`) for NEPSE Wyckoff analysis, market summary, today's share prices and NRB macro data — updated automatically every trading day by GitHub Actions.
 
-**Live site:** `https://YOUR-USERNAME.github.io/nepse-dashboard/`
+**Repository:** <https://github.com/abinbyanjankar-HellRider/Nepse-Summary> · **Pages site** (only if enabled, see DEPLOYMENT.md step 3): `https://abinbyanjankar-hellrider.github.io/Nepse-Summary/`
 
 ## How the daily update works
 
