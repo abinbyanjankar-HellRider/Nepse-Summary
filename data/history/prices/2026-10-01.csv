@@ -1,0 +1,353 @@
+sym,name,sector,ltp,change,pct,open,high,low,close,vwap,vol,prev,turnover,txns,w52h,w52l
+ACLBSL,Aarambha Chautari Laghubitta Bittiya Sanstha Limited,Microfinance,872.0,2.0,0.23,870.0,872.1,866.0,872.0,869.45,337.0,870.0,293004.7,9.0,1095.0,827.9
+ADBL,Agricultural Development Bank Limited,Commercial Banks,310.0,2.5,0.81,305.5,310.9,303.3,310.0,309.04,34895.0,307.5,10783980.0,150.0,340.0,285.2
+AHL,Asian Hydropower Limited,Hydropower,376.0,-2.1,-0.56,380.0,385.0,376.0,376.0,377.81,845.0,378.1,319250.5,20.0,670.0,343.0
+AHPC,Arun Valley Hydropower Development Company Limited,Hydropower,255.0,1.1,0.43,252.3,256.0,252.1,255.0,255.04,77386.0,253.9,19736635.4,238.0,323.3,245.8
+AKJCL,Ankhukhola Hydropower Company Limited,Hydropower,353.7,3.7,1.06,353.9,360.0,351.6,353.7,355.87,231649.0,350.0,82437733.0,543.0,461.4,179.0
+AKPL,Arun Kabeli Power Limited,Hydropower,251.8,1.1,0.44,250.7,252.0,249.0,251.8,250.74,33423.0,250.7,8380638.2,159.0,317.0,231.1
+ALBSL,Asha Laghubitta Bittiya Sanstha Limited,Microfinance,1186.0,-3.0,-0.25,1166.0,1200.0,1166.0,1186.0,1182.16,4170.0,1189.0,4929611.5,79.0,1334.0,930.0
+ALICL,Asian Life Insurance Company Limited,Life Insurance,423.0,-1.6,-0.38,421.4,425.0,418.0,423.0,420.75,11046.0,424.6,4647621.0,64.0,505.0,381.4
+ANLB,Aatmanirbhar Laghubitta Bittiya Sanstha Limited,Microfinance,4919.7,-15.1,-0.31,4935.0,4935.0,4821.0,4919.7,4848.43,945.0,4934.8,4581763.0,29.0,7560.0,4750.0
+APHL,Appolo Hydropower Limited,Hydropower,618.0,0.9,0.15,613.0,620.0,611.2,618.0,617.13,3444.0,617.1,2125406.4,126.0,1053.4,299.7
+API,Api Power Company Limited,Hydropower,341.0,6.0,1.79,335.0,345.0,332.0,341.0,338.74,673595.0,335.0,228171612.0,1229.0,370.0,269.0
+AVYAN,Aviyan Laghubitta Bittiya Sanstha Limited,Microfinance,1040.0,1.8,0.17,1030.0,1045.0,1030.0,1040.0,1037.98,405.0,1038.2,420380.0,20.0,1366.0,906.0
+BANDIPUR,Bandipur Cable Car and Tourism Limited,Hotels & Tourism,623.0,1.0,0.16,618.0,625.0,618.0,623.0,621.88,15407.0,622.0,9581313.4,312.0,1233.0,285.0
+BARUN,Barun Hydropower Company Limited,Hydropower,331.0,4.0,1.22,329.8,331.9,326.0,331.0,329.23,46739.0,327.0,15388007.4,170.0,401.5,298.0
+BBC,Bishal Bazar Company Limited,Trading,4021.0,-42.0,-1.03,4145.0,4145.0,3952.0,4021.0,4008.92,1660.0,4063.0,6654804.0,43.0,5600.0,3825.0
+BEDC,Bhugol Energy Development Company Limited,Hydropower,299.0,0.6,0.2,292.0,300.0,292.0,299.0,298.4,7898.0,298.4,2356797.8,55.0,716.0,270.0
+BFC,Best Finance Company Limited,Finance,450.0,7.0,1.58,443.0,451.9,440.0,450.0,447.26,6031.0,443.0,2697441.3,51.0,562.0,418.0
+BGWT,Bhagawati Hydropower Development Company Limited,Hydropower,485.0,6.0,1.25,482.0,490.1,482.0,485.0,488.82,6138.0,479.0,3000358.3,54.0,874.0,435.0
+BHCL,Bikash Hydropower Company Limited,Hydropower,569.8,-0.2,-0.04,570.0,575.0,560.0,569.8,565.0,32239.0,570.0,18215142.6,318.0,699.0,394.0
+BHDC,Bindhyabasini Hydropower Development Company Limited,Hydropower,427.5,2.3,0.54,420.0,428.8,420.0,427.5,426.23,8442.0,425.2,3598260.6,59.0,616.0,401.1
+BHL,Balephi Hydropower Limited,Hydropower,214.7,4.5,2.14,212.0,217.0,210.7,214.7,213.93,156150.0,210.2,33405941.9,537.0,264.4,172.1
+BHPL,Barahi Hydropower Public Limited,Hydropower,437.9,0.9,0.21,458.0,458.0,428.2,437.9,431.31,7088.0,437.0,3057144.0,48.0,748.0,417.2
+BJHL,Bhujung Hydropower Limited,Hydropower,585.0,-14.0,-2.34,582.0,597.0,582.0,585.0,585.06,5746.0,599.0,3361775.4,125.0,1305.0,270.1
+BNHC,Buddha Bhumi Nepal Hydropower Company Limited,Hydropower,274.0,-0.6,-0.22,274.0,278.0,272.2,274.0,274.66,7863.0,274.6,2159648.7,69.0,613.8,247.5
+BNL,Bottlers Nepal Limited (Balaju),Manufacturing & Processing,14100.0,0.0,0.0,14100.0,14100.0,14100.0,14100.0,13677.0,6.0,14100.0,82062.0,1.0,16921.0,13515.0
+BNT,Bottlers Nepal (Terai) Limited,Manufacturing & Processing,11900.0,0.0,0.0,11662.0,11900.0,11661.0,11900.0,11731.5,40.0,11900.0,469260.0,4.0,12940.0,10660.0
+BPCL,Butwal Power Company Limited,Hydropower,655.0,-4.9,-0.74,656.1,670.0,645.0,655.0,650.62,52623.0,659.9,34237506.3,155.0,819.0,612.0
+BUNGAL,Bungal Hydro Limited,Hydropower,486.3,-14.0,-2.8,500.0,502.0,486.3,486.3,491.57,17784.0,500.3,8742002.2,196.0,895.0,302.4
+C30MF,Citizens Super 30 Mutual Fund,Mutual Fund,9.49,0.27,2.93,9.49,9.49,9.49,9.49,9.49,1000.0,9.22,9490.0,1.0,10.45,8.7
+CBBL,Chhimek Laghubitta Bittiya Sanstha Limited,Microfinance,948.5,1.5,0.16,949.0,952.0,945.1,948.5,948.65,5583.0,947.0,5296336.6,74.0,1054.9,882.0
+CBLD88,10.25% Civil Bank Debenture 2088,Others,1268.0,36.0,2.92,1268.0,1268.0,1268.0,1268.0,1268.0,420.0,1232.0,532560.0,2.0,1325.0,1148.4
+CCBD88,10.50% Century Debenture 2088,Others,1200.0,-10.0,-0.83,1200.0,1200.0,1200.0,1200.0,1200.0,16.0,1210.0,19200.0,1.0,1326.0,1140.0
+CFCL,Central Finance Limited,Finance,572.0,0.0,0.0,560.0,585.0,560.0,572.0,567.8,32053.0,572.0,18199836.0,188.0,699.0,455.0
+CGH,Chandragiri Hills Limited,Hotels & Tourism,760.0,-5.0,-0.65,762.2,769.0,760.0,760.0,761.96,6085.0,765.0,4636537.4,77.0,983.0,748.0
+CHCL,Chilime Hydro power Company Limited,Hydropower,341.7,-7.1,-2.04,349.1,350.0,341.2,341.7,344.91,61190.0,348.8,21105347.6,305.0,525.0,336.8
+CHDC,CEDB Holdings Limited,Investment,2362.2,-15.8,-0.66,2350.1,2389.9,2350.1,2362.2,2368.72,20547.0,2378.0,48670155.6,149.0,2717.0,1967.0
+CHL,Chhyangdi Hydropower Company Limited,Hydropower,260.9,-1.1,-0.42,261.1,265.0,258.1,260.9,259.93,6183.0,262.0,1607142.8,48.0,332.5,223.4
+CIT,Citizen Investment Trust,Investment,1738.0,-1.9,-0.11,1740.0,1752.0,1720.0,1738.0,1737.46,10379.0,1739.9,18033069.4,108.0,1973.0,1621.1
+CITY,City Hotel Limited,Hotels & Tourism,342.9,-0.1,-0.03,344.0,345.0,341.1,342.9,342.37,21674.0,343.0,7420551.0,147.0,590.7,327.2
+CIZBD90,10% Citizens Bank Debenture 2090,Others,1215.5,-9.5,-0.78,1215.5,1215.5,1215.5,1215.5,1215.5,25.0,1225.0,30387.5,1.0,1303.0,1010.0
+CKHL,Chirkhwa Hydro Power Limited,Hydropower,533.0,-2.0,-0.37,520.0,535.0,505.0,533.0,530.3,5307.0,535.0,2814281.0,40.0,804.0,505.0
+CLI,Citizen Life Insurance Company Limited,Life Insurance,436.0,-1.0,-0.23,437.0,438.0,432.1,436.0,435.83,6274.0,437.0,2734393.6,161.0,526.0,410.0
+CORBL,Corporate Development Bank Limited,Development Banks,806.9,69.0,9.35,738.0,813.0,725.0,806.9,786.5,44458.0,737.9,34966362.3,746.0,3183.0,725.0
+CREST,Crest Micro Life Insurance Limited,Life Insurance,1080.0,-9.0,-0.83,1060.0,1082.5,1040.0,1080.0,1061.95,8909.0,1089.0,9460897.7,151.0,1588.0,1000.0
+CSY,Citizens Santulit Yojana,Mutual Fund,8.5,-0.25,-2.86,8.75,8.76,8.5,8.5,8.75,12330.0,8.75,107910.0,15.0,10.0,8.01
+CYCL,CYC Nepal Laghubitta Bittiya Sanstha Limited,Microfinance,1524.9,8.0,0.53,1501.0,1549.0,1462.0,1524.9,1501.7,5801.0,1516.9,8711378.0,116.0,1768.4,1216.0
+CZBIL,Citizens Bank International Limited,Commercial Banks,212.5,-0.3,-0.14,210.1,213.0,206.5,212.5,211.92,52268.0,212.8,11076391.5,230.0,238.6,183.0
+DDBL,Deprosc Laghubitta Bittiya Sanstha Limited,Microfinance,848.0,1.1,0.13,842.0,851.0,841.0,848.0,845.73,6608.0,846.9,5588563.6,60.0,927.0,793.0
+DHEL,Daramkhola Hydro Energy Limited,Hydropower,525.0,-3.0,-0.57,524.0,530.0,517.4,525.0,523.48,9508.0,528.0,4977293.7,174.0,918.9,402.2
+DHPL,Dibyashwari Hydropower Company Limited,Hydropower,273.0,6.6,2.48,266.4,280.1,266.4,273.0,275.92,3760.0,266.4,1037442.0,26.0,345.0,254.0
+DLBS,Dhaulagiri Laghubitta Bittiya Sanstha Limited,Microfinance,1146.9,6.9,0.61,1180.0,1190.0,1110.0,1146.9,1150.99,384.0,1140.0,441981.7,26.0,1495.0,927.0
+DOLTI,Dolti Power Company Ltd,Hydropower,308.0,13.0,4.41,295.0,309.0,292.5,308.0,301.21,34958.0,295.0,10529858.8,174.0,596.0,275.0
+DORDI,Dordi Khola Hydropower Company Limited,Hydropower,260.4,-0.6,-0.23,258.2,264.0,258.2,260.4,261.18,54282.0,261.0,14177237.4,129.0,327.4,213.1
+EBL,Everest Bank Limited,Commercial Banks,696.2,0.2,0.03,698.0,700.8,695.2,696.2,698.54,53726.0,696.0,37529937.6,229.0,760.2,619.0
+EBLD91,7.50% Everest Bank Limited Debenture  2091,Others,1120.0,20.0,1.82,1100.0,1120.0,1085.1,1120.0,1111.57,170.0,1100.0,188967.5,5.0,1142.4,1020.1
+ECL,Everest Colour Limited,Manufacturing & Processing,1266.0,-9.0,-0.71,1274.0,1290.0,1260.0,1266.0,1271.36,8462.0,1275.0,10758218.5,162.0,1980.0,296.6
+EDBL,Excel Development Bank Limited,Development Banks,575.0,0.1,0.02,581.0,581.0,570.2,575.0,574.19,2885.0,574.9,1656541.0,23.0,683.4,535.9
+EHPL,Eastern Hydropower Limited,Hydropower,318.0,1.0,0.32,332.0,332.0,317.1,318.0,319.39,8149.0,317.0,2602741.2,54.0,525.0,295.0
+ENL,Emerging Nepal Limited,Investment,517.0,37.0,7.71,490.0,521.7,475.0,517.0,504.42,154870.0,480.0,78118997.4,764.0,1021.0,458.9
+FMDBL,First Microfinance Laghubitta Bittiya Sanstha Limited,Microfinance,738.9,-5.0,-0.67,744.0,744.0,730.0,738.9,732.9,8147.0,743.9,5970901.2,55.0,982.0,689.8
+FOWAD,Forward Microfinance Laghubitta Bittiya Sanstha Limited,Microfinance,876.0,5.9,0.68,875.0,885.0,870.6,876.0,878.12,1880.0,870.1,1650873.8,30.0,1364.0,834.2
+GBBL,Garima Bikas Bank Limited,Development Banks,402.6,-4.0,-0.98,409.0,409.0,400.8,402.6,402.65,73487.0,406.6,29589592.5,322.0,460.0,367.4
+GBIME,Global IME Bank Limited,Commercial Banks,243.9,0.4,0.16,245.0,245.0,242.0,243.9,243.63,160452.0,243.5,39091427.9,348.0,270.6,218.9
+GBIMESY2,Global IME Samunnat Yojana -II,Mutual Fund,9.0,-0.14,-1.53,9.0,9.1,9.0,9.0,9.02,1820.0,9.14,16425.0,10.0,10.78,8.5
+GBLBS,Grameen Bikas Laghubitta Bittiya Sanstha Limited,Microfinance,672.0,7.0,1.05,660.0,676.9,660.0,672.0,669.26,803.0,665.0,537415.0,29.0,868.0,610.0
+GCIL,Ghorahi Cement Industry Limited,Manufacturing & Processing,391.0,-5.0,-1.26,396.0,400.0,391.0,391.0,393.67,24681.0,396.0,9716195.0,194.0,489.9,315.5
+GFCL,Goodwill Finance Company Limited,Finance,562.0,-1.1,-0.2,568.0,568.0,562.0,562.0,563.54,3712.0,563.1,2091865.0,31.0,738.0,550.0
+GHL,Ghalemdi Hydro Limited,Hydropower,273.6,2.1,0.77,270.0,279.0,268.5,273.6,273.67,676519.0,271.5,185144684.8,1433.0,290.0,197.1
+GIBF1,Global IME Balanced Fund-I,Mutual Fund,10.0,-0.16,-1.57,10.21,10.22,9.95,10.0,10.15,20300.0,10.16,206027.0,7.0,11.93,9.7
+GILB,Global IME Laghubitta Bittiya Sanstha Limited,Microfinance,1112.0,3.0,0.27,1110.0,1112.0,1093.2,1112.0,1106.64,390.0,1109.0,431587.8,15.0,1350.0,1020.1
+GLBSL,Gurans Laghubitta Bittiya Sanstha Limited,Microfinance,1680.0,-10.0,-0.59,1695.0,1695.0,1680.0,1680.0,1688.16,386.0,1690.0,651629.3,18.0,2310.0,1585.1
+GLH,Greenlife Hydropower Limited,Hydropower,279.8,3.0,1.08,279.8,283.0,276.0,279.8,279.87,130960.0,276.8,36651852.3,392.0,328.2,237.1
+GMFBS,Ganapati Laghubitta Bittiya Sanstha Limited,Microfinance,1090.0,10.0,0.93,1080.0,1090.0,1060.0,1090.0,1063.46,106.0,1080.0,112726.6,12.0,1688.0,1041.0
+GMFIL,Guheswori Merchant Banking & Finance Limited,Finance,412.1,-3.9,-0.94,426.0,426.0,411.4,412.1,413.78,1800.0,416.0,744808.5,22.0,540.0,393.1
+GMLI,Guardian Micro Life Insurance Limited,Life Insurance,946.5,-2.5,-0.26,920.6,960.0,920.6,946.5,939.15,240.0,949.0,225395.0,22.0,2068.0,889.0
+GRDBL,Green Development Bank Limited,Development Banks,928.0,-7.0,-0.75,939.0,939.0,912.0,928.0,920.14,12542.0,935.0,11540398.2,144.0,1320.0,911.0
+GSY,Garima Samriddhi Yojana,Mutual Fund,9.11,0.11,1.22,9.01,9.11,9.01,9.11,9.09,7850.0,9.0,71378.5,13.0,10.46,8.5
+GUFL,Gurkhas Finance Limited,Finance,497.2,1.1,0.22,493.5,500.0,492.1,497.2,496.01,13316.0,496.1,6604808.7,70.0,644.0,460.6
+GVL,Green Ventures Limited,Hydropower,492.0,-2.0,-0.4,496.0,499.4,487.3,492.0,490.91,15905.0,494.0,7807956.7,103.0,602.0,461.0
+H8020,Himalayan 80-20,Mutual Fund,11.04,0.1,0.91,11.0,11.04,10.94,11.04,11.0,59065.0,10.94,649937.6,14.0,13.18,10.0
+HATHY,Hathway Investment Nepal Limited,Investment,455.0,26.0,6.06,434.0,470.0,430.0,455.0,453.05,484743.0,429.0,219612961.1,2332.0,1050.0,385.0
+HBL,Himalayan Bank Limited,Commercial Banks,193.3,0.2,0.1,193.0,195.9,190.8,193.3,193.94,54941.0,193.1,10655207.9,476.0,237.0,183.0
+HDHPC,Himal Dolakha Hydropower Company Limited,Hydropower,223.5,5.5,2.52,221.8,226.8,218.0,223.5,223.89,483139.0,218.0,108169615.8,918.0,274.0,165.1
+HDL,Himalayan Distillery Limited,Manufacturing & Processing,1286.0,-6.0,-0.46,1292.0,1298.9,1283.0,1286.0,1287.88,78978.0,1292.0,101714366.3,614.0,1415.7,1097.6
+HEI,Himalayan Everest Insurance Limited,Non-Life Insurance,448.6,-6.2,-1.36,455.0,455.0,448.0,448.6,449.94,4182.0,454.8,1881647.0,27.0,596.0,418.0
+HEIP,Himalayan Everest Insurance Limited Promoter,Others,326.0,8.8,2.77,322.0,326.0,322.0,326.0,324.4,500.0,317.2,162200.0,2.0,378.0,288.0
+HFIN,Hotel Forest Inn Limited,Hotels & Tourism,581.9,-2.1,-0.36,584.0,590.2,580.0,581.9,583.49,17768.0,584.0,10367458.0,385.0,1450.6,101.7
+HHL,Himalayan Hydropower Limited,Hydropower,346.6,-3.4,-0.97,347.0,350.0,346.0,346.6,347.72,27731.0,350.0,9642597.0,148.0,416.6,309.0
+HIDCL,Hydroelectricity Investment and Development Company Limited,Investment,250.0,-2.0,-0.79,254.0,254.0,248.3,250.0,250.57,39784.0,252.0,9968689.6,178.0,307.0,232.6
+HIDCLP,Hydroelectricity Investment and Development Company Limited Promoter Share,Others,188.3,1.0,0.53,187.0,191.0,187.0,188.3,188.78,42924.0,187.3,8103391.5,104.0,230.6,174.4
+HIMSTAR,Him Star Urja Company Limited,Hydropower,624.0,0.1,0.02,623.9,635.0,612.1,624.0,622.83,3455.0,623.9,2151875.1,57.0,1264.0,585.0
+HLBSL,Himalayan Laghubitta Bittiya Sanstha Limited (Former Civil Laghubitta),Microfinance,879.9,4.9,0.56,870.0,881.9,860.2,879.9,870.53,224.0,875.0,194998.2,10.0,1005.0,830.0
+HLI,Himalayan Life Insurance Limited,Life Insurance,304.0,2.0,0.66,302.0,307.0,301.2,304.0,304.33,16940.0,302.0,5155344.0,194.0,412.9,284.3
+HLICF,HLI Large Cap Fund,Mutual Fund,8.33,0.0,0.0,8.2,8.33,8.2,8.33,8.29,700.0,8.33,5802.0,7.0,10.55,7.88
+HPPL,Himalayan Power Partner Limited,Hydropower,379.9,1.9,0.5,359.9,385.0,359.9,379.9,379.87,64896.0,378.0,24651935.4,185.0,605.0,340.1
+HRL,Himalayan Reinsurance Limited,Others,500.4,-0.6,-0.12,501.0,504.0,498.6,500.4,500.0,61646.0,501.0,30823266.2,521.0,950.0,485.0
+HURJA,Himalaya Urja Bikas Company Limited,Hydropower,260.0,4.0,1.56,259.0,266.0,256.7,260.0,261.37,226689.0,256.0,59250726.6,448.0,312.1,204.6
+ICFC,ICFC Finance Limited,Finance,593.0,1.9,0.32,592.1,596.0,592.1,593.0,593.42,4790.0,591.1,2842483.0,29.0,715.0,567.6
+ICFCD83,12% ICFC Finance Limited Debenture 2083,Others,1055.0,-30.0,-2.76,1085.0,1085.0,1085.0,1055.0,1055.0,15.0,1085.0,15825.0,2.0,1272.2,843.2
+ICFCD88,9% ICFC Finance Limited Debenture 2088,Others,1130.1,2.1,0.19,1130.1,1130.1,1130.1,1130.1,1130.1,25.0,1128.0,28252.5,1.0,1216.0,1083.9
+ICFCD89,8% ICFC  Finance Limited Debenture 2089,Others,1107.1,7.1,0.65,1110.0,1110.5,1097.6,1107.1,1108.97,930.0,1100.0,1031340.1,26.0,1140.0,1020.0
+IGI,IGI Prudential Insurance Limited,Non-Life Insurance,386.6,-1.3,-0.34,385.3,386.7,382.2,386.6,384.84,9275.0,387.9,3569376.8,44.0,501.0,355.1
+IHL,Ingwa Hydropower Ltd,Hydropower,319.8,3.5,1.11,321.0,323.0,319.0,319.8,320.33,4994.0,316.3,1599723.4,38.0,638.0,282.5
+ILBS,Infinity Laghubitta Bittiya Sanstha Limited,Microfinance,947.9,3.1,0.33,905.0,990.0,901.0,947.9,931.35,1316.0,944.8,1225650.2,46.0,1246.0,800.0
+ILI,IME Life Insurance Company Limited,Life Insurance,422.1,-0.4,-0.09,422.5,429.0,416.0,422.1,422.72,9276.0,422.5,3921189.6,209.0,489.6,396.3
+JBBL,Jyoti Bikash Bank Limited,Development Banks,344.9,-0.6,-0.17,345.0,348.9,343.3,344.9,345.68,6901.0,345.5,2385571.8,51.0,395.0,295.0
+JBBLPO,Jyoti Bikas Bank Limited Promoter Share,Others,179.0,0.0,0.0,179.0,179.0,179.0,179.0,179.0,23498.0,179.0,4206142.0,1.0,187.0,179.0
+JBLB,Jeevan Bikas Laghubitta Bittiya Sanstha Limited,Microfinance,1278.0,-4.0,-0.31,1275.0,1285.0,1272.1,1278.0,1280.34,2802.0,1282.0,3587510.4,73.0,1644.0,1187.5
+JFL,Janaki Finance Company Limited,Finance,280.0,4.0,1.45,270.0,280.0,270.0,280.0,273.85,11151.0,276.0,3053675.7,76.0,492.0,250.1
+JHAPA,Jhapa Energy Limited,Others,1017.0,7.0,0.69,1010.0,1017.0,1006.8,1017.0,1012.18,1545.0,1010.0,1563817.0,40.0,1929.0,293.4
+JOSHI,Joshi Hydropower Development Company Limited,Hydropower,262.4,1.4,0.54,264.9,264.9,260.0,262.4,260.49,15156.0,261.0,3948005.1,62.0,388.6,245.0
+JSLBB,Janautthan Samudayic Laghubitta Bittiya Sanstha Limited,Microfinance,953.4,7.6,0.8,947.9,953.4,930.5,953.4,938.28,197.0,945.8,184841.9,6.0,1308.0,905.2
+KAHL,Kalanga Hydro Limited,Hydropower,467.0,-2.9,-0.62,470.0,472.0,460.9,467.0,467.44,14541.0,469.9,6797106.9,570.0,613.0,295.4
+KBL,Kumari Bank Limited,Commercial Banks,225.0,1.1,0.49,223.9,227.0,222.6,225.0,224.52,231215.0,223.9,51913412.6,387.0,256.0,176.0
+KBLD89,11% KBL Debenture 2089,Others,1350.0,30.0,2.27,1339.7,1350.0,1339.7,1350.0,1344.23,1395.0,1320.0,1875200.5,10.0,1379.0,1213.2
+KBSH,Kutheli Bukhari Small Hydropower Limited,Hydropower,808.0,10.0,1.25,795.2,808.0,795.2,808.0,803.59,2694.0,798.0,2164858.3,45.0,1907.0,758.1
+KDBY,Kumari Dhanabriddhi Yojana,Mutual Fund,10.09,0.14,1.41,9.96,10.09,9.93,10.09,9.95,11849.0,9.95,117947.41,16.0,12.54,8.77
+KDL,Kalinchowk Darshan Limited,Hotels & Tourism,572.9,7.5,1.33,570.0,582.0,560.3,572.9,573.72,15613.0,565.4,8957466.6,111.0,1185.0,560.3
+KEF,Kumari Equity Fund,Mutual Fund,9.35,0.12,1.3,9.24,9.35,9.24,9.35,9.33,4350.0,9.23,40571.0,8.0,11.3,8.31
+KHPL,Kalinchowk Hydropower Limited,Hydropower,669.0,8.0,1.21,662.3,679.8,659.0,669.0,667.71,3020.0,661.0,2016479.6,86.0,1324.8,300.0
+KKHC,Khani Khola Hydropower Company Limited,Hydropower,272.3,2.1,0.78,283.7,283.7,267.29,272.3,273.55,53377.0,270.2,14601038.9,164.0,362.0,208.0
+KMCDB,Kalika Laghubitta Bittiya Sanstha Limited,Microfinance,806.0,-5.9,-0.73,811.9,811.9,792.0,806.0,795.31,3201.0,811.9,2545789.0,49.0,1189.3,735.0
+KPCL,Kalika Power Company Limited,Hydropower,453.0,-4.0,-0.88,468.0,468.0,449.5,453.0,451.37,11371.0,457.0,5132555.3,104.0,657.0,440.6
+KSBBL,Kamana Sewa Bikas Bank Limited,Development Banks,449.0,-0.6,-0.13,449.6,450.0,446.0,449.0,447.94,22045.0,449.6,9874829.7,68.0,534.0,404.1
+KSY,Kumari Sabal Yojana,Mutual Fund,9.0,0.0,0.0,8.89,9.0,8.78,9.0,8.98,811.0,9.0,7285.58,5.0,10.26,8.21
+LBBL,Lumbini Bikas Bank Limited,Development Banks,478.0,4.0,0.84,473.0,479.8,471.0,478.0,476.04,16187.0,474.0,7705708.6,65.0,555.0,433.0
+LEC,Liberty Energy Company Limited,Hydropower,252.3,-0.5,-0.2,254.8,258.5,252.0,252.3,254.82,374816.0,252.8,95511900.4,587.0,276.0,180.0
+LICN,Life Insurance Corporation Nepal Limited,Life Insurance,780.0,-3.0,-0.38,789.8,789.8,776.1,780.0,780.26,15080.0,783.0,11766375.7,68.0,969.0,741.5
+LLBS,Laxmi Laghubitta Bittiya Sanstha Limited,Microfinance,818.1,-8.9,-1.08,811.1,830.0,811.1,818.1,819.71,688.0,827.0,563962.0,9.0,1081.9,771.4
+LSD92,7% Laxmi Sunrise Debenture 2092,Others,1130.0,18.0,1.62,1150.0,1150.0,1106.0,1130.0,1147.36,113680.0,1112.0,130432172.8,501.0,1150.0,1000.0
+LSH12,LS Horizon 12,Mutual Fund,9.0,0.0,0.0,9.0,9.01,8.9,9.0,8.94,1700.0,9.0,15203.0,13.0,10.0,8.55
+LSL,Laxmi Sunrise Bank Limited,Commercial Banks,258.0,4.5,1.78,252.6,260.0,252.6,258.0,256.45,504687.0,253.5,129427934.3,783.0,260.0,203.0
+LUK,Laxmi Unnati Kosh,Mutual Fund,9.3,0.0,0.0,9.2,9.35,9.2,9.3,9.31,2321.0,9.3,21604.8,3.0,10.91,8.97
+LVF2,Laxmi Value Fund-II,Mutual Fund,9.15,0.0,0.0,9.15,9.15,9.15,9.15,9.15,500.0,9.15,4575.0,5.0,10.3,8.76
+MABEL,Mabilung Energy Limited,Hydropower,561.9,-0.1,-0.02,562.0,572.0,550.2,561.9,559.92,3725.0,562.0,2085685.6,93.0,927.0,317.7
+MAKAR,Makar Jitumaya Suri Hydropower Company Limited,Hydropower,409.0,-1.6,-0.39,410.0,410.5,407.0,409.0,407.94,36030.0,410.6,14698194.0,151.0,619.0,389.0
+MANDU,Mandu Hydropower Limited,Hydropower,751.1,6.0,0.81,746.0,772.5,746.0,751.1,760.94,9107.0,745.1,6929872.1,55.0,909.0,622.0
+MATRI,Matribhumi Laghubitta Bittiya Sanstha Limited,Microfinance,721.1,-4.9,-0.67,720.0,740.0,720.0,721.1,730.54,257.0,726.0,187748.0,10.0,1048.5,705.6
+MBJC,Madhya Bhotekoshi Jalavidyut Company Limited,Hydropower,293.7,-3.3,-1.11,294.0,300.5,293.6,293.7,297.84,83477.0,297.0,24862987.4,273.0,333.0,248.5
+MBL,Machhapuchchhre Bank Limited,Commercial Banks,251.9,4.1,1.65,249.0,251.9,248.1,251.9,250.86,87576.0,247.8,21969563.7,165.0,284.0,205.0
+MBLD87,8.5% Machhapuchchhre Debenture 2087,Others,1094.2,-32.8,-2.91,1094.2,1094.2,1094.2,1094.2,1094.2,11.0,1127.0,12036.2,1.0,1171.0,1074.0
+MBLEF,MBL Equity Fund,Mutual Fund,9.09,0.02,0.22,9.0,9.29,9.0,9.09,9.1,600.0,9.07,5462.0,5.0,10.89,8.44
+MCHL,Menchhiyam Hydropower  Limited,Hydropower,273.9,-0.1,-0.04,266.0,274.0,266.0,273.9,269.75,2498.0,274.0,673841.5,28.0,538.9,232.0
+MDB,Miteri Development Bank Limited,Development Banks,557.0,-2.0,-0.36,558.0,563.9,550.0,557.0,557.14,9201.0,559.0,5126262.6,59.0,705.8,530.5
+MEHL,Manakamana Engineering Hydropower Limited,Hydropower,259.8,1.8,0.7,258.0,263.0,254.0,259.8,259.41,45601.0,258.0,11829474.7,200.0,519.0,220.0
+MEL,Modi Energy Limited,Hydropower,210.0,0.0,0.0,211.0,216.0,209.0,210.0,209.91,44139.0,210.0,9265082.0,192.0,328.0,195.0
+MEN,Mountain Energy Nepal Limited,Hydropower,638.0,2.0,0.31,604.2,640.0,604.2,638.0,635.2,70019.0,636.0,44476176.5,224.0,683.4,535.0
+MEPDL,Mount Everest Power Development Limited,Hydropower,627.0,-3.0,-0.48,625.0,632.0,622.3,627.0,627.75,12580.0,630.0,7897071.8,428.0,855.0,300.0
+MERO,Mero Microfinance Laghubitta Bittiya Sanstha Limited,Microfinance,591.0,-8.9,-1.48,600.0,608.0,591.0,591.0,596.42,4989.0,599.9,2975521.6,54.0,860.0,584.9
+MFIL,Manjushree Finance Limited,Finance,749.9,1.0,0.13,731.0,760.0,731.0,749.9,732.84,45204.0,748.9,33127306.2,45.0,938.0,545.0
+MHCL,Molung Hydropower Company Limited,Hydropower,286.0,4.0,1.42,284.0,289.4,278.1,286.0,281.19,6448.0,282.0,1813124.0,84.0,445.0,261.0
+MHL,Mandakini Hydropower Limited,Hydropower,445.0,-2.9,-0.65,445.0,454.0,441.2,445.0,446.5,4073.0,447.9,1818581.8,46.0,580.0,435.0
+MHNL,Mountain Hydro Nepal Limited,Hydropower,257.0,0.0,0.0,254.2,259.9,254.0,257.0,256.35,22930.0,257.0,5878009.2,57.0,324.0,223.0
+MKCL,Muktinath Krishi Company Limited,Others,847.0,17.0,2.05,820.0,849.9,820.0,847.0,839.32,756.0,830.0,634523.6,27.0,1616.8,810.0
+MKHC,Maya Khola Hydropower Company Limited,Hydropower,254.0,1.0,0.4,247.0,257.0,247.0,254.0,254.41,10251.0,253.0,2607940.5,69.0,414.9,232.1
+MKHL,Mai Khola Hydropower Limited,Hydropower,499.0,-1.0,-0.2,490.0,503.0,487.1,499.0,496.89,2631.0,500.0,1307320.0,44.0,915.0,457.0
+MKJC,Mailung Khola Jal Vidhyut Company Limited,Hydropower,338.0,-4.0,-1.17,341.0,356.9,326.0,338.0,335.04,37391.0,342.0,12527594.4,199.0,635.0,252.0
+MLBBL,Mithila Laghubitta Bittiya Sanstha Limited,Microfinance,951.9,-10.1,-1.05,943.0,951.9,920.1,951.9,936.26,1790.0,962.0,1675903.9,26.0,1661.0,894.0
+MLBL,Mahalaxmi Bikas Bank Limited,Development Banks,355.0,-1.7,-0.48,352.5,357.0,352.5,355.0,355.04,11255.0,356.7,3996023.6,51.0,418.0,330.7
+MLBS,Manushi Laghubitta Bittiya Sanstha Limited,Microfinance,981.5,-16.5,-1.65,972.0,999.0,972.0,981.5,988.96,139.0,998.0,137466.0,8.0,1666.0,967.0
+MLBSL,Mahila Laghubitta Bittiya Sanstha Limited,Microfinance,1081.0,-19.0,-1.73,1105.0,1105.0,1081.0,1081.0,1092.7,330.0,1100.0,360591.8,17.0,2192.8,1026.0
+MMF1,Mega Mutual Fund - 1,Mutual Fund,8.75,0.0,0.0,8.95,8.95,8.7,8.75,8.76,6900.0,8.75,60464.0,19.0,10.16,8.27
+MMKJL,Mathillo Mailun Khola Jalvidhyut Limited,Hydropower,369.0,26.0,7.58,352.0,369.7,343.1,369.0,362.15,19195.0,343.0,6951419.8,163.0,667.0,309.0
+MNBBL,Muktinath Bikas Bank Limited,Development Banks,331.0,1.0,0.3,330.0,332.0,327.0,331.0,329.9,20082.0,330.0,6624957.9,129.0,467.0,314.2
+MNMF1,Muktinath Mutual Fund 1,Mutual Fund,8.95,-0.24,-2.61,8.92,9.14,8.92,8.95,8.98,4299.0,9.19,38613.55,14.0,10.4,8.53
+MPFL,Multipurpose Finance Company Limited,Finance,584.8,0.7,0.12,585.0,586.0,570.0,584.8,577.87,8223.0,584.1,4751859.2,70.0,744.0,491.0
+MSHL,Mid Solu Hydropower Company Limited,Hydropower,535.2,-4.8,-0.89,540.0,540.0,532.1,535.2,535.15,12092.0,540.0,6471038.2,113.0,937.0,481.0
+MSLB,Mahuli Laghubitta Bittiya Sanstha Limited,Microfinance,1194.0,-6.0,-0.5,1171.6,1194.0,1171.6,1194.0,1178.25,223.0,1200.0,262750.7,17.0,1634.0,1089.9
+NABBC,Narayani Development Bank Limited,Development Banks,713.0,-14.9,-2.05,711.0,726.0,702.1,713.0,713.99,12345.0,727.9,8814257.4,77.0,1835.0,662.0
+NABIL,Nabil Bank Limited,Commercial Banks,528.5,-2.2,-0.41,531.0,532.0,525.0,528.5,528.09,73656.0,530.7,38897356.6,607.0,581.0,485.0
+NABILD2089,7% Nabil Debenture 2089,Others,1077.0,-3.0,-0.28,1080.0,1080.0,1077.0,1077.0,1078.67,45.0,1080.0,48540.0,2.0,1154.0,1000.0
+NADEP,NADEP Laghubitta Bittiya Sanstha Limited,Microfinance,683.0,16.8,2.52,674.0,683.0,665.0,683.0,667.43,2482.0,666.2,1656550.1,19.0,871.0,652.0
+NBF2,Nabil Balanced Fund - 2,Mutual Fund,9.23,-0.25,-2.64,9.23,9.23,9.23,9.23,9.23,200.0,9.48,1846.0,1.0,10.7,8.89
+NBF3,Nabil Balanced Fund III,Mutual Fund,9.16,0.0,0.0,9.16,9.3,9.16,9.16,9.18,8569.0,9.16,78632.04,13.0,10.22,8.35
+NBL,Nepal Bank Limited,Commercial Banks,293.0,-1.7,-0.58,293.0,295.0,291.0,293.0,293.68,109554.0,294.7,32173709.2,284.0,302.9,235.0
+NBLD87,8.5% Nepal Bank Debenture 2087,Others,1100.3,-12.1,-1.09,1100.0,1100.3,1100.0,1100.3,1100.1,75.0,1112.4,82507.5,2.0,1225.0,1060.0
+NESDO,Nesdo Sambridha Laghubitta Bittiya Sanstha Limited,Microfinance,1339.0,-0.1,-0.01,1335.0,1339.0,1320.0,1339.0,1327.53,732.0,1339.1,971748.9,11.0,1682.0,1272.2
+NFS,Nepal Finance Limited,Finance,480.0,0.0,0.0,483.0,483.0,480.0,480.0,481.01,3504.0,480.0,1685456.0,37.0,725.0,465.0
+NGPL,Ngadi Group Power Limited,Hydropower,396.7,0.6,0.15,398.1,400.0,395.0,396.7,396.58,98514.0,396.1,39069042.7,209.0,502.0,343.0
+NHDL,Nepal Hydro Developer Limited,Hydropower,635.0,-8.0,-1.24,627.0,643.5,627.0,635.0,633.02,3210.0,643.0,2032003.4,24.0,796.0,606.2
+NHPC,National Hydro Power Company Limited,Hydropower,261.6,1.6,0.62,263.9,268.8,258.1,261.6,263.54,199421.0,260.0,52555316.3,335.0,340.0,179.7
+NIBLGF,NIBL Growth Fund,Mutual Fund,8.81,0.1,1.15,8.73,8.81,8.73,8.81,8.74,1775.0,8.71,15509.75,8.0,11.81,8.1
+NIBLSTF,NIBL Stable Fund,Mutual Fund,8.46,-0.17,-1.97,8.41,8.5,8.41,8.46,8.47,17560.0,8.63,148777.5,18.0,10.85,8.0
+NIBSF2,NIBL Samriddhi Fund - 2,Mutual Fund,8.63,0.06,0.7,8.63,8.63,8.63,8.63,8.63,100.0,8.57,863.0,1.0,11.13,8.1
+NICA,NIC Asia Bank Limited,Commercial Banks,313.4,1.4,0.45,312.0,315.0,311.0,313.4,312.5,41683.0,312.0,13026029.7,162.0,411.0,302.9
+NICAD2091,7% NIC Asia Debenture 2091,Others,1086.0,9.5,0.88,1086.0,1086.0,1086.0,1086.0,1086.0,50.0,1076.5,54300.0,1.0,1106.0,1005.2
+NICD88,8.5% NIC Asia Debenture 2088,Others,1117.5,32.5,3.0,1117.5,1117.5,1117.5,1117.5,1117.5,500.0,1085.0,558750.0,2.0,1153.0,1043.0
+NICFC,NIC Asia Flexi Cap Fund,Mutual Fund,8.98,0.05,0.56,8.92,8.98,8.92,8.98,8.98,5550.0,8.93,49814.0,7.0,9.89,8.37
+NICGF2,NIC Asia Growth Fund 2,Mutual Fund,8.88,-0.11,-1.22,8.76,9.02,8.76,8.88,8.95,2400.0,8.99,21484.93,9.0,10.13,8.14
+NICL,Nepal Insurance Company Limited,Non-Life Insurance,446.0,1.0,0.22,440.2,449.9,440.2,446.0,442.96,1590.0,445.0,704303.2,31.0,575.0,408.0
+NICLBSL,NIC Asia Laghubitta Bittiya Sanstha Limited,Microfinance,508.0,4.1,0.81,512.5,512.5,500.2,508.0,503.42,1881.0,503.9,946941.9,55.0,679.0,490.0
+NICSF,NIC Asia Select-30,Mutual Fund,8.5,0.18,2.16,8.31,8.54,8.31,8.5,8.48,5490.0,8.32,46535.2,9.0,9.97,8.04
+NIFRA,Nepal Infrastructure Bank Limited,Investment,245.7,-1.3,-0.53,247.0,249.0,245.1,245.7,246.13,59444.0,247.0,14630956.8,321.0,299.0,232.0
+NIL,Neco Insurance Limited,Non-Life Insurance,525.3,-3.3,-0.62,528.0,530.7,525.0,525.3,527.95,5253.0,528.6,2773318.4,47.0,685.0,502.8
+NIMB,Nepal Investment Mega Bank Limited,Commercial Banks,192.0,1.0,0.52,191.0,193.6,190.0,192.0,191.96,109442.0,191.0,21008348.0,233.0,232.5,181.0
+NIMBPO,Nepal Investment Mega Bank Ltd. Promoter Share,Others,143.9,0.9,0.63,140.7,143.9,140.6,143.9,140.67,8125.0,143.0,1142947.0,4.0,174.9,134.1
+NLG,NLG Insurance Company Limited,Non-Life Insurance,502.9,-2.1,-0.42,505.0,509.0,496.1,502.9,501.34,7159.0,505.0,3589071.5,44.0,770.0,477.1
+NLIC,Nepal Life Insurance Company Limited,Life Insurance,727.9,0.1,0.01,727.0,739.0,721.0,727.9,726.55,12131.0,727.8,8813759.9,150.0,872.0,680.5
+NLICL,National Life Insurance Company Limited,Life Insurance,569.9,1.9,0.33,552.1,575.0,552.1,569.9,567.16,4692.0,568.0,2661131.4,24.0,644.0,538.4
+NMB,NMB Bank Limited,Commercial Banks,255.5,1.2,0.47,254.0,257.0,254.0,255.5,255.14,107408.0,254.3,27404379.0,221.0,272.0,230.0
+NMBHF2,NMB Hybrid Fund L-II,Mutual Fund,8.93,-0.08,-0.89,8.75,9.01,8.75,8.93,8.9,700.0,9.01,6233.0,5.0,10.2,8.36
+NMBMF,NMB Laghubitta Bittiya Sanstha Limited,Microfinance,592.1,-1.9,-0.32,586.1,592.2,586.0,592.1,590.04,766.0,594.0,451967.9,7.0,750.0,570.0
+NMFBS,National Laghubitta Bittiya Sanstha Limited,Microfinance,1195.0,13.8,1.17,1182.0,1199.0,1182.0,1195.0,1191.52,4491.0,1181.2,5351108.4,38.0,1370.0,1051.9
+NMIC,Nepal Micro Insurance Company Limited,Non-Life Insurance,796.0,-2.1,-0.26,778.0,804.0,778.0,796.0,798.47,1549.0,798.1,1236835.1,54.0,1525.0,765.3
+NMLBBL,Nerude Mirmire Laghubitta Bittiya Sanstha Limited,Microfinance,507.7,12.7,2.57,495.0,510.0,488.0,507.7,508.02,24280.0,495.0,12334645.1,54.0,697.6,468.4
+NRIC,Nepal Reinsurance Company Limited,Others,803.0,-3.0,-0.37,800.1,809.4,795.5,803.0,799.56,12529.0,806.0,10017722.5,142.0,1465.0,765.9
+NRM,Nepal Republic Media Limited,Others,290.0,2.1,0.73,280.7,290.0,280.7,290.0,286.27,6286.0,287.9,1799514.0,75.0,470.0,270.9
+NRN,NRN Infrastructure and Development Limited,Investment,1382.0,2.0,0.14,1350.0,1410.0,1350.0,1382.0,1386.95,23226.0,1380.0,32213257.5,187.0,2175.0,1280.0
+NSIF2,NMB Sulav Investment Fund - II,Mutual Fund,10.09,0.0,0.0,9.91,10.09,9.91,10.09,10.07,4674.0,10.09,47059.66,7.0,11.45,9.65
+NSY,Nepal Life Samriddhi Lagani Yojana,Mutual Fund,8.91,-0.09,-1.0,8.84,9.0,8.84,8.91,8.9,2900.0,9.0,25806.0,15.0,10.19,8.8
+NTC,Nepal Doorsanchar Company Limited,Others,906.1,-3.9,-0.43,910.0,912.0,902.2,906.1,909.08,9215.0,910.0,8377150.1,111.0,942.5,831.0
+NUBL,Nirdhan Utthan Laghubitta Bittiya Sanstha Limited,Microfinance,591.3,-5.7,-0.95,597.0,597.0,590.1,591.3,591.77,1510.0,597.0,893567.9,14.0,802.0,555.1
+NWCL,Nepal Warehousing Company Limited,Others,579.2,-8.8,-1.5,585.0,590.0,579.0,579.2,583.71,2591.0,588.0,1512396.0,36.0,1045.0,571.0
+NYADI,Nyadi Hydropower  Limited,Hydropower,347.4,-1.6,-0.46,345.0,353.0,343.0,347.4,345.62,3061.0,349.0,1057939.3,59.0,482.0,335.3
+OHL,Oriental Hotel Limited,Hotels & Tourism,623.0,-2.0,-0.32,625.0,625.0,621.0,623.0,621.8,225.0,625.0,139906.0,8.0,785.0,590.0
+OMPL,Om Megashree Pharmaceuticals Limited,Manufacturing & Processing,856.9,4.9,0.58,855.0,900.0,845.2,856.9,849.63,6984.0,852.0,5933824.6,112.0,1575.9,845.2
+PBD85,8.75% Prime Debenture 2085,Others,1115.0,0.0,0.0,1115.0,1115.0,1115.0,1115.0,1115.0,865.0,1115.0,964475.0,2.0,1150.0,1060.0
+PBD88,10% Prime Debenture 2088,Others,1181.0,-5.0,-0.42,1185.0,1185.0,1161.1,1181.0,1173.61,35.0,1186.0,41076.5,3.0,1284.0,1145.0
+PBD93,6.25% Prime Bank Debenture 2093,Others,1131.0,31.0,2.82,1070.0,1159.0,1070.0,1131.0,1138.21,19411.0,1100.0,22093871.5,139.0,1160.0,996.0
+PBLD84,10% Prabhu Bank Debenture 2084 (PBLD84),Others,1095.0,-5.0,-0.45,1095.0,1095.0,1095.0,1095.0,1095.0,50.0,1100.0,54750.0,1.0,1158.4,1057.2
+PCBL,Prime Commercial Bank Limited,Commercial Banks,261.0,2.8,1.08,259.8,262.0,257.2,261.0,259.81,156981.0,258.2,40785171.0,281.0,275.9,225.0
+PCIL,Palpa Cements Industries Limited,Manufacturing & Processing,617.2,0.9,0.15,600.0,626.0,600.0,617.2,620.22,31435.0,616.3,19496467.4,655.0,1280.0,300.0
+PFL,Pokhara Finance Limited,Finance,339.0,2.5,0.74,337.0,340.5,336.0,339.0,339.2,10152.0,336.5,3443568.4,72.0,443.0,335.0
+PHCL,Peoples Hydropower Company Limited,Hydropower,340.5,6.7,2.01,323.8,344.0,323.8,340.5,338.89,430430.0,333.8,145869254.0,1169.0,405.9,249.7
+PMHPL,Panchakanya Mai Hydropower Limited,Hydropower,300.0,-2.0,-0.66,300.0,300.0,296.5,300.0,298.45,8195.0,302.0,2445813.9,44.0,428.0,287.0
+PMLI,Prabhu Mahalaxmi Life Insurance Company Limited,Life Insurance,419.3,-2.7,-0.64,416.0,424.7,416.0,419.3,420.58,7478.0,422.0,3145114.1,82.0,543.6,392.6
+PMLIP,Prabhu Mahalaxmi Life Insurance Limited promotor,Others,232.0,0.0,0.0,232.0,232.0,232.0,232.0,232.0,1300.0,232.0,301600.0,1.0,270.0,232.0
+PPCL,Panchthar Power Company Limited,Hydropower,333.0,2.0,0.6,314.5,333.1,314.5,333.0,331.3,10830.0,331.0,3587930.5,47.0,462.0,284.1
+PPL,People’s Power Limited,Hydropower,325.1,7.1,2.23,302.1,329.0,302.1,325.1,322.87,33891.0,318.0,10942414.0,202.0,425.0,263.2
+PRIN,Prabhu Insurance Company Limited,Non-Life Insurance,590.0,0.0,0.0,590.0,591.0,585.0,590.0,589.51,5275.0,590.0,3109674.8,43.0,794.9,564.4
+PROFL,Progressive Finance Limited,Finance,386.0,1.0,0.26,389.0,390.6,381.3,386.0,386.21,2528.0,385.0,976332.6,15.0,522.0,360.1
+PRSF,Prabhu Smart Fund,Mutual Fund,12.03,0.15,1.26,11.89,12.04,11.89,12.03,12.03,24800.0,11.88,298244.72,10.0,13.61,9.85
+PRVU,Prabhu Bank Limited,Commercial Banks,187.0,1.7,0.92,185.0,187.5,184.1,187.0,185.87,87890.0,185.3,16335690.0,237.0,235.6,169.7
+PSF,Prabhu Select Fund,Mutual Fund,10.9,0.08,0.74,10.84,10.92,10.84,10.9,10.89,5625.0,10.82,61263.5,9.0,13.0,9.91
+PURE,Pure Energy Limited,Others,786.8,-7.9,-0.99,780.0,795.0,780.0,786.8,786.52,2645.0,794.7,2080337.3,50.0,1262.0,662.0
+RADHI,Radhi Bidyut Company Limited,Hydropower,712.9,-7.1,-0.99,725.0,725.0,705.0,712.9,716.21,75144.0,720.0,53819025.4,123.0,940.0,618.8
+RAWA,Rawa Energy Development Ltd.,Hydropower,412.0,0.0,0.0,411.1,419.0,411.1,412.0,414.23,8843.0,412.0,3663010.2,82.0,851.7,379.0
+RBBD2088,7% RBBL Debenture 2088,Others,1103.0,33.0,3.08,1071.0,1103.0,1071.0,1103.0,1100.03,195.0,1070.0,214505.0,4.0,1157.0,994.1
+RBBF40,RBB Focus 40,Mutual Fund,9.0,0.09,1.01,8.91,9.0,8.91,9.0,8.99,3900.0,8.91,35050.0,7.0,10.36,8.73
+RBCL,Rastriya Beema Company Limited,Non-Life Insurance,13801.0,-199.0,-1.42,13999.0,14069.0,13801.0,13801.0,13915.23,61.0,14000.0,848829.0,6.0,16261.0,13106.0
+RFPL,River Falls Power Limited,Hydropower,332.1,2.1,0.64,326.8,333.9,326.8,332.1,330.41,11013.0,330.0,3638793.3,87.0,464.2,306.0
+RHGCL,Rapti Hydro & General Construction Limited,Hydropower,260.0,0.2,0.08,255.5,260.2,255.5,260.0,258.33,9144.0,259.8,2362192.3,100.0,353.0,217.2
+RHPL,Rasuwagadhi Hydropower Company Limited,Hydropower,168.0,0.0,0.0,166.4,170.0,166.4,168.0,168.46,35903.0,168.0,6048306.9,175.0,325.0,156.0
+RIDI,Ridi Power Company Limited,Hydropower,338.0,-1.0,-0.29,339.0,341.0,336.5,338.0,338.63,124749.0,339.0,42243962.4,320.0,415.0,214.0
+RLEL,Ridge Line Energy Limited,Hydropower,740.9,23.9,3.33,730.0,745.0,722.7,740.9,737.59,9943.0,717.0,7333828.6,214.0,1592.3,300.0
+RLFL,Reliance Finance Limited,Finance,416.1,0.1,0.02,410.0,423.0,408.3,416.1,416.59,10359.0,416.0,4315423.2,52.0,514.9,396.8
+RMF1,RBB Mutual Fund 1,Mutual Fund,9.01,0.02,0.22,9.01,9.2,9.01,9.01,9.03,5550.0,8.99,50139.2,9.0,11.02,8.71
+RMF2,RBB Mutual Fund 2,Mutual Fund,9.22,0.03,0.33,9.46,9.46,9.22,9.22,9.45,2100.0,9.19,19842.0,2.0,10.71,8.84
+RNLI,Reliable Nepal Life Insurance Limited,Life Insurance,437.8,-0.4,-0.09,435.2,440.0,435.2,437.8,437.92,11333.0,438.2,4962960.7,207.0,520.2,402.0
+RSDC,RSDC Laghubitta Bittiya Sanstha Limited,Microfinance,616.0,1.0,0.16,612.0,621.0,612.0,616.0,615.67,2287.0,615.0,1408036.2,29.0,763.0,578.7
+RSML,Reliance Spinning Mills Limited,Manufacturing & Processing,2739.9,1.0,0.04,2701.0,2779.0,2699.0,2739.9,2721.48,54374.0,2738.9,147977697.6,499.0,5049.0,300.0
+RSY,Reliable Samriddhi Yojana,Mutual Fund,9.28,-0.17,-1.8,9.4,9.4,9.25,9.28,9.35,500.0,9.45,4673.0,3.0,10.7,8.72
+RSY2,Reliable Samriddhi Yojana-2,Others,8.85,0.03,0.34,8.7,9.09,8.7,8.85,8.85,58240.0,8.82,515496.6,30.0,10.0,8.42
+RURU,Ru Ru Jalbidhyut Pariyojana Limited,Hydropower,607.0,18.0,3.06,579.1,618.0,579.0,607.0,597.01,10193.0,589.0,6085296.5,92.0,830.0,560.1
+SABBL,Salapa Bikas Bank Limited,Development Banks,850.0,-0.2,-0.02,842.0,859.0,842.0,850.0,850.63,6284.0,850.2,5345380.2,171.0,2000.0,300.0
+SADBL,Shangrila Development Bank Limited,Development Banks,393.9,2.2,0.56,391.2,393.9,390.3,393.9,392.13,23871.0,391.7,9360525.1,60.0,463.0,376.0
+SAEF2,Sanima Equity Fund II,Mutual Fund,9.02,-0.02,-0.22,9.0,9.19,9.0,9.02,9.11,5700.0,9.04,51904.0,24.0,10.0,8.76
+SAGAR,Sagar Distillery Limited,Manufacturing & Processing,1590.0,12.0,0.76,1577.0,1605.0,1566.0,1590.0,1589.42,2202.0,1578.0,3499900.3,62.0,2439.0,319.5
+SAGF,Sanima Growth Fund,Mutual Fund,9.4,-0.01,-0.11,9.4,9.4,9.4,9.4,9.4,300.0,9.41,2820.0,2.0,11.31,8.79
+SAHAS,Sahas Urja Limited,Hydropower,688.0,-1.0,-0.15,680.0,691.8,680.0,688.0,689.2,70766.0,689.0,48771662.7,308.0,725.0,535.3
+SAIL,Shreenagar Agritech Industries Limited,Manufacturing & Processing,978.8,13.8,1.43,1013.2,1013.2,967.2,978.8,979.09,14652.0,965.0,14345698.3,205.0,1690.0,301.7
+SALICO,Sagarmatha Lumbini Insurance Company Limited,Non-Life Insurance,528.1,-1.9,-0.36,530.0,537.5,527.1,528.1,529.22,2620.0,530.0,1386558.1,33.0,695.0,512.0
+SANIMA,Sanima Bank Limited,Commercial Banks,363.0,-0.5,-0.14,362.0,366.0,361.0,363.0,364.34,50305.0,363.5,18328127.5,199.0,390.6,295.0
+SANVI,Sanvi Energy Limited,Hydropower,520.0,-10.0,-1.89,525.0,534.0,515.6,520.0,524.77,26070.0,530.0,13680841.9,210.0,1060.0,515.6
+SAPDBL,Saptakoshi Development Bank Limited,Development Banks,600.0,9.8,1.66,619.7,619.7,588.0,600.0,598.45,10277.0,590.2,6150320.9,108.0,1065.7,556.7
+SAPIL,Sarvottam Paints Industries Limited,Manufacturing & Processing,1279.0,-21.0,-1.62,1280.0,1317.0,1226.0,1279.0,1250.09,42121.0,1300.0,52655040.7,682.0,1604.0,300.0
+SARBTM,Sarbottam Cement Limited,Manufacturing & Processing,816.0,2.0,0.25,814.0,838.4,801.5,816.0,817.39,17433.0,814.0,14249535.4,88.0,942.4,750.0
+SBCF,Sunrise Bluechip Fund,Mutual Fund,9.19,-0.08,-0.86,9.01,9.25,8.98,9.19,9.04,1600.0,9.27,14458.0,7.0,11.16,8.73
+SBD87,8.5% Sanima Debenture 2087,Others,1093.0,31.0,2.92,1093.0,1093.0,1093.0,1093.0,1093.0,30.0,1062.0,32790.0,1.0,1210.0,1062.0
+SBI,Nepal SBI Bank Limited,Commercial Banks,403.0,3.0,0.75,402.0,403.0,398.2,403.0,400.67,9820.0,400.0,3934552.6,55.0,441.0,368.0
+SBID2090,7% Nepal SBI Bank Debenture 2090,Others,1125.0,0.0,0.0,1125.0,1125.0,1125.0,1125.0,1125.0,50.0,1125.0,56250.0,2.0,1184.5,1000.0
+SBID89,9% Nepal SBI Bank Debenture 2089,Others,1145.0,0.0,0.0,1145.0,1145.0,1145.0,1145.0,1145.0,25.0,1145.0,28625.0,1.0,1266.0,1100.0
+SBL,Siddhartha Bank Limited,Commercial Banks,459.9,4.5,0.99,457.0,460.1,456.2,459.9,458.08,666560.0,455.4,305335453.3,1597.0,460.1,320.5
+SCB,Standard Chartered Bank Nepal Limited,Commercial Banks,661.0,2.0,0.3,659.0,663.0,657.1,661.0,659.37,6880.0,659.0,4536474.5,78.0,712.6,603.0
+SEF,Siddhartha Equity Fund,Mutual Fund,9.6,-0.15,-1.54,9.75,9.75,9.6,9.6,9.65,2500.0,9.75,24135.0,3.0,11.53,8.6
+SEF2,Siddhartha Equity Fund 2,Mutual Fund,9.02,-0.08,-0.88,8.92,9.17,8.92,9.02,9.08,5240.0,9.1,47569.8,28.0,10.0,8.5
+SFEF,Sunrise Focused Equity Fund,Mutual Fund,9.0,0.08,0.9,8.96,9.0,8.96,9.0,9.0,10100.0,8.92,90896.0,3.0,10.65,8.4
+SFMF,Sunrise First Mutual Fund,Mutual Fund,9.11,0.01,0.11,9.11,9.11,9.11,9.11,9.11,1000.0,9.1,9110.0,2.0,11.01,8.96
+SGHC,Swet-Ganga Hydropower & Construction Limited,Hydropower,294.0,4.9,1.69,289.0,297.0,288.1,294.0,290.98,24962.0,289.1,7263552.3,128.0,487.6,280.0
+SGHL,Sanigad Hydro Limited,Hydropower,471.9,-2.0,-0.42,471.0,479.0,467.3,471.9,471.14,29410.0,473.9,13856130.1,887.0,587.0,299.3
+SGIC,Sanima GIC Insurance Limited,Non-Life Insurance,385.8,3.1,0.81,380.0,385.9,378.2,385.8,382.88,4144.0,382.7,1586670.7,83.0,538.5,370.3
+SHEL,Singati Hydro Energy Limited,Hydropower,299.9,3.2,1.08,298.0,302.3,297.5,299.9,299.92,93463.0,296.7,28031530.5,300.0,361.0,262.0
+SHINE,Shine Resunga Development Bank Limited,Development Banks,396.6,-0.3,-0.08,394.4,399.1,391.0,396.6,394.99,41622.0,396.9,16440344.5,150.0,449.7,384.0
+SHINED,Shine Resunga Debenture,Others,1125.0,0.0,0.0,1125.0,1125.0,1125.0,1125.0,1125.0,25.0,1125.0,28125.0,1.0,1200.0,1000.0
+SHIVM,Shivam Cements Limited,Manufacturing & Processing,685.0,0.5,0.07,685.0,689.5,680.1,685.0,685.71,134118.0,684.5,91965928.3,425.0,737.1,546.6
+SHL,Soaltee Hotel Limited,Hotels & Tourism,509.8,0.7,0.14,510.0,515.0,508.0,509.8,509.0,20385.0,509.1,10375995.9,68.0,559.8,464.0
+SHLB,Shrijanshil Laghubitta Bittiya Sanstha Limited,Microfinance,1277.2,32.1,2.58,1227.6,1277.2,1227.6,1277.2,1246.97,140.0,1245.1,174576.0,9.0,1961.0,1215.3
+SHPC,Sanima Mai Hydropower Limited,Hydropower,531.0,1.4,0.26,531.0,533.9,525.8,531.0,528.55,40120.0,529.6,21205484.5,122.0,588.0,475.0
+SICL,Shikhar Insurance Company Limited,Non-Life Insurance,540.1,-0.9,-0.17,540.0,550.0,540.0,540.1,541.05,3164.0,541.0,1711888.6,37.0,690.0,508.0
+SIFC,Shree Investment Finance Company Limited,Finance,478.0,-1.0,-0.21,478.0,479.9,472.1,478.0,477.38,14050.0,479.0,6707210.4,31.0,687.4,450.0
+SIGS3,Siddhartha Investment Growth Scheme 3,Mutual Fund,10.34,0.01,0.1,10.35,10.35,10.15,10.34,10.3,1670.0,10.33,17198.5,7.0,11.58,8.52
+SIKLES,Sikles Hydropower Limited,Hydropower,563.5,0.5,0.09,564.0,567.0,563.0,563.5,564.18,4685.0,563.0,2643177.9,50.0,720.0,536.3
+SINDU,Sindhu Bikas Bank Limited,Development Banks,489.9,45.0,10.11,422.7,493.0,400.0,489.9,424.47,73156.0,444.9,31052389.3,451.0,919.9,329.8
+SIPD,Shikhar Power Development Limited,Hydropower,560.3,22.3,4.14,532.0,562.0,526.1,560.3,550.34,16783.0,538.0,9236307.4,356.0,1216.8,284.3
+SJCL,Sanjen Jalavidhyut Company Limited,Hydropower,242.0,3.0,1.26,239.0,242.0,235.5,242.0,239.99,12767.0,239.0,3064001.3,87.0,365.0,214.2
+SJLIC,SuryaJyoti Life Insurance Company Limited,Life Insurance,419.0,0.6,0.14,411.2,419.0,411.2,419.0,417.22,5558.0,418.4,2318889.1,120.0,489.9,386.0
+SKBBL,Sana Kisan Bikas Laghubitta Bittiya Sanstha Limited,Microfinance,763.0,-3.0,-0.39,769.0,769.0,760.0,763.0,764.56,4990.0,766.0,3815173.5,43.0,910.0,735.0
+SKHEL,Suryakunda Hydro Electric Limited,Hydropower,806.0,2.0,0.25,804.0,806.9,791.0,806.0,798.51,1547.0,804.0,1235289.2,61.0,2069.4,284.3
+SKHL,Super Khudi Hydropower Limited,Hydropower,718.0,3.0,0.42,715.0,736.4,715.0,718.0,720.57,5543.0,715.0,3994092.8,155.0,1360.0,300.0
+SLBBL,Swarojgar Laghubitta Bittiya Sanstha Limited,Microfinance,823.9,7.9,0.97,816.0,826.8,815.0,823.9,818.46,5276.0,816.0,4318199.5,53.0,960.6,761.9
+SLBSL,Samudayik Laghubitta Bittiya Sanstha Limited,Microfinance,885.0,-10.0,-1.12,895.0,895.0,885.0,885.0,887.14,480.0,895.0,425826.6,8.0,1508.1,840.0
+SLCF,Sanima Large Cap Fund,Mutual Fund,9.12,-0.15,-1.62,9.02,9.24,9.02,9.12,9.12,6150.0,9.27,56103.5,9.0,10.7,8.8
+SMATA,Samata Gharelu Laghubitta Bittiya Sanstha Limited,Microfinance,685.0,2.0,0.29,673.0,685.0,673.0,685.0,679.11,2293.0,683.0,1557200.6,38.0,955.0,665.1
+SMB,Support Laghubitta Bittiya Sanstha Limited,Microfinance,1801.0,-30.0,-1.64,1844.5,1845.0,1801.0,1801.0,1824.13,526.0,1831.0,959494.0,13.0,2310.3,1699.0
+SMFBS,Swabhimaan Laghubitta Bittiya Sanstha Limited,Microfinance,1330.1,-74.9,-5.33,1371.0,1412.0,1330.1,1330.1,1378.73,406.0,1405.0,559766.3,14.0,1808.0,1285.0
+SMH,Supermai Hydropower  Limited,Hydropower,508.4,4.4,0.87,502.0,515.0,502.0,508.4,508.39,6528.0,504.0,3318738.4,44.0,1024.8,482.6
+SMHL,Super Madi Hydropower Limited,Hydropower,470.4,4.4,0.94,469.0,472.9,466.2,470.4,471.08,42858.0,466.0,20189507.7,140.0,897.0,443.0
+SMJC,Sagarmatha Jalbidhyut Company Limited,Hydropower,404.5,1.5,0.37,405.0,409.0,400.0,404.5,403.15,12138.0,403.0,4893470.5,103.0,563.0,393.0
+SMPDA,Sampada Laghubitta Bittiya Sanstha Limited,Microfinance,722.1,-10.1,-1.38,732.2,733.0,722.1,722.1,725.29,1072.0,732.2,777509.8,28.0,1064.0,707.0
+SNLI,Sun Nepal Life Insurance Company Limited,Life Insurance,412.7,-0.3,-0.07,433.6,433.6,406.5,412.7,412.16,13138.0,413.0,5414952.2,222.0,528.3,375.0
+SNORL,Snow Rivers Limited,Hydropower,843.9,-35.1,-3.99,853.0,870.0,828.0,843.9,843.58,22348.0,879.0,18852335.2,200.0,1057.0,298.7
+SOHL,Solu Hydropower Limited,Hydropower,630.0,-8.0,-1.25,638.0,640.0,618.2,630.0,626.92,138798.0,638.0,87014710.8,1078.0,875.5,300.0
+SONA,Sonapur Minerals and Oil Limited,Manufacturing & Processing,420.0,0.0,0.0,420.0,424.4,417.0,420.0,421.69,157977.0,420.0,66617898.6,526.0,510.0,380.0
+SOPL,Sopan Pharmaceuticals Limited,Manufacturing & Processing,662.1,-27.9,-4.04,683.0,699.9,653.0,662.1,671.66,57350.0,690.0,38519494.8,934.0,1217.0,276.5
+SPC,Samling Power Company Limited,Hydropower,388.6,-4.3,-1.09,393.0,395.0,365.0,388.6,383.04,11553.0,392.9,4425300.1,66.0,577.0,361.7
+SPDL,Synergy Power Development Limited,Hydropower,347.8,2.8,0.81,362.2,362.2,343.1,347.8,346.56,25878.0,345.0,8968395.4,175.0,474.0,326.0
+SPHL,Sayapatri Hydropower Limited,Hydropower,524.0,-56.0,-9.66,551.0,565.0,510.0,524.0,523.3,21299.0,580.0,11145870.7,253.0,708.0,474.0
+SPIL,Siddhartha Premier Insurance Limited,Non-Life Insurance,608.0,-1.0,-0.16,605.4,617.0,605.0,608.0,607.56,3641.0,609.0,2212111.3,26.0,770.7,560.1
+SPL,Shuvam Power Limited,Hydropower,591.8,3.8,0.65,571.1,592.0,571.1,591.8,577.64,2080.0,588.0,1201491.5,32.0,984.6,570.0
+SRBLD83,10.25% SRBL Debenture 2083,Others,1031.0,-7.0,-0.67,1025.0,1031.0,1025.0,1031.0,1027.3,1000.0,1038.0,1027300.0,5.0,1125.0,1006.1
+SRLI,Sanima Reliance Life Insurance Limited,Life Insurance,369.1,-2.7,-0.73,368.0,372.9,368.0,369.1,369.51,8522.0,371.8,3148965.2,157.0,437.7,348.0
+SRLIP,Sanima Reliance Life Insurance Limited Promoter Share,Others,196.0,-1.6,-0.81,196.0,196.0,196.0,196.0,196.0,18199.0,197.6,3567004.0,1.0,215.0,196.0
+SSHL,Shiva Shree Hydropower Limited,Hydropower,208.6,2.8,1.36,208.9,212.0,205.0,208.6,210.0,215602.0,205.8,45276606.2,509.0,251.0,151.0
+STC,Salt Trading Corporation Limited,Trading,5555.9,-69.1,-1.23,5555.5,5556.0,5555.5,5555.9,5558.6,48.0,5625.0,266813.0,7.0,6335.9,4997.1
+SWASTIK,Swastik Laghubitta Bittiya Sanstha Limited,Microfinance,1761.0,-29.0,-1.62,1790.0,1790.0,1757.0,1761.0,1762.29,147.0,1790.0,259057.0,14.0,3400.0,391.7
+SWBBL,Swabalamban Laghubitta Bittiya Sanstha Limited,Microfinance,695.1,-4.9,-0.7,697.3,703.0,695.1,695.1,697.41,4871.0,700.0,3397061.9,42.0,848.0,630.5
+SWMF,Suryodaya Womi Laghubitta Bittiya Sanstha Limited,Microfinance,607.8,5.8,0.96,600.9,608.0,596.5,607.8,599.38,2585.0,602.0,1549401.2,28.0,754.0,571.1
+SYPNL,SY Panel Nepal Limited,Manufacturing & Processing,1374.0,24.0,1.78,1350.0,1399.9,1350.0,1374.0,1381.81,102922.0,1350.0,142219094.4,1142.0,2255.9,319.8
+TAMOR,Sanima Middle Tamor Hydropower Limited,Hydropower,526.7,-2.2,-0.42,520.0,530.0,520.0,526.7,526.39,87294.0,528.9,45950506.0,257.0,558.0,396.4
+TPC,Terhathum Power Company Limited,Hydropower,359.0,1.0,0.28,352.0,361.2,352.0,359.0,359.88,12450.0,358.0,4480566.0,61.0,450.0,270.1
+TPKHL,Taksar Pikhuwa Khola Hydropower Limited,Hydropower,488.0,-1.0,-0.2,489.0,489.0,480.1,488.0,483.71,12032.0,489.0,5819944.2,419.0,772.5,300.0
+TRH,Taragaon Regency Hotel Limited,Hotels & Tourism,802.3,-10.2,-1.26,817.0,817.0,800.0,802.3,802.94,432.0,812.5,346868.0,7.0,853.9,681.1
+TSHL,Three Star Hydropower Limited,Hydropower,341.5,-1.3,-0.38,337.0,350.0,337.0,341.5,342.57,1971.0,342.8,675206.9,31.0,900.0,308.1
+TTL,Trade Tower Limited,Others,673.0,-5.0,-0.74,670.0,678.0,670.0,673.0,674.44,8899.0,678.0,6001873.8,182.0,1173.0,665.0
+TVCL,Trishuli Jal Vidhyut Company Limited,Hydropower,290.0,-4.0,-1.36,308.0,308.0,278.4,290.0,285.58,7262.0,294.0,2073890.5,48.0,689.0,268.1
+UAIL,United Ajod Insurance Limited,Non-Life Insurance,365.2,-1.1,-0.3,367.0,372.0,365.0,365.2,368.07,13280.0,366.3,4887906.8,155.0,519.1,354.1
+UHEWA,Upper Hewakhola Hydropower Company Limited,Hydropower,586.0,2.0,0.34,584.0,589.9,584.0,586.0,586.69,7682.0,584.0,4506942.1,46.0,692.6,521.0
+ULBSL,Upakar Laghubitta Bittiya Sanstha Limited,Microfinance,2544.0,15.0,0.59,2521.9,2544.0,2470.2,2544.0,2507.38,537.0,2529.0,1346462.5,18.0,4325.0,2310.0
+ULHC,Upper Lohore Khola Hydropower Company Limited,Hydropower,350.0,-2.0,-0.57,352.0,360.0,340.0,350.0,344.53,3295.0,352.0,1135214.9,59.0,599.0,260.0
+UMHL,United Modi Hydropower Limited,Hydropower,551.8,1.3,0.24,552.5,552.6,548.4,551.8,550.16,26528.0,550.5,14594770.1,81.0,706.0,495.0
+UMRH,United Idi-Mardi and R.B. Hydropower Limited,Hydropower,511.0,2.1,0.41,506.2,511.7,506.2,511.0,510.51,2746.0,508.9,1401873.4,41.0,622.0,500.7
+UNHPL,Union Hydro Holdings Company Limited,Hydropower,358.0,-1.8,-0.5,354.0,363.0,354.0,358.0,357.44,12422.0,359.8,4440181.6,49.0,571.0,340.1
+UNL,Unilever Nepal Limited,Manufacturing & Processing,49100.0,-100.0,-0.2,49100.0,49100.0,49100.0,49100.0,49100.0,30.0,49200.0,1473000.0,2.0,49200.0,45200.0
+UNLB,Unique Nepal Laghubitta Bittiya Sanstha Limited,Microfinance,1220.0,-24.9,-2.0,1239.0,1242.0,1220.0,1220.0,1235.6,50.0,1244.9,61780.0,5.0,2228.0,1187.0
+UPCL,Universal Power Company Limited,Hydropower,333.9,2.1,0.63,333.0,335.0,331.3,333.9,333.14,20187.0,331.8,6725158.0,91.0,430.4,318.4
+UPPER,Upper Tamakoshi Hydropower Limited,Hydropower,191.0,1.9,1.0,190.0,193.0,189.5,191.0,191.47,79989.0,189.1,15315519.9,342.0,242.6,170.5
+USHEC,Upper Solu Hydro Electric Company Limited,Hydropower,495.5,1.5,0.3,508.0,508.0,493.0,495.5,497.99,3264.0,494.0,1625448.0,47.0,539.1,432.0
+USHL,Upper Syange Hydropower Limited,Hydropower,515.0,0.0,0.0,507.0,521.0,507.0,515.0,517.26,1598.0,515.0,826580.0,27.0,945.0,468.1
+USLB,Unnati Sahakarya Laghubitta Bittiya Sanstha Limited,Microfinance,1150.0,0.0,0.0,1138.0,1199.7,1111.0,1150.0,1162.95,4095.0,1150.0,4762267.0,105.0,2412.0,941.0
+VLBS,Vijaya Laghubitta Bittiya Sanstha Limited,Microfinance,617.5,4.5,0.73,610.0,625.2,607.0,617.5,621.21,3549.0,613.0,2204682.3,68.0,876.0,591.7
+VLUCL,Vision Lumbini Urja Company Limited,Hydropower,379.9,-4.9,-1.27,376.0,385.0,363.1,379.9,372.27,14462.0,384.8,5383803.9,121.0,652.0,363.1
+YMHL,Yambaling Hydropower Limited,Hydropower,505.0,-7.0,-1.37,506.0,524.0,500.0,505.0,507.06,37016.0,512.0,18769379.8,484.0,797.6,300.0
