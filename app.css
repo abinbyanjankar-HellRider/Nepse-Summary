@@ -1906,6 +1906,18 @@
     #tv-chart { height: 300px; }
   }
 
+  .today-tiles { display: grid; grid-template-columns: 1fr; gap: 12px; margin: 12px 0; }
+  .tt-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; }
+  .tt-card h2 { margin: 0 0 8px; font: 600 13px/1.2 var(--display); color: var(--text2); text-transform: uppercase; letter-spacing: .04em; }
+  .tt-card .row { display: flex; justify-content: space-between; gap: 12px; padding: 6px 0; font-size: 14px; font-variant-numeric: tabular-nums; border-top: 1px solid var(--border); }
+  .tt-card .row:first-child { border-top: 0; }
+  .tt-card .k { color: var(--text2); }
+  .tt-card .up { color: var(--green); } .tt-card .down { color: var(--red); } .tt-card .flat { color: var(--text3); }
+  .breadth { display: flex; height: 10px; border-radius: 6px; overflow: hidden; background: var(--bg3); margin-bottom: 8px; }
+  .breadth .b-up { background: var(--green); } .breadth .b-down { background: var(--red); } .breadth .b-flat { background: var(--text3); }
+
   @media (min-width: 900px) {
     .topbar, .subnav, .tabbar { display: none; }
+    .today-tiles { grid-template-columns: repeat(3, 1fr); }
+    .tt-wide { grid-column: 1 / -1; }
   }

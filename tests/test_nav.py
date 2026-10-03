@@ -92,5 +92,16 @@ class PhoneLayer(unittest.TestCase):
         self.assertRegex(CSS[:i][CSS[:i].rindex('@media'):], r'@media \(max-width: 899px\)')
 
 
+class TodayTiles(unittest.TestCase):
+    def test_tiles_markup_and_renderer(self):
+        for el in ('id="today-tiles"', 'id="tt-breadth"', 'id="tt-gainers"', 'id="tt-losers"', 'id="tt-turnover"'):
+            self.assertIn(el, HTML)
+        self.assertIn('function renderTodayTiles', JS)
+        self.assertRegex(JS, r'function renderCloseReport\(\)\s*\{[\s\S]*?renderTodayTiles\(\);\s*\}\s*\n')
+
+    def test_tiles_come_before_the_changes_panel(self):
+        self.assertLess(HTML.index('id="today-tiles"'), HTML.index('id="today-grid"'))
+
+
 if __name__ == '__main__':
     unittest.main()

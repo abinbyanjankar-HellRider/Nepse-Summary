@@ -3676,6 +3676,36 @@ function triggerRows() {
   };
 }
 
+// Today at a glance: breadth bar and three top-5 lists from today's snapshot.
+// Each tile is built on its own so one missing field never blanks the others.
+function renderTodayTiles() {
+  const s = LIVE_SNAPSHOT || {};
+  const $ = id => document.getElementById(id);
+  const num = (v, d = 2) => typeof v === 'number' ? v.toLocaleString('en-IN', { minimumFractionDigits: d, maximumFractionDigits: d }) : '—';
+  const none = '<div class="row">No data</div>';
+  const tile = (id, build) => {
+    const el = $(id); if (!el) return;
+    try { el.innerHTML = build() || none; } catch (e) { console.error('[today]', id, e); el.innerHTML = none; }
+  };
+  tile('tt-breadth', () => {
+    const { gainers: g, losers: l, unchanged: u } = s;
+    if (![g, l, u].every(v => typeof v === 'number')) return '';
+    const t = (g + l + u) || 1;
+    return `<div class="breadth" role="img" aria-label="${g} up, ${l} down, ${u} unchanged">
+        <span class="b-up" style="width:${(g / t * 100).toFixed(1)}%"></span>
+        <span class="b-flat" style="width:${(u / t * 100).toFixed(1)}%"></span>
+        <span class="b-down" style="width:${(l / t * 100).toFixed(1)}%"></span></div>
+      <div class="row"><span class="up">${g} up</span><span class="flat">${u} unchanged</span><span class="down">${l} down</span></div>` +
+      (typeof s.turnover === 'number' ? `<div class="row"><span class="k">Turnover</span><span>Rs ${(s.turnover / 1e9).toFixed(2)} bil${typeof s.scrips_traded === 'number' ? ` · ${s.scrips_traded} scrips` : ''}</span></div>` : '');
+  });
+  const movers = (list, cls) => (list || []).slice(0, 5).map(m =>
+    `<div class="row"><span class="k">${esc(m.sym)}</span><span class="${cls}">${num(m.close)} (${m.pct > 0 ? '+' : m.pct < 0 ? '−' : ''}${num(Math.abs(m.pct))}%)</span></div>`).join('');
+  tile('tt-gainers', () => movers(s.top_gainers, 'up'));
+  tile('tt-losers', () => movers(s.top_losers, 'down'));
+  tile('tt-turnover', () => (s.top_turnover || []).slice(0, 5).map(m =>
+    `<div class="row"><span class="k">${esc(m.sym)}</span><span>Rs ${(m.turnover / 1e6).toFixed(0)} mil</span></div>`).join(''));
+}
+
 function renderCloseReport() {
   const s = LIVE_SNAPSHOT;
   const $ = id => document.getElementById(id);
@@ -3721,6 +3751,7 @@ function renderCloseReport() {
     `<div class="row"><span class="k">Phase</span><span><b>Trading range, phase B</b> (2,487 to 2,960). Bias neutral.</span></div>` +
     T.rows.map(r => `<div class="row"><span class="plan-dot${r.hit ? ' met' : ''}" aria-hidden="true"></span><span>${r.label}${r.hit ? ' <b style="color:var(--amber);">met</b>' : ''}</span></div>`).join('') +
     (T.wk && T.wk.days < 5 ? `<div class="row" style="color:var(--text3);">Weekly checks use this week's closes so far (${T.wk.days} session${T.wk.days === 1 ? '' : 's'}).</div>` : '');
+  renderTodayTiles();
 }
 
 // ── Emotion cycle infographic ────────────────────────────────
