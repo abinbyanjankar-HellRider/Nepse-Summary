@@ -112,6 +112,13 @@ class Build(unittest.TestCase):
         self.assertNotEqual(self.blob, again)
         self.assertNotEqual(self.blob[8:200], again[8:200])        # new salts / wrapped keys in the header
 
+    def test_unlock_page_embeds_the_reader_and_asks_for_a_username(self):
+        page = (self.out / 'index.html').read_text(encoding='utf-8')
+        self.assertIn('UnlockCore', page)
+        self.assertNotIn('__UNLOCK_CORE__', page)
+        field = page.split('name="username"')[1].split('>')[0]
+        self.assertNotIn('hidden', field)                          # a real, visible field
+
 
 class Guards(unittest.TestCase):
     def test_short_passphrase_refused(self):

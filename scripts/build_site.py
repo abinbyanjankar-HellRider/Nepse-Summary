@@ -79,13 +79,6 @@ def collect(root):
     return files
 
 
-MAGIC = b'NSD2'
-SLOT_AAD = b'NSD2-slot:'
-USER_RE = re.compile(r'^[a-z0-9._-]{2,32}$')
-BAD = 'wrong username or passphrase, or corrupted bundle'
-b64 = lambda b: base64.b64encode(b).decode('ascii')
-
-
 def norm_user(username):
     return unicodedata.normalize('NFKC', username).strip().lower()
 
@@ -166,8 +159,10 @@ def build(out, users, iterations=ITERATIONS, root=ROOT):
     files = collect(root)
     blob = encrypt(files, users, iterations)
     (out / 'site.enc').write_bytes(blob)
-    (out / 'index.html').write_text((Path(__file__).with_name('unlock_template.html')).read_text(encoding='utf-8'),
-                                    encoding='utf-8', newline='\n')
+    core = (Path(__file__).with_name('unlock_core.js')).read_text(encoding='utf-8')
+    assert '</script' not in core.lower()
+    page = (Path(__file__).with_name('unlock_template.html')).read_text(encoding='utf-8')
+    (out / 'index.html').write_text(page.replace('/*__UNLOCK_CORE__*/', core), encoding='utf-8', newline='\n')
     (out / '.nojekyll').write_text('', encoding='utf-8')
     (out / 'robots.txt').write_text('User-agent: *\nDisallow: /\n', encoding='utf-8', newline='\n')
     return files, blob
