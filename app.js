@@ -61,6 +61,58 @@ const PAGE_MEMBERS = {
   'events-sec':    ['events-sec', 'vol-section'],
   'structure-sec': ['levels-sec', 'structure-sec'],
 };
+// Five groups over the sixteen pages (page id = the menu's navTo target). Strict JSON on
+// purpose: tests/test_nav.py parses it. Each page in exactly one group.
+const NAV_GROUPS = [
+  {"id": "today",  "label": "Today",  "pages": ["chart-sec", "events-sec", "summary-sec"]},
+  {"id": "market", "label": "Market", "pages": ["market-summary-sec", "heatmap-sec", "price-table-sec", "rrg-sec", "money-sec", "emotion-sec"]},
+  {"id": "charts", "label": "Charts", "pages": ["tvchart-sec", "structure-sec", "trade-sec"]},
+  {"id": "stocks", "label": "Stocks", "pages": ["stock-analyzer-sec", "notes-sec"]},
+  {"id": "more",   "label": "More",   "pages": ["macro-sec", "links-sec"]}
+];
+const lastPageInGroup = {};
+
+function groupOf(page) { return NAV_GROUPS.find(g => g.pages.includes(page)) || null; }
+
+function pageLabel(page) {
+  const el = document.querySelector(`.sidebar-nav .nav-btn[data-on-click="navTo('${page}')"] .nav-label`);
+  return el ? el.textContent : page;
+}
+
+function navGroup(id) {
+  const g = NAV_GROUPS.find(x => x.id === id);
+  if (g) navTo(lastPageInGroup[id] || g.pages[0]);
+}
+
+// Highlight the group's tab, (re)build the chip row for its pages, mark the current chip.
+function updateGroupNav(page) {
+  const g = groupOf(page);
+  document.querySelectorAll('.tabbar .tab').forEach(b => {
+    const on = !!g && b.dataset.group === g.id;
+    b.classList.toggle('active', on);
+    if (on) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current');
+  });
+  const sub = document.getElementById('subnav');
+  if (!sub || !g) return;
+  lastPageInGroup[g.id] = page;
+  if (sub.dataset.group !== g.id) {
+    sub.dataset.group = g.id;
+    sub.replaceChildren(...g.pages.map(p => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'chip'; b.dataset.page = p;
+      b.setAttribute('data-on-click', `navTo('${p}')`);
+      b.textContent = pageLabel(p);
+      return b;
+    }));
+  }
+  sub.querySelectorAll('.chip').forEach(c => {
+    const on = c.dataset.page === page;
+    c.classList.toggle('active', on);
+    if (on) { c.setAttribute('aria-current', 'page'); c.scrollIntoView({ inline: 'center', block: 'nearest' }); }
+    else c.removeAttribute('aria-current');
+  });
+}
+
 let currentPage = null;
 
 function pageOf(el) {
@@ -94,6 +146,7 @@ function showPage(page, push = true) {
     const m = (btn.getAttribute('data-on-click') || '').match(/'([^']+)'/);
     btn.classList.toggle('active', !!(m && m[1] === page));
   });
+  updateGroupNav(page);
   if (push && location.hash !== '#/' + page) history.pushState(null, '', '#/' + page);
   window.scrollTo({ top: 0 });
   // Charts / treemaps measured while hidden have no size — redraw now that the
@@ -2631,6 +2684,9 @@ function refreshLiveData() {
     hdrChg.textContent = fmtIndexChange(snap);
     hdrChg.style.color = snap.change < 0 ? 'var(--red)' : 'var(--green)';
   }
+  const tbp = document.getElementById('tb-price'), tbc = document.getElementById('tb-chg');
+  if (tbp) tbp.textContent = snap.index.toLocaleString('en-IN', { minimumFractionDigits:2, maximumFractionDigits:2 });
+  if (tbc) { tbc.textContent = fmtIndexChange(snap); tbc.style.color = snap.change < 0 ? 'var(--red)' : 'var(--green)'; }
 
   // Phase pill
   const phaseVal = document.getElementById('phase-val');

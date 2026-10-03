@@ -1,0 +1,57 @@
+"""Navigation groups: data, sidebar markup and tab bar stay in step (static checks)."""
+import json, re, unittest
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+JS = (ROOT / 'app.js').read_text(encoding='utf-8')
+HTML = (ROOT / 'index.html').read_text(encoding='utf-8')
+
+
+def groups():
+    m = re.search(r'const NAV_GROUPS = (\[.*?\n\]);', JS, re.S)
+    assert m, 'NAV_GROUPS literal not found in app.js'
+    return json.loads(m.group(1))            # the literal is strict JSON on purpose
+
+
+def sidebar_nav():
+    return HTML.split('<nav class="sidebar-nav"', 1)[1].split('</nav>', 1)[0]
+
+
+class NavGroups(unittest.TestCase):
+    def test_every_sidebar_page_is_in_exactly_one_group(self):
+        flat = [p for g in groups() for p in g['pages']]
+        self.assertEqual(len(flat), len(set(flat)), 'a page is in two groups')
+        self.assertEqual(sorted(flat), sorted(re.findall(r"navTo\('([a-z-]+)'\)", sidebar_nav())))
+
+    def test_every_group_page_exists(self):
+        keys = set(re.findall(r"^\s*'([a-z-]+)':\s*\[", JS.split('const PAGE_MEMBERS', 1)[1].split('};', 1)[0], re.M))
+        for g in groups():
+            for p in g['pages']:
+                self.assertTrue(p in keys or f'id="{p}"' in HTML, f'{p} is not a page')
+
+    def test_group_ids_are_unique_and_labelled(self):
+        ids = [g['id'] for g in groups()]
+        self.assertEqual(len(ids), len(set(ids)))
+        self.assertEqual(len(ids), 5)
+        for g in groups():
+            self.assertTrue(g['label'] and g['pages'])
+
+    def test_tab_bar_has_one_button_per_group(self):
+        bar = HTML.split('<nav class="tabbar"', 1)[1].split('</nav>', 1)[0]
+        for g in groups():
+            self.assertIn(f"data-on-click=\"navGroup('{g['id']}')\"", bar)
+        self.assertIn('id="subnav"', HTML)
+        self.assertIn('class="topbar"', HTML)
+
+    def test_sidebar_sections_match_group_labels(self):
+        self.assertEqual(re.findall(r'nav-section-label">([^<]+)<', sidebar_nav()), [g['label'] for g in groups()])
+
+    def test_no_inline_handlers_added(self):
+        self.assertNotRegex(HTML, r'\sonclick=')
+
+    def test_viewport_covers_the_notch(self):
+        self.assertIn('viewport-fit=cover', HTML)
+
+
+if __name__ == '__main__':
+    unittest.main()
