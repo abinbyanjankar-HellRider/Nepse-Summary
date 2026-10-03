@@ -57,10 +57,62 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') toggleAppear
 // target id. Blocks without an entry join the page of the block after them
 // (e.g. the Trading Range ruler joins Wyckoff Events). The disclaimer shows on every page.
 const PAGE_MEMBERS = {
-  'chart-sec':     ['close-report', 'data-check', 'today-grid', 'chart-sec'],
+  'chart-sec':     ['close-report', 'data-check', 'today-grid', 'today-tiles', 'chart-sec'],
   'events-sec':    ['events-sec', 'vol-section'],
   'structure-sec': ['levels-sec', 'structure-sec'],
 };
+// Five groups over the sixteen pages (page id = the menu's navTo target). Strict JSON on
+// purpose: tests/test_nav.py parses it. Each page in exactly one group.
+const NAV_GROUPS = [
+  {"id": "today",  "label": "Today",  "pages": ["chart-sec", "events-sec", "summary-sec"]},
+  {"id": "market", "label": "Market", "pages": ["market-summary-sec", "heatmap-sec", "price-table-sec", "rrg-sec", "money-sec", "emotion-sec"]},
+  {"id": "charts", "label": "Charts", "pages": ["tvchart-sec", "structure-sec", "trade-sec"]},
+  {"id": "stocks", "label": "Stocks", "pages": ["stock-analyzer-sec", "notes-sec"]},
+  {"id": "more",   "label": "More",   "pages": ["macro-sec", "links-sec"]}
+];
+const lastPageInGroup = {};
+
+function groupOf(page) { return NAV_GROUPS.find(g => g.pages.includes(page)) || null; }
+
+function pageLabel(page) {
+  const el = document.querySelector(`.sidebar-nav .nav-btn[data-on-click="navTo('${page}')"] .nav-label`);
+  return el ? el.textContent : page;
+}
+
+function navGroup(id) {
+  const g = NAV_GROUPS.find(x => x.id === id);
+  if (g) navTo(lastPageInGroup[id] || g.pages[0]);
+}
+
+// Highlight the group's tab, (re)build the chip row for its pages, mark the current chip.
+function updateGroupNav(page) {
+  const g = groupOf(page);
+  document.querySelectorAll('.tabbar .tab').forEach(b => {
+    const on = !!g && b.dataset.group === g.id;
+    b.classList.toggle('active', on);
+    if (on) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current');
+  });
+  const sub = document.getElementById('subnav');
+  if (!sub || !g) return;
+  lastPageInGroup[g.id] = page;
+  if (sub.dataset.group !== g.id) {
+    sub.dataset.group = g.id;
+    sub.replaceChildren(...g.pages.map(p => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'chip'; b.dataset.page = p;
+      b.setAttribute('data-on-click', `navTo('${p}')`);
+      b.textContent = pageLabel(p);
+      return b;
+    }));
+  }
+  sub.querySelectorAll('.chip').forEach(c => {
+    const on = c.dataset.page === page;
+    c.classList.toggle('active', on);
+    if (on) { c.setAttribute('aria-current', 'page'); c.scrollIntoView({ inline: 'center', block: 'nearest' }); }
+    else c.removeAttribute('aria-current');
+  });
+}
+
 let currentPage = null;
 
 function pageOf(el) {
@@ -82,7 +134,7 @@ function initPages() {
   const fromHash = () => location.hash.replace(/^#\/?/, '');
   window.addEventListener('hashchange', () => showPage(fromHash(), false));
   const start = fromHash();
-  showPage(document.querySelector(`[data-page="${start}"]`) ? start : 'chart-sec', false);
+  showPage(document.querySelector(`main.main > [data-page="${start}"]`) ? start : 'chart-sec', false);
 }
 
 function showPage(page, push = true) {
@@ -94,6 +146,7 @@ function showPage(page, push = true) {
     const m = (btn.getAttribute('data-on-click') || '').match(/'([^']+)'/);
     btn.classList.toggle('active', !!(m && m[1] === page));
   });
+  updateGroupNav(page);
   if (push && location.hash !== '#/' + page) history.pushState(null, '', '#/' + page);
   window.scrollTo({ top: 0 });
   // Charts / treemaps measured while hidden have no size — redraw now that the
@@ -2631,6 +2684,9 @@ function refreshLiveData() {
     hdrChg.textContent = fmtIndexChange(snap);
     hdrChg.style.color = snap.change < 0 ? 'var(--red)' : 'var(--green)';
   }
+  const tbp = document.getElementById('tb-price'), tbc = document.getElementById('tb-chg');
+  if (tbp) tbp.textContent = snap.index.toLocaleString('en-IN', { minimumFractionDigits:2, maximumFractionDigits:2 });
+  if (tbc) { tbc.textContent = fmtIndexChange(snap); tbc.style.color = snap.change < 0 ? 'var(--red)' : 'var(--green)'; }
 
   // Phase pill
   const phaseVal = document.getElementById('phase-val');
@@ -3314,12 +3370,12 @@ function renderHeatmap() {
     // Sector index table — daily / weekly / monthly side by side
     const cell = v => `<td style="color:${typeof v !== 'number' || v === 0 ? 'var(--text2)' : v > 0 ? 'var(--green)' : 'var(--red)'}">${f2(v)}</td>`;
     const b = VIEWS.benchmark || {};
-    document.getElementById('hm-sector-table').innerHTML = `<table class="hm-table">
+    document.getElementById('hm-sector-table').innerHTML = `<div class="table-scroll"><table class="hm-table">
       <thead><tr><th>Index</th><th>Close</th><th>1 Day</th><th>1 Week</th><th>1 Month</th><th>Companies</th><th>Turnover</th></tr></thead><tbody>
       <tr class="bench"><td>NEPSE (benchmark)</td><td>${(b.close || 0).toLocaleString('en-IN')}</td>${cell(b.d)}${cell(b.w)}${cell(b.m)}<td>—</td><td>—</td></tr>
       ${H.sectors.slice().sort((a, b2) => (b2[key] ?? -99) - (a[key] ?? -99)).map(s =>
         `<tr><td>${esc(s.sector)}</td><td>${s.close.toLocaleString('en-IN')}</td>${cell(s.d)}${cell(s.w)}${cell(s.m)}<td>${s.stocks}</td><td>${fmtTo(s.to)}</td></tr>`).join('')}
-      </tbody></table>`;
+      </tbody></table></div>`;
     return;
   }
 
@@ -3620,6 +3676,36 @@ function triggerRows() {
   };
 }
 
+// Today at a glance: breadth bar and three top-5 lists from today's snapshot.
+// Each tile is built on its own so one missing field never blanks the others.
+function renderTodayTiles() {
+  const s = LIVE_SNAPSHOT || {};
+  const $ = id => document.getElementById(id);
+  const num = (v, d = 2) => Number.isFinite(v) ? v.toLocaleString('en-IN', { minimumFractionDigits: d, maximumFractionDigits: d }) : '—';
+  const none = '<div class="row">No data</div>';
+  const tile = (id, build) => {
+    const el = $(id); if (!el) return;
+    try { el.innerHTML = build() || none; } catch (e) { console.error('[today]', id, e); el.innerHTML = none; }
+  };
+  tile('tt-breadth', () => {
+    const { gainers: g, losers: l, unchanged: u } = s;
+    if (![g, l, u].every(v => typeof v === 'number')) return '';
+    const t = (g + l + u) || 1;
+    return `<div class="breadth" role="img" aria-label="${g} up, ${l} down, ${u} unchanged">
+        <span class="b-up" style="width:${(g / t * 100).toFixed(1)}%"></span>
+        <span class="b-flat" style="width:${(u / t * 100).toFixed(1)}%"></span>
+        <span class="b-down" style="width:${(l / t * 100).toFixed(1)}%"></span></div>
+      <div class="row"><span class="up">${g} up</span><span class="flat">${u} unchanged</span><span class="down">${l} down</span></div>` +
+      (typeof s.turnover === 'number' ? `<div class="row"><span class="k">Turnover</span><span>Rs ${(s.turnover / 1e9).toFixed(2)} bil${typeof s.scrips_traded === 'number' ? ` · ${s.scrips_traded} scrips` : ''}</span></div>` : '');
+  });
+  const movers = (list, cls) => (list || []).slice(0, 5).map(m =>
+    `<div class="row"><span class="k">${esc(m.sym)}</span><span class="${cls}">${num(m.close)}${Number.isFinite(m.pct) ? ` (${m.pct > 0 ? '+' : m.pct < 0 ? '−' : ''}${num(Math.abs(m.pct))}%)` : ''}</span></div>`).join('');
+  tile('tt-gainers', () => movers(s.top_gainers, 'up'));
+  tile('tt-losers', () => movers(s.top_losers, 'down'));
+  tile('tt-turnover', () => (s.top_turnover || []).filter(m => m && Number.isFinite(m.turnover)).slice(0, 5).map(m =>
+    `<div class="row"><span class="k">${esc(m.sym)}</span><span>Rs ${(m.turnover / 1e6).toFixed(0)} mil</span></div>`).join(''));
+}
+
 function renderCloseReport() {
   const s = LIVE_SNAPSHOT;
   const $ = id => document.getElementById(id);
@@ -3665,6 +3751,7 @@ function renderCloseReport() {
     `<div class="row"><span class="k">Phase</span><span><b>Trading range, phase B</b> (2,487 to 2,960). Bias neutral.</span></div>` +
     T.rows.map(r => `<div class="row"><span class="plan-dot${r.hit ? ' met' : ''}" aria-hidden="true"></span><span>${r.label}${r.hit ? ' <b style="color:var(--amber);">met</b>' : ''}</span></div>`).join('') +
     (T.wk && T.wk.days < 5 ? `<div class="row" style="color:var(--text3);">Weekly checks use this week's closes so far (${T.wk.days} session${T.wk.days === 1 ? '' : 's'}).</div>` : '');
+  renderTodayTiles();
 }
 
 // ── Emotion cycle infographic ────────────────────────────────
@@ -4954,6 +5041,7 @@ async function showSignedInUser() {
     if (!d || typeof d.user !== 'string') return;
     document.getElementById('auth-name').textContent = d.user;
     document.getElementById('auth-user').style.display = '';
+    const tbo = document.getElementById('tb-logout'); if (tbo) tbo.hidden = false;
   } catch (e) { /* not behind the login server */ }
 }
 

@@ -20,9 +20,9 @@ From this moment the PC's scheduled task switches itself to **pull mode**: GitHu
 ## 3. (Optional) Publish a login-protected copy on GitHub Pages
 GitHub Pages cannot check passwords, so the published site is **encrypted**: the
 deploy job runs `scripts/build_site.py`, which encrypts `index.html`, the app files
-and `data/` (AES-256-GCM, key from your passphrase via PBKDF2-SHA256, 1,000,000
+and `data/` (AES-256-GCM under a random data key that is wrapped separately for each user with a key from their passphrase via PBKDF2-SHA256, 1,000,000
 rounds) and pushes only the ciphertext plus a small unlock page to a **second,
-public repository**. Visitors see a passphrase prompt; the browser decrypts and shows
+public repository**. Visitors see a username and passphrase prompt; the browser decrypts and shows
 the dashboard. Nothing readable is ever served. (The per-user login in
 `scripts/secure_server.py` still protects the copy on your PC.)
 
@@ -33,18 +33,19 @@ the dashboard. Nothing readable is ever served. (The per-user login in
 3. **Create a deploy token**: GitHub → Settings → Developer settings → Fine-grained tokens → *Generate new token*;
    Repository access: **only** the site repository; Permissions: **Contents: Read and write**. Set an expiry and put a reminder in your calendar.
 4. In **this** repository, **Settings → Secrets and variables → Actions**:
-   * Secret `SITE_PASSPHRASE` — a long passphrase (at least 16 characters; four or five random words is good).
+   * Secret `SITE_USERS` — one `username:passphrase` per line (usernames 2–32 characters of a–z 0–9 . _ - ; passphrases at least 16 characters). Create the lines with `python scripts/manage_site_users.py gen abin ram.k`. That script needs the `cryptography` package: run `pip install -r scripts/requirements-site.txt` once on your PC first. Give each person only their own line.
    * Secret `SITE_DEPLOY_TOKEN` — the token from step 3.
    * Variable `SITE_REPO` — `your-username/nepse-dashboard-site`.
    Until `SITE_REPO` exists the deploy job is skipped. Without both secrets it **fails** rather than publish anything unprotected.
 5. Run the workflow once (Actions → NEPSE daily data → Run workflow). Your site: `https://YOUR-USERNAME.github.io/nepse-dashboard-site/`
+   After the first per-user deploy, everyone must **hard-refresh** the site once (Ctrl+Shift+R, or clear the site data on a phone): a cached copy of the old single-passphrase page cannot read the new bundle and shows "Unrecognised bundle format".
 
 What this protects, and what it does not:
-* **One shared passphrase**, not per-user accounts; there is no per-person revocation. To lock someone out, change `SITE_PASSPHRASE` (the next deploy re-encrypts).
+* **Per-user passphrases**, but a static site cannot lock anyone out and cannot hide who has an account. To revoke someone, delete their line from `SITE_USERS` and run the workflow: the new build has no slot for them and uses a new data key. They keep anything they already downloaded or decrypted.
 * Anyone can download `site.enc` and guess passphrases offline, with no lockout. The 1M-round key derivation slows this, but only a **long, random passphrase** makes it infeasible. A short or guessable one is not protection.
 * Data already published while the repository was public (including old commits and any forks or caches) stays exposed; making the repo private stops new exposure only. Consider that data public.
 * The site is a static snapshot from the last deploy: the Refresh button and intraday live mode work only on your PC (`start-live.bat`).
-* Local test: `SITE_PASSPHRASE='…' python scripts/build_site.py --out _site`, then serve `_site/` with any static server.
+* Local test: `SITE_USERS='demo.user:a-long-demo-passphrase' python scripts/build_site.py --out _site`, then serve `_site/` with any static server.
 
 ## 4. Allow the Action to save data
 **Settings → Actions → General → Workflow permissions → `Read and write permissions` → Save**.

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Technical Analysis</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -40,28 +40,28 @@
   <nav class="sidebar-nav" aria-label="Sections">
     <div class="nav-section-label">Today</div>
     <button class="nav-btn active" data-on-click="navTo('chart-sec')"><span class="nav-label">Close report</span></button>
-    <button class="nav-btn" data-on-click="navTo('tvchart-sec')"><span class="nav-label">NEPSE chart</span></button>
+    <button class="nav-btn" data-on-click="navTo('events-sec')"><span class="nav-label">Phase &amp; events</span></button>
+    <button class="nav-btn" data-on-click="navTo('summary-sec')"><span class="nav-label">Analysis summary</span></button>
+
+    <div class="nav-section-label">Market</div>
     <button class="nav-btn" data-on-click="navTo('market-summary-sec')"><span class="nav-label">Market summary</span></button>
     <button class="nav-btn" data-on-click="navTo('heatmap-sec')"><span class="nav-label">Heatmap</span></button>
     <button class="nav-btn" data-on-click="navTo('price-table-sec')"><span class="nav-label">Share prices</span></button>
-
-    <div class="nav-section-label">Rotation</div>
     <button class="nav-btn" data-on-click="navTo('rrg-sec')"><span class="nav-label">Relative rotation (RRG)</span></button>
-
-    <div class="nav-section-label">Wyckoff plan</div>
-    <button class="nav-btn" data-on-click="navTo('trade-sec')"><span class="nav-label">Scenarios &amp; triggers</span></button>
-    <button class="nav-btn" data-on-click="navTo('events-sec')"><span class="nav-label">Phase &amp; events</span></button>
-    <button class="nav-btn" data-on-click="navTo('structure-sec')"><span class="nav-label">Levels &amp; structure</span></button>
     <button class="nav-btn" data-on-click="navTo('money-sec')"><span class="nav-label">Risk &amp; position size</span></button>
     <button class="nav-btn" data-on-click="navTo('emotion-sec')"><span class="nav-label">Emotion cycle</span></button>
 
-    <div class="nav-section-label">Tools</div>
-    <button class="nav-btn" data-on-click="navTo('stock-analyzer-sec')"><span class="nav-label">Stock analyzer</span></button>
-    <button class="nav-btn" data-on-click="navTo('macro-sec')"><span class="nav-label">NRB macro</span></button>
+    <div class="nav-section-label">Charts</div>
+    <button class="nav-btn" data-on-click="navTo('tvchart-sec')"><span class="nav-label">NEPSE chart</span></button>
+    <button class="nav-btn" data-on-click="navTo('structure-sec')"><span class="nav-label">Levels &amp; structure</span></button>
+    <button class="nav-btn" data-on-click="navTo('trade-sec')"><span class="nav-label">Scenarios &amp; triggers</span></button>
 
-    <div class="nav-section-label">Reference</div>
+    <div class="nav-section-label">Stocks</div>
+    <button class="nav-btn" data-on-click="navTo('stock-analyzer-sec')"><span class="nav-label">Stock analyzer</span></button>
     <button class="nav-btn" data-on-click="navTo('notes-sec')"><span class="nav-label">Study notes</span></button>
-    <button class="nav-btn" data-on-click="navTo('summary-sec')"><span class="nav-label">Analysis summary</span></button>
+
+    <div class="nav-section-label">More</div>
+    <button class="nav-btn" data-on-click="navTo('macro-sec')"><span class="nav-label">NRB macro</span></button>
     <button class="nav-btn" data-on-click="navTo('links-sec')"><span class="nav-label">Resources</span></button>
   </nav>
 
@@ -76,6 +76,24 @@
     </div>
   </div>
 </aside>
+
+<!-- PHONE CHROME (shown below 900 px by app.css): slim top bar, sub-view chips, bottom tab bar -->
+<header class="topbar">
+  <span class="logo">NEPSE<span>Analytics</span></span>
+  <span class="topbar-price"><b id="tb-price">—</b> <span id="tb-chg"></span></span>
+  <span class="topbar-actions">
+    <button type="button" class="tb-btn" data-on-click="toggleTheme()" aria-label="Switch light or dark theme" title="Light / dark">◐</button>
+    <a class="tb-btn tb-link" id="tb-logout" href="/logout" hidden>Sign out</a>
+  </span>
+</header>
+<div class="subnav" id="subnav" role="navigation" aria-label="Pages in this group"></div>
+<nav class="tabbar" aria-label="Sections">
+  <button class="tab" data-group="today"  data-on-click="navGroup('today')">Today</button>
+  <button class="tab" data-group="market" data-on-click="navGroup('market')">Market</button>
+  <button class="tab" data-group="charts" data-on-click="navGroup('charts')">Charts</button>
+  <button class="tab" data-group="stocks" data-on-click="navGroup('stocks')">Stocks</button>
+  <button class="tab" data-group="more"   data-on-click="navGroup('more')">More</button>
+</nav>
 
 <!-- MAIN -->
 <main class="main">
@@ -111,6 +129,17 @@
       <div><div class="dc-sec" id="dc-changes-title">Changes since previous session</div><div id="dc-changes"></div></div>
     </div>
   </div>
+
+  <!-- DECISION TILES: breadth + movers, straight from today's close -->
+  <section class="today-tiles" id="today-tiles" aria-label="Today at a glance">
+    <div class="tt-card tt-wide">
+      <h2>Breadth</h2>
+      <div id="tt-breadth"><div class="row">Waiting for the first daily update.</div></div>
+    </div>
+    <div class="tt-card"><h2>Top gainers</h2><div id="tt-gainers"></div></div>
+    <div class="tt-card"><h2>Top losers</h2><div id="tt-losers"></div></div>
+    <div class="tt-card"><h2>Most turnover</h2><div id="tt-turnover"></div></div>
+  </section>
 
   <!-- WHAT CHANGED + PLAN STATUS -->
   <section class="today-grid" id="today-grid">
@@ -912,7 +941,7 @@
       </div>
 
       <!-- Table -->
-      <div style="overflow-x:auto;">
+      <div class="table-scroll">
         <table id="pt-table" style="width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12px;">
           <thead>
             <tr style="background:var(--bg3);border-bottom:1px solid var(--border2);">
