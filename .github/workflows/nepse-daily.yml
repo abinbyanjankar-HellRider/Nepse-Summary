@@ -64,7 +64,7 @@ jobs:
     # Publishes an ENCRYPTED copy (scripts/build_site.py) to a separate public "site"
     # repository whose GitHub Pages serves it: only ciphertext + an unlock page.
     # Skipped until the repository variable SITE_REPO ("owner/name" of that site
-    # repo) exists. Needs the secrets SITE_PASSPHRASE and SITE_DEPLOY_TOKEN (a
+    # repo) exists. Needs the secrets SITE_USERS (one username:passphrase per line) and SITE_DEPLOY_TOKEN (a
     # fine-grained token with Contents: read/write on the site repo only).
     # Never uploads plaintext: without both secrets the job fails instead.
     # This repository must be private, otherwise index.html and data/ are public here.
@@ -75,12 +75,12 @@ jobs:
       contents: read
     env:
       SITE_REPO: ${{ vars.SITE_REPO }}
-      SITE_PASSPHRASE: ${{ secrets.SITE_PASSPHRASE }}
+      SITE_USERS: ${{ secrets.SITE_USERS }}
       SITE_DEPLOY_TOKEN: ${{ secrets.SITE_DEPLOY_TOKEN }}
     steps:
       - name: Refuse to publish unprotected
         run: |
-          [ -n "$SITE_PASSPHRASE" ]   || { echo "::error::Secret SITE_PASSPHRASE is not set - refusing to publish"; exit 1; }
+          [ -n "$SITE_USERS" ]        || { echo "::error::Secret SITE_USERS is not set - refusing to publish"; exit 1; }
           [ -n "$SITE_DEPLOY_TOKEN" ] || { echo "::error::Secret SITE_DEPLOY_TOKEN is not set - cannot publish"; exit 1; }
           [ "$SITE_REPO" != "$GITHUB_REPOSITORY" ] || { echo "::error::SITE_REPO must be a different repository from this one"; exit 1; }
 
@@ -93,6 +93,9 @@ jobs:
           python-version: '3.12'
 
       - run: pip install -r scripts/requirements-site.txt
+
+      - name: Validate SITE_USERS (usernames only are printed)
+        run: printf '%s\n' "$SITE_USERS" | python scripts/manage_site_users.py check
 
       - name: Encrypt the site
         run: python scripts/build_site.py --out _site
