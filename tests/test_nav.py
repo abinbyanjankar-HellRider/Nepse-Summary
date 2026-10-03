@@ -176,3 +176,43 @@ class PageAssignment(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+class PhoneExtras(unittest.TestCase):
+    def test_topbar_has_theme_button_and_signout(self):
+        bar = HTML.split('<header class="topbar">', 1)[1].split('</header>', 1)[0]
+        self.assertIn("data-on-click=\"toggleTheme()\"", bar)
+        self.assertIn('id="tb-logout"', bar)
+        self.assertIn('href="/logout"', bar)
+        self.assertRegex(JS, r"getElementById\('tb-logout'\)")
+
+    def test_signout_hidden_until_the_login_server_confirms(self):
+        self.assertRegex(HTML, r'id="tb-logout"[^>]*\bhidden\b')
+
+    def test_short_landscape_layout(self):
+        self.assertRegex(PHONE, r'@media \(max-width: 899px\) and \(max-height: 500px\)')
+        short = PHONE.split('(max-height: 500px)', 1)[1].split('@media', 1)[0]
+        self.assertRegex(short, r'\.topbar\s*\{[^}]*position:\s*static')
+        self.assertRegex(short, r'\.subnav\s*\{[^}]*position:\s*sticky')
+
+    def test_pinned_benchmark_cell_is_opaque(self):
+        rule = re.search(r'\.hm-table tr\.bench td:first-child\s*\{([^}]*)\}', PHONE)
+        self.assertTrue(rule, 'bench first-cell rule missing from the phone layer')
+        self.assertIn('linear-gradient', rule.group(1))                 # translucent --inset layered over an opaque base
+        self.assertRegex(rule.group(1), r'background-color:\s*var\(--surface\)')
+
+    def test_theme_button_tap_target(self):
+        self.assertRegex(PHONE, r'\.tb-btn\s*\{[^}]*min-(width|height):\s*(4[4-9]|[5-9]\d)px')
+
+
+class NarrowPhone(unittest.TestCase):
+    def test_topbar_fits_small_phones_with_both_buttons(self):
+        m = re.search(r'@media \(max-width: 430px\)\s*\{(.*?)\n  \}', PHONE, re.S)
+        self.assertTrue(m, 'no max-width: 430px rule for the top bar')
+        body = m.group(1)
+        self.assertRegex(body, r'\.topbar \.logo span\s*\{\s*display:\s*none')
+        self.assertRegex(body, r'\.topbar-price\s*\{[^}]*font-size:\s*1[0-3]px')
+        self.assertNotIn('.tb-btn', body)                          # the 44px tap target is not shrunk
+
+    def test_change_text_dropped_on_the_narrowest_phones(self):
+        self.assertRegex(PHONE, r'@media \(max-width: 340px\)\s*\{\s*#tb-chg\s*\{\s*display:\s*none')

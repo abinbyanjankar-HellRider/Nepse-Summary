@@ -5041,6 +5041,7 @@ async function showSignedInUser() {
     if (!d || typeof d.user !== 'string') return;
     document.getElementById('auth-name').textContent = d.user;
     document.getElementById('auth-user').style.display = '';
+    const tbo = document.getElementById('tb-logout'); if (tbo) tbo.hidden = false;
   } catch (e) { /* not behind the login server */ }
 }
 
