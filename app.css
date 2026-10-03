@@ -1241,7 +1241,7 @@
     vertical-align: middle;
   }
   /* Mobile: sidebar collapses to top bar */
-  @media (max-width: 900px) {
+  @media (max-width: 899px) {
     body { padding-left: 0; padding-top: 52px; }
     .sidebar {
       width: 100%;
@@ -1264,7 +1264,7 @@
     .main { max-width: 100%; }
   }
   @media print {
-    .sidebar, #live-banner { display: none !important; }
+    .sidebar, #live-banner, .topbar, .subnav, .tabbar { display: none !important; }
     body { padding-left: 0 !important; }
     body::before, body::after { display: none !important; }
     body { background: #fff !important; color: #000 !important; }
@@ -1873,7 +1873,7 @@
   }
   .subnav::-webkit-scrollbar { display: none; }
   .chip {
-    flex: 0 0 auto; min-height: 36px; padding: 6px 14px; border-radius: 999px; white-space: nowrap;
+    flex: 0 0 auto; min-height: 44px; padding: 6px 14px; border-radius: 999px; white-space: nowrap;
     border: 1px solid var(--border2); background: var(--surface); color: var(--text2);
     font: 500 14px/1 var(--sans); cursor: pointer;
   }
@@ -1893,7 +1893,7 @@
 
   @media (max-width: 899px) {
     .sidebar { display: none; }
-    body { padding-left: 0; padding-top: calc(48px + 52px + env(safe-area-inset-top)); padding-bottom: calc(60px + env(safe-area-inset-bottom)); }
+    body { padding-left: 0; padding-top: calc(48px + 60px + env(safe-area-inset-top)); padding-bottom: calc(60px + env(safe-area-inset-bottom)); }
     .main { padding: 14px 16px 24px; max-width: 100%; }
     .main > * { max-width: 100%; }
     .today-grid, .rrg-grid { grid-template-columns: 1fr; }
@@ -1901,7 +1901,7 @@
     .table-scroll table { min-width: 560px; }
     .table-scroll th:first-child, .table-scroll td:first-child { position: sticky; left: 0; background: var(--surface); z-index: 1; }
     button, .nav-btn, .ctrl-btn, .sa-tab { min-height: 44px; }
-    input, select, textarea { font-size: 16px; }
+    input, select, textarea { font-size: 16px !important; }
     .ctrl-group, .chart-controls { flex-wrap: wrap; }
     #tv-chart { height: 300px; }
   }

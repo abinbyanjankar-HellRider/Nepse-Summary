@@ -52,7 +52,6 @@ class NavGroups(unittest.TestCase):
     def test_viewport_covers_the_notch(self):
         self.assertIn('viewport-fit=cover', HTML)
 
-
     def test_sidebar_page_order_per_section(self):
         parts = re.split(r'<div class="nav-section-label"[^>]*>([^<]+)</div>', sidebar_nav())
         found = {parts[i].strip(): re.findall(r"navTo\('([a-z-]+)'\)", parts[i + 1]) for i in range(1, len(parts), 2)}
@@ -77,16 +76,20 @@ class PhoneLayer(unittest.TestCase):
 
     def test_tap_targets_and_input_size(self):
         self.assertRegex(PHONE, r'\.tab\s*\{[^}]*min-height:\s*(4[4-9]|[5-9]\d)px')
-        self.assertRegex(PHONE, r'input[^{]*\{[^}]*font-size:\s*16px')
+        self.assertRegex(PHONE, r'input[^{]*\{[^}]*font-size:\s*16px\s*!important')
 
     def test_old_mobile_top_bar_is_neutralised(self):
         self.assertRegex(PHONE, r'@media \(max-width: 899px\)[^{]*\{[^@]*\.sidebar\s*\{\s*display:\s*none')
 
     def test_no_page_level_horizontal_scroll(self):
-        self.assertRegex(PHONE, r'overflow-x:\s*(hidden|clip)')
+        self.assertRegex(PHONE, r'body\s*\{[^}]*overflow-x:\s*(hidden|clip)')
 
     def test_price_table_is_scrollable(self):
         self.assertRegex(HTML, r'<div class="table-scroll">\s*<table id="pt-table"')
+
+    def test_old_top_bar_block_stops_at_899(self):
+        i = CSS.index('.sidebar-logo .live-badge { display: none; }')
+        self.assertRegex(CSS[:i][CSS[:i].rindex('@media'):], r'@media \(max-width: 899px\)')
 
 
 if __name__ == '__main__':
