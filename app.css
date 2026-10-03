@@ -1899,9 +1899,10 @@
     .today-grid, .rrg-grid { grid-template-columns: 1fr; }
     .table-scroll, .rrg-table-wrap, .ps-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; max-width: 100%; }
     .table-scroll table { min-width: 560px; }
-    .table-scroll th:first-child, .table-scroll td:first-child { position: sticky; left: 0; background: var(--surface); z-index: 1; }
+    .table-scroll th:first-child, .table-scroll td:first-child { position: sticky; left: 0; background-color: var(--surface) !important; z-index: 1; }
+    .hm-table tr.bench td:first-child { background-color: var(--inset) !important; }
     button, .nav-btn, .ctrl-btn, .sa-tab { min-height: 44px; }
-    input, select, textarea { font-size: 16px !important; }
+    input, select, textarea, input[style], select[style], textarea[style] { font-size: 16px !important; }
     .ctrl-group, .chart-controls { flex-wrap: wrap; }
     #tv-chart { height: 300px; }
   }

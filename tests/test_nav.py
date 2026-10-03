@@ -78,6 +78,11 @@ class PhoneLayer(unittest.TestCase):
     def test_tap_targets_and_input_size(self):
         self.assertRegex(PHONE, r'\.tab\s*\{[^}]*min-height:\s*(4[4-9]|[5-9]\d)px')
         self.assertRegex(PHONE, r'input[^{]*\{[^}]*font-size:\s*16px\s*!important')
+        # must beat the older [style*="font-size:11px"] !important rule
+        self.assertRegex(PHONE, r'input\[style\][^{]*\{[^}]*font-size:\s*16px\s*!important')
+
+    def test_sticky_first_column_is_opaque(self):
+        self.assertRegex(PHONE, r'\.table-scroll td:first-child[^{]*\{[^}]*background(-color)?:[^;}]*!important')
 
     def test_old_mobile_top_bar_is_neutralised(self):
         self.assertRegex(PHONE, r'@media \(max-width: 899px\)[^{]*\{[^@]*\.sidebar\s*\{\s*display:\s*none')
