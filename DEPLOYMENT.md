@@ -33,7 +33,7 @@ the dashboard. Nothing readable is ever served. (The per-user login in
 3. **Create a deploy token**: GitHub → Settings → Developer settings → Fine-grained tokens → *Generate new token*;
    Repository access: **only** the site repository; Permissions: **Contents: Read and write**. Set an expiry and put a reminder in your calendar.
 4. In **this** repository, **Settings → Secrets and variables → Actions**:
-   * Secret `SITE_USERS` — one `username:passphrase` per line (usernames 2–32 characters of a–z 0–9 . _ - ; passphrases at least 16 characters). Create the lines with `python scripts/manage_site_users.py gen abin ram.k` and give each person only their own.
+   * Secret `SITE_USERS` — one `username:passphrase` per line (usernames 2–32 characters of a–z 0–9 . _ - ; passphrases at least 16 characters). Create the lines with `python scripts/manage_site_users.py gen abin ram.k`. That script needs the `cryptography` package: run `pip install -r scripts/requirements-site.txt` once on your PC first. Give each person only their own line.
    * Secret `SITE_DEPLOY_TOKEN` — the token from step 3.
    * Variable `SITE_REPO` — `your-username/nepse-dashboard-site`.
    Until `SITE_REPO` exists the deploy job is skipped. Without both secrets it **fails** rather than publish anything unprotected.

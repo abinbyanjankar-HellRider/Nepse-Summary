@@ -166,3 +166,11 @@ repo so old ciphertext is not kept in its history.
 - Crypto format change: mitigate with Python and WebCrypto round-trip tests and
   a test vector shared by both.
 - Page-load cost: PBKDF2 at 1M rounds takes ~1-2 s on phones; show progress.
+
+## Deviations found during planning
+
+1. `levels-sec` is already reachable: it belongs to the "Levels & structure" page (`PAGE_MEMBERS['structure-sec']`); no change needed, it stays in the Charts group.
+2. `chart-sec` is the home page (close report + data check + changes + chart on one page), so it sits in the Today group, not Charts.
+3. No watchlist tile and no NRB strip on Today: there is no watchlist data (it would need per-user storage, a non-goal), and the NRB blocks are hand-entered prose with no structured numbers. Today gets a breadth bar plus top gainers / losers / turnover from `data/latest.json`; the existing "what changed" and "plan status" panels stay.
+4. The unlock page does not read the old NSD1 format: `index.html` and `site.enc` are published together in one orphan commit, so a mixed state cannot occur; a stale cached unlock page shows "Reload the page".
+5. The phone-first layer is additive: the existing desktop-first stylesheet is left alone; a new final block adds the phone-first nav and layout rules and neutralises the old top-bar rule (now `max-width: 899px`).
