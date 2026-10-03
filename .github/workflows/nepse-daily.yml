@@ -61,34 +61,52 @@ jobs:
 
   deploy:
     needs: update-data
-    # GitHub Pages: free for public repos (paid plans for private). Set the repository
-    # variable PAGES_ENABLED=true (Settings → Secrets and variables → Actions →
-    # Variables) once Pages is switched on; until then this job is skipped.
-    if: ${{ !cancelled() && needs.update-data.result != 'failure' && vars.PAGES_ENABLED == 'true' }}
-    # WARNING: a Pages site is public to anyone with the link and has no login —
-    # it publishes the dashboard and all market data (see DEPLOYMENT.md).
+    # Publishes an ENCRYPTED copy (scripts/build_site.py) to a separate public "site"
+    # repository whose GitHub Pages serves it: only ciphertext + an unlock page.
+    # Skipped until the repository variable SITE_REPO ("owner/name" of that site
+    # repo) exists. Needs the secrets SITE_PASSPHRASE and SITE_DEPLOY_TOKEN (a
+    # fine-grained token with Contents: read/write on the site repo only).
+    # Never uploads plaintext: without both secrets the job fails instead.
+    # This repository must be private, otherwise index.html and data/ are public here.
+    if: ${{ !cancelled() && needs.update-data.result != 'failure' && vars.SITE_REPO != '' }}
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     permissions:
       contents: read
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+    env:
+      SITE_REPO: ${{ vars.SITE_REPO }}
+      SITE_PASSPHRASE: ${{ secrets.SITE_PASSPHRASE }}
+      SITE_DEPLOY_TOKEN: ${{ secrets.SITE_DEPLOY_TOKEN }}
     steps:
+      - name: Refuse to publish unprotected
+        run: |
+          [ -n "$SITE_PASSPHRASE" ]   || { echo "::error::Secret SITE_PASSPHRASE is not set - refusing to publish"; exit 1; }
+          [ -n "$SITE_DEPLOY_TOKEN" ] || { echo "::error::Secret SITE_DEPLOY_TOKEN is not set - cannot publish"; exit 1; }
+          [ "$SITE_REPO" != "$GITHUB_REPOSITORY" ] || { echo "::error::SITE_REPO must be a different repository from this one"; exit 1; }
+
       - uses: actions/checkout@v4
         with:
           ref: main
-      # Only what the page loads: index.html + data/ (never scripts/, docs/, .claude/, logs)
-      - name: Stage the site
-        run: |
-          mkdir _site
-          cp index.html _site/
-          cp -r data _site/
-          rm -f _site/data/live.json _site/data/live_views.json
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
+
+      - uses: actions/setup-python@v5
         with:
-          path: '_site'
-      - id: deployment
-        uses: actions/deploy-pages@v4
+          python-version: '3.12'
+
+      - run: pip install -r scripts/requirements-site.txt
+
+      - name: Encrypt the site
+        run: python scripts/build_site.py --out _site
+
+      - name: Publish the ciphertext to the site repository
+        run: |
+          cd _site
+          git init -q -b main
+          git config user.name  "nepse-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -q -m "site: encrypted build $(date -u +%F)"
+          AUTH=$(printf 'x-access-token:%s' "$SITE_DEPLOY_TOKEN" | base64 -w0)
+          echo "::add-mask::$AUTH"
+          # one orphan commit each time: the ciphertext changes daily, so history would only grow
+          git -c "http.https://github.com/.extraheader=AUTHORIZATION: basic $AUTH" \
+              push --force "https://github.com/${SITE_REPO}.git" main

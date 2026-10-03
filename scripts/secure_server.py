@@ -23,8 +23,8 @@ Security model
   • AI analysis: POST /api/claude (signed-in, same-origin, JSON only, 30 per
     user per hour). The server holds ANTHROPIC_API_KEY and picks the model
     (scripts/claude_client.py); the key never reaches the browser.
-  • Served: only index.html and files under data/ (checked on the decoded
-    path). Never: hidden paths (.git, .auth, …), scripts/, logs/, listings.
+  • Served: only index.html, app.css, app.js, app-boot.js and files under
+    data/ (checked on the decoded path). Never: hidden paths (.git, .auth, …), scripts/, logs/, listings.
   • The server refuses to start while no user exists (fails closed).
   • Plain HTTP: keep the default host 127.0.0.1 (this PC only). --host 0.0.0.0
     shares it on your network, but passwords then cross the network unencrypted.
@@ -55,8 +55,13 @@ AI_PER_HOUR   = 30                  # /api/claude calls per user (each one costs
 AI_MAX_BODY   = 12 * 1024 * 1024    # chart screenshots, base64
 AI_IMAGE_TYPES = {'image/png', 'image/jpeg', 'image/gif', 'image/webp'}
 
+# The page and its own assets (the only top-level files ever served)
+PAGE_FILES = [['index.html'], ['app.css'], ['app.js'], ['app-boot.js']]
+
+# No 'unsafe-inline' for scripts: the page has no inline code (handlers are
+# delegated, see app.js). Inline styles stay allowed — the markup uses style="".
 CSP = ("default-src 'self'; "
-       "script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; "
+       "script-src 'self' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; "
        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
        "font-src https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self'; "
        "object-src 'none'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'")
@@ -244,7 +249,7 @@ def safe_next(target):
 
 
 def servable(raw_path):
-    """Allowlist of what the page needs: index.html and files under data/.
+    """Allowlist of what the page needs: index.html, its css/js and files under data/.
     Checked on the *decoded* path — the file lookup decodes %2E to '.', so a
     check on the raw path let /%2Eauth/users.json and /%2Egit/config through."""
     path = unquote(raw_path)
@@ -253,7 +258,7 @@ def servable(raw_path):
     segs = [s for s in path.split('/') if s]
     if any(s.startswith('.') for s in segs):     # also rules out '..'
         return False
-    return not segs or segs == ['index.html'] or (segs[0] == 'data' and len(segs) > 1)
+    return not segs or segs in PAGE_FILES or (segs[0] == 'data' and len(segs) > 1)
 
 
 def parse_ai_request(req):

@@ -1,6 +1,6 @@
 # NEPSE Wyckoff Technical Analysis Dashboard
 
-Single-file dashboard (`index.html`) for NEPSE Wyckoff analysis, market summary, today's share prices and NRB macro data — updated automatically every trading day by GitHub Actions.
+Static dashboard (`index.html` + `app.css`, `app.js`, `app-boot.js`) for NEPSE Wyckoff analysis, market summary, today's share prices and NRB macro data — updated automatically every trading day by GitHub Actions.
 
 **Live site:** `https://YOUR-USERNAME.github.io/nepse-dashboard/`
 
@@ -131,13 +131,13 @@ python scripts/secure_server.py list
 
 By default it listens on `127.0.0.1` (this PC only). `--host 0.0.0.0` shares it on your network, but over plain HTTP, so passwords are not encrypted in transit.
 
-**Not covered:** this login protects the copy served from this PC. The GitHub repository is public, so anything committed to it (including `index.html` and `data/`) can be read there, and a GitHub Pages site would be public too.
+**Not covered:** this login protects the copy served from this PC. Keep the GitHub repository **private** (anything committed to it, including `index.html` and `data/`, is readable by whoever can see it). To publish to GitHub Pages, use the encrypted, passphrase-protected build described in `DEPLOYMENT.md` step 3 (`scripts/build_site.py`) — a plain Pages site would be public.
 
 ## Changing the look
 
 Everyone can pick a look in the sidebar: **Appearance** → theme (dark/light), font style, accent colour (saved per browser).
 
-To change or add options, edit one object near the top of `index.html`:
+To change or add options, edit the `APPEARANCE` object at the top of `app-boot.js`:
 
 ```js
 const APPEARANCE = {
@@ -153,7 +153,8 @@ const APPEARANCE = {
 ## Repository layout
 
 ```
-index.html                         ← the dashboard (single self-contained file)
+index.html                         ← the page: markup + the embedded data blocks the daily job rewrites
+app.css, app.js, app-boot.js       ← styles and code (no inline scripts: the login server's CSP forbids them)
 scripts/run_daily.py               ← the daily update (all steps, in order)
 scripts/fetch_nepse.py             ← today's close + price list
 scripts/market_views.py            ← heatmap + RRG (sector/company histories)
@@ -173,7 +174,7 @@ git pull                                            # keep rows the daily Action
 python scripts/backfill_history.py --update-chart   # re-runnable; existing rows are never overwritten
 ```
 
-`--update-chart` also regenerates the monthly chart arrays (`allData`) in `index.html` from real month-end closes.
+`--update-chart` also regenerates the monthly chart arrays (`allData`) in `app.js` from real month-end closes.
 
 ## Phantom-day guard
 

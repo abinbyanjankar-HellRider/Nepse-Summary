@@ -41,6 +41,8 @@ def main():
     ap.add_argument('--force', action='store_true')
     a = ap.parse_args()
     started = dt.datetime.now(dt.timezone.utc)
+    latest = ROOT / 'data' / 'latest.json'
+    before = latest.read_bytes() if latest.exists() else None
 
     res = {'fetch': step('fetch_nepse.py', ['--force'] if a.force else [])}
     if res['fetch'] == 0:
@@ -48,8 +50,12 @@ def main():
         res['verify'] = step('verify_daily.py', [])
     res['validate'] = step('validate_data.py', [])
 
-    latest = ROOT / 'data' / 'latest.json'
     trade = json.loads(latest.read_text(encoding='utf-8')).get('trade_date') if latest.exists() else ''
+    # A clean run that changed nothing (the 4:45 PM retry after a 4:00 PM success)
+    # is not logged — otherwise runs.csv alone makes every retry a commit.
+    if not any(res.values()) and not a.force and before is not None and latest.read_bytes() == before:
+        print(f'\nrun_daily: {res} — nothing changed, run not logged', flush=True)
+        return 0
     RUN_LOG.parent.mkdir(parents=True, exist_ok=True)
     new = not RUN_LOG.exists()
     with RUN_LOG.open('a', newline='', encoding='utf-8') as f:

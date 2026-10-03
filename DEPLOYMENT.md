@@ -4,7 +4,7 @@ Total time: about 15 minutes, once.
 
 ## 1. Create the repository
 1. Go to https://github.com/new
-2. Name: `nepse-dashboard` · Visibility: **Public** (free GitHub Pages needs a public repo; a private repo with Pages needs a paid plan) · do **not** add a README, .gitignore or licence.
+2. Name: `nepse-dashboard` · Visibility: **Private** — this repository holds `index.html` and all the price data as plain files, so anyone who can see it can read the data. (Free GitHub Pages needs a public repo, which is why step 3 publishes an *encrypted* copy to a second repo instead.) · do **not** add a README, .gitignore or licence.
 3. Click **Create repository**.
 
 ## 2. Push the project (it's already a git repository with its full history)
@@ -17,17 +17,34 @@ Check on GitHub that you can see `.github/workflows/nepse-daily.yml` and `data/h
 
 From this moment the PC's scheduled task switches itself to **pull mode**: GitHub does the daily update, and the PC just downloads it. Nothing else to change.
 
-## 3. (Optional) Turn on GitHub Pages — read this first
-A Pages site is **public to anyone who has the link and has no login**: the
-login in `scripts/secure_server.py` only protects the copy served from your PC.
-Pages would publish the dashboard and all its data (not the scripts — the
-deploy job uploads only `index.html` and `data/`). On a private repository
-Pages also needs a paid GitHub plan.
+## 3. (Optional) Publish a login-protected copy on GitHub Pages
+GitHub Pages cannot check passwords, so the published site is **encrypted**: the
+deploy job runs `scripts/build_site.py`, which encrypts `index.html`, the app files
+and `data/` (AES-256-GCM, key from your passphrase via PBKDF2-SHA256, 1,000,000
+rounds) and pushes only the ciphertext plus a small unlock page to a **second,
+public repository**. Visitors see a passphrase prompt; the browser decrypts and shows
+the dashboard. Nothing readable is ever served. (The per-user login in
+`scripts/secure_server.py` still protects the copy on your PC.)
 
-If you still want it:
-1. **Settings → Pages → Build and deployment → Source: `GitHub Actions`**.
-2. **Settings → Secrets and variables → Actions → Variables → New repository variable**:
-   `PAGES_ENABLED` = `true`. Until this variable exists the deploy job is skipped.
+1. **Make this repository private** (Settings → General → Danger Zone → Change visibility).
+   Do this first: while it is public, the same data is readable right here.
+2. **Create the site repository**: e.g. `nepse-dashboard-site`, **Public**, empty (no README). It only ever holds ciphertext.
+   In it: **Settings → Pages → Build and deployment → Deploy from a branch → `main` / `/ (root)`**.
+3. **Create a deploy token**: GitHub → Settings → Developer settings → Fine-grained tokens → *Generate new token*;
+   Repository access: **only** the site repository; Permissions: **Contents: Read and write**. Set an expiry and put a reminder in your calendar.
+4. In **this** repository, **Settings → Secrets and variables → Actions**:
+   * Secret `SITE_PASSPHRASE` — a long passphrase (at least 16 characters; four or five random words is good).
+   * Secret `SITE_DEPLOY_TOKEN` — the token from step 3.
+   * Variable `SITE_REPO` — `your-username/nepse-dashboard-site`.
+   Until `SITE_REPO` exists the deploy job is skipped. Without both secrets it **fails** rather than publish anything unprotected.
+5. Run the workflow once (Actions → NEPSE daily data → Run workflow). Your site: `https://YOUR-USERNAME.github.io/nepse-dashboard-site/`
+
+What this protects, and what it does not:
+* **One shared passphrase**, not per-user accounts; there is no per-person revocation. To lock someone out, change `SITE_PASSPHRASE` (the next deploy re-encrypts).
+* Anyone can download `site.enc` and guess passphrases offline, with no lockout. The 1M-round key derivation slows this, but only a **long, random passphrase** makes it infeasible. A short or guessable one is not protection.
+* Data already published while the repository was public (including old commits and any forks or caches) stays exposed; making the repo private stops new exposure only. Consider that data public.
+* The site is a static snapshot from the last deploy: the Refresh button and intraday live mode work only on your PC (`start-live.bat`).
+* Local test: `SITE_PASSPHRASE='…' python scripts/build_site.py --out _site`, then serve `_site/` with any static server.
 
 ## 4. Allow the Action to save data
 **Settings → Actions → General → Workflow permissions → `Read and write permissions` → Save**.

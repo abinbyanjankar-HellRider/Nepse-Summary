@@ -22,6 +22,8 @@ from zoneinfo import ZoneInfo
 
 import requests
 from bs4 import BeautifulSoup
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from validate_data import SYM_RE, check_payload
@@ -87,25 +89,39 @@ def write_atomic(path, text):
     raise PermissionError(f'could not replace {path}')
 
 
+def _make_session():
+    """One session for every fetch: retries transient failures (5xx, 429, dropped
+    connections) with backoff — the sources are free scraped sites."""
+    s = requests.Session()
+    s.headers.update(HEADERS)
+    retry = Retry(total=3, backoff_factor=1.5, status_forcelist=(429, 500, 502, 503, 504),
+                  allowed_methods=('GET',), respect_retry_after_header=True)
+    s.mount('https://', HTTPAdapter(max_retries=retry))
+    s.mount('http://', HTTPAdapter(max_retries=retry))
+    return s
+
+
+SESSION = _make_session()
+
+
 def get(url, timeout=30):
-    r = requests.get(url, headers=HEADERS, timeout=timeout)
+    r = SESSION.get(url, timeout=timeout)
     r.raise_for_status()
     return r.text
 
 
-# ── Symbol → name / sector map (taken from the dashboard itself) ──
+# ── Symbol → name / sector map (data/reference/*.csv) ──
 def load_symbol_map():
+    """companies.csv is the live list (refreshed weekly by market_views.py);
+    legacy_symbols.csv keeps merged/delisted names the old history still uses.
+    The first file that lists a symbol wins."""
     m = {}
-    ref = ROOT / 'data' / 'reference' / 'companies.csv'     # full list (market_views.py)
-    if ref.exists():
-        with ref.open(newline='', encoding='utf-8') as f:
-            for r in csv.DictReader(f):
-                m[r['symbol']] = (r['name'], r['sector'])
-    html = INDEX_HTML.read_text(encoding='utf-8')
-    for s, n, sec in re.findall(r"\{s:'([A-Z0-9]+)',n:'([^']*)',sec:'([^']*)'\}", html):
-        m.setdefault(s, (n, sec))
-    for s, n, sec in re.findall(r"\['([A-Z0-9]+)','([^']*)','([^']*)',[\d.\-]", html):
-        m.setdefault(s, (n, sec))
+    for name in ('companies.csv', 'legacy_symbols.csv'):
+        ref = ROOT / 'data' / 'reference' / name
+        if ref.exists():
+            with ref.open(newline='', encoding='utf-8') as f:
+                for r in csv.DictReader(f):
+                    m.setdefault(r['symbol'], (r['name'], r['sector']))
     return m
 
 
@@ -243,7 +259,7 @@ def merolagani_history(start='2020-01-01', end=None, timeout=60, symbol='NEPSE',
     s = int(dt.datetime.fromisoformat(start).replace(tzinfo=dt.timezone.utc).timestamp())
     e = int((dt.datetime.fromisoformat(end).replace(tzinfo=dt.timezone.utc)
              if end else dt.datetime.now(dt.timezone.utc) + dt.timedelta(days=1)).timestamp())
-    r = requests.get(ML_CHART_URL, headers=HEADERS, timeout=timeout, params={
+    r = SESSION.get(ML_CHART_URL, timeout=timeout, params={
         'type': 'get_advanced_chart', 'symbol': symbol, 'resolution': '1D',
         'rangeStartDate': s, 'rangeEndDate': e, 'isAdjust': 1, 'currencyCode': 'NPR'})
     r.raise_for_status()
@@ -487,6 +503,141 @@ def inject_into_html(payload):
 
 
 # ── Main ─────────────────────────────────────────────────────
+def fetch_prices(args, symmap, today):
+    """ShareSansar price list → (prices, as_of, sources). A list with no as-of
+    date is only used if it really follows the last stored session."""
+    prices, as_of, sources = [], None, []
+    try:
+        ss_html = Path(args.ss_html).read_text(encoding='utf-8') if args.ss_html else get(SS_PRICE_URL)
+        prices, as_of = parse_price_table(ss_html, symmap), find_as_of_date(ss_html)
+        log(f'ShareSansar: {len(prices)} rows · as-of {as_of}')
+        if prices and not as_of:
+            ok, why = prices_follow_last_session(prices, today)
+            log(f'Price list has no as-of date: {why}' + ('' if ok else ' — prices not used'))
+            if not ok:
+                prices = []
+        if prices:
+            sources.append('sharesansar.com')
+    except (requests.RequestException, OSError, ValueError) as e:
+        log(f'ShareSansar price page failed: {e}')
+    return prices, as_of, sources
+
+
+def previous_close(want):
+    """(index history rows before `want`, the previous close or None)."""
+    prev_rows = [r for r in read_index_history() if r['date'] < want]
+    prev_close = num(prev_rows[-1]['index']) if prev_rows else None
+    if prev_close is None and LATEST.exists():
+        last = json.loads(LATEST.read_text(encoding='utf-8'))
+        if (last.get('trade_date') or '') < want:
+            prev_close = last.get('index')
+    return prev_rows, prev_close
+
+
+def fetch_index(args, want, prev_close):
+    """The NEPSE index, phantom-day guarded: a reading is only accepted when its
+    date is known (MeroLagani bar date) or it differs from the previous close,
+    so a page still showing yesterday's close is never stored under today's date.
+    → (idx or None, idx_date or None, sources)"""
+    idx, idx_date, sources = None, None, []
+
+    if not args.index_html:
+        try:
+            bars = merolagani_history(start=(dt.date.fromisoformat(want) - dt.timedelta(days=20)).isoformat())
+            pos = next((i for i, x in enumerate(bars) if x['date'] == want), None)
+            if pos is not None:
+                # Change vs the stored previous close; the previous MeroLagani bar
+                # is only used when history has none (a missing bar would span 2 days)
+                b = bars[pos]
+                p = prev_close or (bars[pos - 1]['index'] if pos > 0 else None)
+                idx = {'index': b['index']}
+                if p:
+                    idx['change'] = round(b['index'] - p, 2)
+                    idx['changePct'] = round((b['index'] - p) / p * 100, 2)
+                idx_date = want
+                log(f'Index {idx} from merolagani chart API (bar dated {want})')
+                sources.append('merolagani.com')
+            else:
+                log(f"MeroLagani has no bar dated {want} (latest {bars[-1]['date'] if bars else 'none'})")
+        except (requests.RequestException, ValueError, KeyError, IndexError) as e:
+            log(f'MeroLagani chart API failed: {e}')
+
+    for url in ([] if idx else [args.index_html] if args.index_html else INDEX_URLS):
+        try:
+            html = Path(url).read_text(encoding='utf-8') if args.index_html else get(url)
+            cand = extract_index(html)
+            if cand and is_repeat(cand['index'], prev_close):
+                log(f"Index {cand['index']} from {url} equals the previous close — stale page, ignored")
+                continue
+            if cand:
+                idx = cand
+                log(f'Index {idx} from {url}')
+                sources.append(url.split('/')[2] if '://' in url else 'local-file')
+                break
+        except (requests.RequestException, OSError, ValueError) as e:
+            log(f'Index source failed {url}: {e}')
+    return idx, idx_date, sources
+
+
+def complete_change(idx, prev_rows):
+    """Fill change / changePct from the previous close when a source omitted them."""
+    if idx.get('change') is None and prev_rows:
+        p = num(prev_rows[-1]['index'])
+        idx['change'] = round(idx['index'] - p, 2)
+        idx['changePct'] = round((idx['index'] - p) / p * 100, 2)
+    if idx.get('changePct') is None and idx.get('change') is not None:
+        base = idx['index'] - idx['change']
+        idx['changePct'] = round(idx['change'] / base * 100, 2) if base else None
+
+
+def build_payload(trade_date, idx, prices, claude, sources):
+    payload = {
+        'trade_date': trade_date,
+        'updated_at': dt.datetime.now(dt.timezone.utc).isoformat(timespec='seconds'),
+        'index': round(idx['index'], 2),
+        'change': idx.get('change'),
+        'changePct': idx.get('changePct'),
+        'market_cap': None, 'float_mkt_cap': None,
+    }
+    if prices:
+        payload.update(derive_from_prices(prices))
+    if claude:
+        for k, v in claude.items():
+            if k != 'trade_date' and payload.get(k) in (None, [], '') and v not in (None, [], ''):
+                payload[k] = v
+    payload['source'] = ' + '.join(dict.fromkeys(sources)) or 'unknown'
+    if prices:
+        payload['prices'] = prices
+    return clean_payload(payload)
+
+
+def store_day(payload, hist, trade_date):
+    """Write history, the day's price file and the weekly/monthly summaries, then
+    latest.json and the page. `hist` excludes trade_date."""
+    prices = payload.get('prices', [])
+    hist.append({'date': trade_date, **{k: payload.get(k) for k in INDEX_CSV_FIELDS if k != 'date'}})
+    hist = write_index_history(hist)
+    payload['monthly'] = [m for m in monthly_from_history(hist) if m['label'] and m['close']]
+    if prices:
+        with (PRICE_DIR / f'{trade_date}.csv').open('w', newline='', encoding='utf-8') as f:
+            w = csv.DictWriter(f, lineterminator='\n', fieldnames=list(prices[0].keys()))
+            w.writeheader()
+            w.writerows(prices)
+        # index of archived trading days, for the dashboard's date picker
+        (PRICE_DIR / 'index.json').write_text(json.dumps(sorted(p.stem for p in PRICE_DIR.glob('*.csv'))), encoding='utf-8', newline='\n')
+
+    # Weekly / monthly market summaries (after today's price file is written,
+    # so the period's stock movers include today)
+    weekly, monthly = period_summaries(hist, 'week', 8), period_summaries(hist, 'month', 12)
+    payload['periods'] = clean_payload({
+        'weekly': weekly, 'monthly': monthly,
+        'week_movers': period_movers(weekly[-1]['start'], trade_date) if weekly else None,
+        'month_movers': period_movers(monthly[-1]['start'], trade_date) if monthly else None,
+    })
+    write_atomic(LATEST, json.dumps(payload, ensure_ascii=False, indent=1))
+    inject_into_html(payload)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--force', action='store_true',
@@ -519,25 +670,8 @@ def main():
             log(f'Already updated for {today}. Nothing to do.')
             return 0
 
-    symmap = load_symbol_map()
-    sources = []
-
     # 1. Price table
-    prices, as_of = [], None
-    try:
-        ss_html = Path(args.ss_html).read_text(encoding='utf-8') if args.ss_html else get(SS_PRICE_URL)
-        prices, as_of = parse_price_table(ss_html, symmap), find_as_of_date(ss_html)
-        log(f'ShareSansar: {len(prices)} rows · as-of {as_of}')
-        if prices and not as_of:
-            ok, why = prices_follow_last_session(prices, today)
-            log(f'Price list has no as-of date: {why}' + ('' if ok else ' — prices not used'))
-            if not ok:
-                prices = []
-        if prices:
-            sources.append('sharesansar.com')
-    except Exception as e:
-        log(f'ShareSansar price page failed: {e}')
-
+    prices, as_of, sources = fetch_prices(args, load_symbol_map(), today)
     if as_of and as_of < today and not args.force:
         if as_of in stored:
             log(f'Latest published prices are for {as_of}, not {today}, and {as_of} is already stored — '
@@ -547,55 +681,11 @@ def main():
         # the newest published session is not stored yet, so store it under its own date.
         log(f'Catch-up: the latest published session {as_of} is not stored yet — storing it now.')
 
-    # 2. Index — phantom-day guard: a reading is only accepted when its date is
-    #    known (ShareSansar as-of, MeroLagani bar date, Claude trade_date) or it
-    #    differs from the previous close. A page still showing yesterday's close
-    #    must never be stored under today's date.
+    # 2. Index
     want = as_of or today
-    hist_all = read_index_history()
-    prev_rows = [r for r in hist_all if r['date'] < want]
-    prev_close = num(prev_rows[-1]['index']) if prev_rows else None
-    if prev_close is None and LATEST.exists():
-        last = json.loads(LATEST.read_text(encoding='utf-8'))
-        if (last.get('trade_date') or '') < want:
-            prev_close = last.get('index')
-    idx, idx_date = None, None
-
-    if not args.index_html:
-        try:
-            bars = merolagani_history(start=(dt.date.fromisoformat(want) - dt.timedelta(days=20)).isoformat())
-            pos = next((i for i, x in enumerate(bars) if x['date'] == want), None)
-            if pos is not None:
-                # Change vs the stored previous close; the previous MeroLagani bar
-                # is only used when history has none (a missing bar would span 2 days)
-                b = bars[pos]
-                p = prev_close or (bars[pos - 1]['index'] if pos > 0 else None)
-                idx = {'index': b['index']}
-                if p:
-                    idx['change'] = round(b['index'] - p, 2)
-                    idx['changePct'] = round((b['index'] - p) / p * 100, 2)
-                idx_date = want
-                log(f'Index {idx} from merolagani chart API (bar dated {want})')
-                sources.append('merolagani.com')
-            else:
-                log(f"MeroLagani has no bar dated {want} (latest {bars[-1]['date'] if bars else 'none'})")
-        except Exception as e:
-            log(f'MeroLagani chart API failed: {e}')
-
-    for url in ([] if idx else [args.index_html] if args.index_html else INDEX_URLS):
-        try:
-            html = Path(url).read_text(encoding='utf-8') if args.index_html else get(url)
-            cand = extract_index(html)
-            if cand and is_repeat(cand['index'], prev_close):
-                log(f"Index {cand['index']} from {url} equals the previous close — stale page, ignored")
-                continue
-            if cand:
-                idx = cand
-                log(f'Index {idx} from {url}')
-                sources.append(url.split('/')[2] if '://' in url else 'local-file')
-                break
-        except Exception as e:
-            log(f'Index source failed {url}: {e}')
+    _, prev_close = previous_close(want)
+    idx, idx_date, idx_sources = fetch_index(args, want, prev_close)
+    sources += idx_sources
 
     # 3. Claude fallback — fills the index and anything else missing
     claude = None
@@ -623,38 +713,11 @@ def main():
             f'public holiday or not published yet. Keeping existing data.')
         return 0
 
-    # 4. Build payload
+    # 4. Build payload and sanity-check it — nothing is written unless plausible
     hist = [r for r in read_index_history() if r['date'] != trade_date]
     prev_rows = [r for r in hist if r['date'] < trade_date]
-    if idx.get('change') is None and prev_rows:
-        p = num(prev_rows[-1]['index'])
-        idx['change'] = round(idx['index'] - p, 2)
-        idx['changePct'] = round((idx['index'] - p) / p * 100, 2)
-    if idx.get('changePct') is None and idx.get('change') is not None:
-        base = idx['index'] - idx['change']
-        idx['changePct'] = round(idx['change'] / base * 100, 2) if base else None
-
-    payload = {
-        'trade_date': trade_date,
-        'updated_at': dt.datetime.now(dt.timezone.utc).isoformat(timespec='seconds'),
-        'index': round(idx['index'], 2),
-        'change': idx.get('change'),
-        'changePct': idx.get('changePct'),
-        'market_cap': None, 'float_mkt_cap': None,
-    }
-    if prices:
-        payload.update(derive_from_prices(prices))
-    if claude:
-        for k, v in claude.items():
-            if k != 'trade_date' and payload.get(k) in (None, [], '') and v not in (None, [], ''):
-                payload[k] = v
-    payload['source'] = ' + '.join(dict.fromkeys(sources)) or 'unknown'
-    if prices:
-        payload['prices'] = prices
-    payload = clean_payload(payload)
-    prices = payload.get('prices', [])
-
-    # Sanity check — nothing is written unless the day's data is plausible
+    complete_change(idx, prev_rows)
+    payload = build_payload(trade_date, idx, prices, claude, sources)
     errs, warns = check_payload(payload, num(prev_rows[-1]['index']) if prev_rows else None, today)
     for w in warns:
         log(f'WARNING: {w}')
@@ -664,31 +727,10 @@ def main():
         log('Sanity check failed — existing data left unchanged.')
         return 1
 
-    # 5. History + monthly series
-    hist.append({'date': trade_date, **{k: payload.get(k) for k in INDEX_CSV_FIELDS if k != 'date'}})
-    hist = write_index_history(hist)
-    payload['monthly'] = [m for m in monthly_from_history(hist) if m['label'] and m['close']]
-    if prices:
-        with (PRICE_DIR / f'{trade_date}.csv').open('w', newline='', encoding='utf-8') as f:
-            w = csv.DictWriter(f, lineterminator='\n', fieldnames=list(prices[0].keys()))
-            w.writeheader()
-            w.writerows(prices)
-        # index of archived trading days, for the dashboard's date picker
-        (PRICE_DIR / 'index.json').write_text(json.dumps(sorted(p.stem for p in PRICE_DIR.glob('*.csv'))), encoding='utf-8', newline='\n')
-
-    # Weekly / monthly market summaries (after today's price file is written,
-    # so the period's stock movers include today)
-    weekly, monthly = period_summaries(hist, 'week', 8), period_summaries(hist, 'month', 12)
-    payload['periods'] = clean_payload({
-        'weekly': weekly, 'monthly': monthly,
-        'week_movers': period_movers(weekly[-1]['start'], trade_date) if weekly else None,
-        'month_movers': period_movers(monthly[-1]['start'], trade_date) if monthly else None,
-    })
-
-    write_atomic(LATEST, json.dumps(payload, ensure_ascii=False, indent=1))
-    inject_into_html(payload)
+    # 5. Store
+    store_day(payload, hist, trade_date)
     log(f"Done: {trade_date} · NEPSE {payload['index']} ({payload['change']}) · "
-        f"{len(prices)} prices · source {payload['source']}")
+        f"{len(payload.get('prices', []))} prices · source {payload['source']}")
     return 0
 
 
