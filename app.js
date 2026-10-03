@@ -3370,12 +3370,12 @@ function renderHeatmap() {
     // Sector index table — daily / weekly / monthly side by side
     const cell = v => `<td style="color:${typeof v !== 'number' || v === 0 ? 'var(--text2)' : v > 0 ? 'var(--green)' : 'var(--red)'}">${f2(v)}</td>`;
     const b = VIEWS.benchmark || {};
-    document.getElementById('hm-sector-table').innerHTML = `<table class="hm-table">
+    document.getElementById('hm-sector-table').innerHTML = `<div class="table-scroll"><table class="hm-table">
       <thead><tr><th>Index</th><th>Close</th><th>1 Day</th><th>1 Week</th><th>1 Month</th><th>Companies</th><th>Turnover</th></tr></thead><tbody>
       <tr class="bench"><td>NEPSE (benchmark)</td><td>${(b.close || 0).toLocaleString('en-IN')}</td>${cell(b.d)}${cell(b.w)}${cell(b.m)}<td>—</td><td>—</td></tr>
       ${H.sectors.slice().sort((a, b2) => (b2[key] ?? -99) - (a[key] ?? -99)).map(s =>
         `<tr><td>${esc(s.sector)}</td><td>${s.close.toLocaleString('en-IN')}</td>${cell(s.d)}${cell(s.w)}${cell(s.m)}<td>${s.stocks}</td><td>${fmtTo(s.to)}</td></tr>`).join('')}
-      </tbody></table>`;
+      </tbody></table></div>`;
     return;
   }
 

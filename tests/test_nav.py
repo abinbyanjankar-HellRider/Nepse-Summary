@@ -53,5 +53,41 @@ class NavGroups(unittest.TestCase):
         self.assertIn('viewport-fit=cover', HTML)
 
 
+    def test_sidebar_page_order_per_section(self):
+        parts = re.split(r'<div class="nav-section-label"[^>]*>([^<]+)</div>', sidebar_nav())
+        found = {parts[i].strip(): re.findall(r"navTo\('([a-z-]+)'\)", parts[i + 1]) for i in range(1, len(parts), 2)}
+        self.assertEqual(len(found), 5)
+        for g in groups():
+            self.assertEqual(found[g['label']], g['pages'], g['id'])
+
+
+CSS = (ROOT / 'app.css').read_text(encoding='utf-8')
+PHONE = CSS.split('PHONE-FIRST LAYER', 1)[1] if 'PHONE-FIRST LAYER' in CSS else ''
+
+
+class PhoneLayer(unittest.TestCase):
+    def test_layer_exists(self):
+        self.assertTrue(PHONE, 'PHONE-FIRST LAYER block missing')
+
+    def test_phone_chrome_is_styled_and_desktop_hides_it(self):
+        for sel in ('.tabbar', '.subnav', '.chip', '.topbar'):
+            self.assertIn(sel, PHONE)
+        self.assertRegex(PHONE, r'@media \(min-width: 900px\)')
+        self.assertIn('env(safe-area-inset-bottom)', PHONE)
+
+    def test_tap_targets_and_input_size(self):
+        self.assertRegex(PHONE, r'\.tab\s*\{[^}]*min-height:\s*(4[4-9]|[5-9]\d)px')
+        self.assertRegex(PHONE, r'input[^{]*\{[^}]*font-size:\s*16px')
+
+    def test_old_mobile_top_bar_is_neutralised(self):
+        self.assertRegex(PHONE, r'@media \(max-width: 899px\)[^{]*\{[^@]*\.sidebar\s*\{\s*display:\s*none')
+
+    def test_no_page_level_horizontal_scroll(self):
+        self.assertRegex(PHONE, r'overflow-x:\s*(hidden|clip)')
+
+    def test_price_table_is_scrollable(self):
+        self.assertRegex(HTML, r'<div class="table-scroll">\s*<table id="pt-table"')
+
+
 if __name__ == '__main__':
     unittest.main()
