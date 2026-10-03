@@ -1893,7 +1893,7 @@
 
   @media (max-width: 899px) {
     .sidebar { display: none; }
-    body { padding-left: 0; padding-top: calc(48px + 60px + env(safe-area-inset-top)); padding-bottom: calc(60px + env(safe-area-inset-bottom)); }
+    body { padding-left: 0; padding-top: calc(48px + 61px + env(safe-area-inset-top)); padding-bottom: calc(60px + env(safe-area-inset-bottom)); }
     .main { padding: 14px 16px 24px; max-width: 100%; }
     .main > * { max-width: 100%; }
     .today-grid, .rrg-grid { grid-template-columns: 1fr; }

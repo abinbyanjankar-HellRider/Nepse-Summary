@@ -57,7 +57,7 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') toggleAppear
 // target id. Blocks without an entry join the page of the block after them
 // (e.g. the Trading Range ruler joins Wyckoff Events). The disclaimer shows on every page.
 const PAGE_MEMBERS = {
-  'chart-sec':     ['close-report', 'data-check', 'today-grid', 'chart-sec'],
+  'chart-sec':     ['close-report', 'data-check', 'today-grid', 'today-tiles', 'chart-sec'],
   'events-sec':    ['events-sec', 'vol-section'],
   'structure-sec': ['levels-sec', 'structure-sec'],
 };
@@ -134,7 +134,7 @@ function initPages() {
   const fromHash = () => location.hash.replace(/^#\/?/, '');
   window.addEventListener('hashchange', () => showPage(fromHash(), false));
   const start = fromHash();
-  showPage(document.querySelector(`[data-page="${start}"]`) ? start : 'chart-sec', false);
+  showPage(document.querySelector(`main.main > [data-page="${start}"]`) ? start : 'chart-sec', false);
 }
 
 function showPage(page, push = true) {
@@ -3681,7 +3681,7 @@ function triggerRows() {
 function renderTodayTiles() {
   const s = LIVE_SNAPSHOT || {};
   const $ = id => document.getElementById(id);
-  const num = (v, d = 2) => typeof v === 'number' ? v.toLocaleString('en-IN', { minimumFractionDigits: d, maximumFractionDigits: d }) : '—';
+  const num = (v, d = 2) => Number.isFinite(v) ? v.toLocaleString('en-IN', { minimumFractionDigits: d, maximumFractionDigits: d }) : '—';
   const none = '<div class="row">No data</div>';
   const tile = (id, build) => {
     const el = $(id); if (!el) return;
@@ -3699,10 +3699,10 @@ function renderTodayTiles() {
       (typeof s.turnover === 'number' ? `<div class="row"><span class="k">Turnover</span><span>Rs ${(s.turnover / 1e9).toFixed(2)} bil${typeof s.scrips_traded === 'number' ? ` · ${s.scrips_traded} scrips` : ''}</span></div>` : '');
   });
   const movers = (list, cls) => (list || []).slice(0, 5).map(m =>
-    `<div class="row"><span class="k">${esc(m.sym)}</span><span class="${cls}">${num(m.close)} (${m.pct > 0 ? '+' : m.pct < 0 ? '−' : ''}${num(Math.abs(m.pct))}%)</span></div>`).join('');
+    `<div class="row"><span class="k">${esc(m.sym)}</span><span class="${cls}">${num(m.close)}${Number.isFinite(m.pct) ? ` (${m.pct > 0 ? '+' : m.pct < 0 ? '−' : ''}${num(Math.abs(m.pct))}%)` : ''}</span></div>`).join('');
   tile('tt-gainers', () => movers(s.top_gainers, 'up'));
   tile('tt-losers', () => movers(s.top_losers, 'down'));
-  tile('tt-turnover', () => (s.top_turnover || []).slice(0, 5).map(m =>
+  tile('tt-turnover', () => (s.top_turnover || []).filter(m => m && Number.isFinite(m.turnover)).slice(0, 5).map(m =>
     `<div class="row"><span class="k">${esc(m.sym)}</span><span>Rs ${(m.turnover / 1e6).toFixed(0)} mil</span></div>`).join(''));
 }
 

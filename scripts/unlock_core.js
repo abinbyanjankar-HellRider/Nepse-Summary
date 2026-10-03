@@ -9,22 +9,30 @@
 
   async function unlock(bytes, username, password) {
     if (String.fromCharCode(...bytes.subarray(0, 4)) !== 'NSD2') throw new Error('Unrecognised bundle format. Reload the page.');
+    const damaged = () => new Error('The encrypted bundle is damaged.');
+    if (bytes.length < 8) throw damaged();
     const hlen = new DataView(bytes.buffer, bytes.byteOffset).getUint32(4);
-    if (8 + hlen + 12 > bytes.length) throw new Error('The encrypted bundle is damaged.');
+    if (8 + hlen + 12 > bytes.length) throw damaged();
     const prefix = bytes.subarray(0, 8 + hlen);
-    const header = JSON.parse(new TextDecoder().decode(bytes.subarray(8, 8 + hlen)));
+    let header;
+    try {
+      header = JSON.parse(new TextDecoder().decode(bytes.subarray(8, 8 + hlen)));
+    } catch (e) { throw damaged(); }
+    if (!header || !Array.isArray(header.slots)) throw damaged();
     const name = username.normalize('NFKC').trim().toLowerCase();
     const sid = hex(await crypto.subtle.digest('SHA-256', enc.encode(name)));
-    const slot = header.slots.find(s => s.id === sid);
+    const slot = header.slots.find(s => s && s.id === sid);
     if (!slot) throw wrong();
-    if (!Number.isInteger(slot.it) || slot.it < 1 || slot.it > 5000000) throw new Error('The encrypted bundle is damaged.');
+    if (!Number.isInteger(slot.it) || slot.it < 1 || slot.it > 5000000) throw damaged();
+    let salt, siv, wk;
+    try { salt = b64(slot.salt); siv = b64(slot.iv); wk = b64(slot.wk); } catch (e) { throw damaged(); }
     const pw = await crypto.subtle.importKey('raw', enc.encode(password.normalize('NFKC')), 'PBKDF2', false, ['deriveKey']);
-    const kek = await crypto.subtle.deriveKey({ name: 'PBKDF2', hash: 'SHA-256', salt: b64(slot.salt), iterations: slot.it },
+    const kek = await crypto.subtle.deriveKey({ name: 'PBKDF2', hash: 'SHA-256', salt, iterations: slot.it },
       pw, { name: 'AES-GCM', length: 256 }, false, ['decrypt']);
     let dkRaw;
     try {
-      dkRaw = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: b64(slot.iv), additionalData: enc.encode('NSD2-slot:' + sid) },
-        kek, b64(slot.wk));
+      dkRaw = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: siv, additionalData: enc.encode('NSD2-slot:' + sid) },
+        kek, wk);
     } catch (e) { throw wrong(); }
     const dk = await crypto.subtle.importKey('raw', dkRaw, 'AES-GCM', false, ['decrypt']);
     let plain;

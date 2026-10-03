@@ -39,10 +39,38 @@ class ParseUsers(unittest.TestCase):
                 B.parse_users(text)
 
     def test_error_never_echoes_the_passphrase(self):
-        try:
-            B.parse_users('ok.name:tooshort\n')
-        except SystemExit as e:
-            self.assertNotIn('tooshort', str(e))
+        for text, secret in (('ok.name:tooshort\n', 'tooshort'),                       # length error
+                             ('ok.name:  padded passphrase\n', 'padded passphrase'),    # whitespace error
+                             ('bad name:secretpassphrase1\n', 'secretpassphrase1'),    # format error
+                             ('dup.user:secretpassphrase1\ndup.user:secretpassphrase2\n', 'secretpassphrase')):
+            with self.assertRaises(SystemExit) as cm:
+                B.parse_users(text)
+            self.assertNotIn(secret, str(cm.exception), text)
+
+    def test_leading_or_trailing_space_in_passphrase_is_refused(self):
+        for text in ('ok.name: leading space passphrase\n', 'ok.name:trailing space passphrase \n',
+                     'ok.name:trailing space passphrase \r\n'):
+            with self.assertRaises(SystemExit) as cm:
+                B.parse_users(text)
+            self.assertIn('must not start or end with a space', str(cm.exception), repr(text))
+            self.assertNotIn('space passphrase', str(cm.exception))
+
+    def test_crlf_line_endings_parse(self):
+        got = B.parse_users('# c\r\nzq-analyst:correct horse battery staple\r\n\r\nram.k:another long passphrase 42\r\n')
+        self.assertEqual(got, {'zq-analyst': 'correct horse battery staple', 'ram.k': 'another long passphrase 42'})
+
+
+class DecryptMalformed(unittest.TestCase):
+    def test_short_and_garbage_blobs_raise_value_error(self):
+        good = B.encrypt({'a': {'t': 'x', 's': 'y'}}, USERS, FAST)
+        hlen = int.from_bytes(good[4:8], 'big')
+        garbage_hdr = b'NSD2' + (5).to_bytes(4, 'big') + b'{notj' + bytes(20)
+        no_slots = b'NSD2' + (2).to_bytes(4, 'big') + b'{}' + bytes(20)
+        bad_b64 = good[:8] + good[8:8 + hlen].replace(b'"salt":"', b'"salt":"!!', 1) + good[8 + hlen:]
+        for blob in (b'NSD2', b'NSD2\x00', garbage_hdr, no_slots, bad_b64):
+            with self.assertRaises(ValueError, msg=repr(blob[:12])) as cm:
+                B.decrypt(blob, 'zq-analyst', USERS['zq-analyst'])
+            self.assertIn(B.BAD, str(cm.exception))
 
 
 class Build(unittest.TestCase):

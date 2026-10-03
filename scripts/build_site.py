@@ -29,7 +29,7 @@ File format of site.enc (NSD2; integers big-endian):
   Each user's slot holds that key, AES-GCM-wrapped under PBKDF2-SHA256(passphrase,
   salt, it) with AAD b'NSD2-slot:' + id, where id = SHA-256(normalised username).
 """
-import argparse, base64, gzip, hashlib, json, os, re, secrets, struct, sys, unicodedata
+import argparse, base64, binascii, gzip, hashlib, json, os, re, secrets, struct, sys, unicodedata
 from pathlib import Path
 
 from cryptography.exceptions import InvalidTag
@@ -92,8 +92,8 @@ def parse_users(text):
     Splits on the FIRST colon only, so passphrases may contain colons. Never echoes a passphrase."""
     users = {}
     for n, line in enumerate(text.splitlines(), 1):
-        line = line.strip()
-        if not line or line.startswith('#'):
+        line = line.rstrip('\r\n')           # keep spaces: a trailing space in a passphrase must be seen, not dropped
+        if not line.strip() or line.lstrip().startswith('#'):
             continue
         name, sep, pw = line.partition(':')
         name = norm_user(name)
@@ -105,6 +105,8 @@ def parse_users(text):
         if len(pw) < MIN_PASSPHRASE:
             raise SystemExit(f'build_site: SITE_USERS line {n} ({name!r}): passphrase must be at least '
                              f'{MIN_PASSPHRASE} characters')
+        if pw != pw.strip():
+            raise SystemExit(f'build_site: SITE_USERS line {n} ({name!r}): passphrase must not start or end with a space')
         users[name] = pw
     if not users:
         raise SystemExit('build_site: SITE_USERS has no users - refusing to publish a site nobody can open')
@@ -134,7 +136,10 @@ def decrypt(blob, username, password):
     """Inverse of encrypt (used by the tests). Raises ValueError on any credential or integrity failure."""
     if blob[:4] != MAGIC:
         raise ValueError('not a site bundle')
-    hlen = struct.unpack('>I', blob[4:8])[0]
+    try:
+        hlen = struct.unpack('>I', blob[4:8])[0]
+    except struct.error:
+        raise ValueError(BAD) from None
     if 8 + hlen + 12 > len(blob):
         raise ValueError(BAD)
     prefix = blob[:8 + hlen]
@@ -148,7 +153,7 @@ def decrypt(blob, username, password):
                                  SLOT_AAD + sid.encode('ascii'))
         iv = blob[len(prefix):len(prefix) + 12]
         plain = AESGCM(dk).decrypt(iv, blob[len(prefix) + 12:], prefix)
-    except (InvalidTag, KeyError, TypeError):
+    except (InvalidTag, KeyError, TypeError, ValueError, binascii.Error):
         raise ValueError(BAD) from None
     return json.loads(gzip.decompress(plain).decode('utf-8'))
 

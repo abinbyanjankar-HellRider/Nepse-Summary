@@ -38,6 +38,7 @@ the dashboard. Nothing readable is ever served. (The per-user login in
    * Variable `SITE_REPO` — `your-username/nepse-dashboard-site`.
    Until `SITE_REPO` exists the deploy job is skipped. Without both secrets it **fails** rather than publish anything unprotected.
 5. Run the workflow once (Actions → NEPSE daily data → Run workflow). Your site: `https://YOUR-USERNAME.github.io/nepse-dashboard-site/`
+   After the first per-user deploy, everyone must **hard-refresh** the site once (Ctrl+Shift+R, or clear the site data on a phone): a cached copy of the old single-passphrase page cannot read the new bundle and shows "Unrecognised bundle format".
 
 What this protects, and what it does not:
 * **Per-user passphrases**, but a static site cannot lock anyone out and cannot hide who has an account. To revoke someone, delete their line from `SITE_USERS` and run the workflow: the new build has no slot for them and uses a new data key. They keep anything they already downloaded or decrypted.
