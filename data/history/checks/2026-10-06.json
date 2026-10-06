@@ -1,0 +1,502 @@
+{
+ "date": "2026-10-06",
+ "generated_at": "2026-10-06T16:56:39+00:00",
+ "status": "ok",
+ "checks": [
+  {
+   "id": "index_continuity",
+   "name": "Index change vs stored previous close",
+   "status": "ok",
+   "detail": "2026-10-05 close 2,566.76 → 2026-10-06 2,578.73: change +11.97",
+   "items": []
+  },
+  {
+   "id": "history_gaps",
+   "name": "No missing trading day since the previous session",
+   "status": "ok",
+   "detail": "Consecutive sessions",
+   "items": []
+  },
+  {
+   "id": "price_continuity",
+   "name": "Today's prev-close = LTP stored for the previous session",
+   "status": "ok",
+   "detail": "339/339 match · 0 explained by corporate-action adjustment · 0 unexplained",
+   "items": []
+  },
+  {
+   "id": "cross_source",
+   "name": "ShareSansar LTP = MeroLagani close (same day)",
+   "status": "ok",
+   "detail": "279/279 agree within 0.5%",
+   "items": []
+  },
+  {
+   "id": "sector_indices",
+   "name": "All sector indices have today's close",
+   "status": "ok",
+   "detail": "13/13 updated",
+   "items": []
+  },
+  {
+   "id": "breadth",
+   "name": "Gainers + losers + unchanged = scrips traded",
+   "status": "ok",
+   "detail": "205 + 124 + 26 = 355 (scrips traded 355)",
+   "items": []
+  }
+ ],
+ "changes": {
+  "previous_session": "2026-10-05",
+  "index": {
+   "prev": 2566.76,
+   "now": 2578.73,
+   "change": 11.97,
+   "changePct": 0.47
+  },
+  "sectors": [
+   {
+    "sector": "Trading",
+    "close": 3225.86,
+    "changePct": 0.82
+   },
+   {
+    "sector": "Commercial Banks",
+    "close": 1493.43,
+    "changePct": 0.65
+   },
+   {
+    "sector": "Hydropower",
+    "close": 3511.38,
+    "changePct": 0.62
+   },
+   {
+    "sector": "Development Banks",
+    "close": 5339.44,
+    "changePct": 0.55
+   },
+   {
+    "sector": "Hotels & Tourism",
+    "close": 6940.77,
+    "changePct": 0.54
+   },
+   {
+    "sector": "Investment",
+    "close": 94.04,
+    "changePct": 0.44
+   },
+   {
+    "sector": "Others",
+    "close": 1799.94,
+    "changePct": 0.4
+   },
+   {
+    "sector": "Life Insurance",
+    "close": 11603.25,
+    "changePct": 0.36
+   },
+   {
+    "sector": "Manufacturing & Processing",
+    "close": 10556.95,
+    "changePct": 0.27
+   },
+   {
+    "sector": "Mutual Fund",
+    "close": 19.5,
+    "changePct": 0.21
+   },
+   {
+    "sector": "Finance",
+    "close": 2178.84,
+    "changePct": 0.15
+   },
+   {
+    "sector": "Microfinance",
+    "close": 4446.83,
+    "changePct": -0.0
+   },
+   {
+    "sector": "Non-Life Insurance",
+    "close": 9406.28,
+    "changePct": -0.07
+   }
+  ],
+  "turnover": {
+   "prev": 3279423259.72,
+   "now": 3137939420.46
+  },
+  "breadth": {
+   "prev": [
+    68.0,
+    274.0
+   ],
+   "now": [
+    205,
+    124
+   ]
+  },
+  "rrg_moves": [
+   {
+    "name": "Hydropower",
+    "kind": "sector",
+    "sector": "Hydropower",
+    "from": "Lagging",
+    "to": "Improving",
+    "weekly": "Lagging"
+   },
+   {
+    "name": "Investment",
+    "kind": "sector",
+    "sector": "Investment",
+    "from": "Lagging",
+    "to": "Improving",
+    "weekly": "Lagging"
+   },
+   {
+    "name": "Microfinance",
+    "kind": "sector",
+    "sector": "Microfinance",
+    "from": "Leading",
+    "to": "Improving",
+    "weekly": "Improving"
+   },
+   {
+    "name": "Others",
+    "kind": "sector",
+    "sector": "Others",
+    "from": "Lagging",
+    "to": "Improving",
+    "weekly": "Lagging"
+   },
+   {
+    "sym": "BANDIPUR",
+    "kind": "stock",
+    "sector": "Hotels & Tourism",
+    "from": "Lagging",
+    "to": "Improving",
+    "weekly": "Improving"
+   },
+   {
+    "sym": "BJHL",
+    "kind": "stock",
+    "sector": "Hydropower",
+    "from": "Lagging",
+    "to": "Improving",
+    "weekly": ""
+   },
+   {
+    "sym": "CKHL",
+    "kind": "stock",
+    "sector": "Hydropower",
+    "from": "Lagging",
+    "to": "Improving",
+    "weekly": "Lagging"
+   },
+   {
+    "sym": "GBIME",
+    "kind": "stock",
+    "sector": "Commercial Banks",
+    "from": "Lagging",
+    "to": "Improving",
+    "weekly": "Weakening"
+   },
+   {
+    "sym": "GMFIL",
+    "kind": "stock",
+    "sector": "Finance",
+    "from": "Lagging",
+    "to": "Improving",
+    "weekly": "Lagging"
+   },
+   {
+    "sym": "HFIN",
+    "kind": "stock",
+    "sector": "Hotels & Tourism",
+    "from": "Lagging",
+    "to": "Improving",
+    "weekly": ""
+   },
+   {
+    "sym": "JOSHI",
+    "kind": "stock",
+    "sector": "Hydropower",
+    "from": "Lagging",
+    "to": "Improving",
+    "weekly": "Lagging"
+   },
+   {
+    "sym": "JSLBB",
+    "kind": "stock",
+    "sector": "Microfinance",
+    "from": "Lagging",
+    "to": "Improving",
+    "weekly": "Improving"
+   },
+   {
+    "sym": "KBSH",
+    "kind": "stock",
+    "sector": "Hydropower",
+    "from": "Lagging",
+    "to": "Improving",
+    "weekly": "Improving"
+   },
+   {
+    "sym": "KKHC",
+    "kind": "stock",
+    "sector": "Hydropower",
+    "from": "Lagging",
+    "to": "Improving",
+    "weekly": "Weakening"
+   },
+   {
+    "sym": "MKHL",
+    "kind": "stock",
+    "sector": "Hydropower",
+    "from": "Lagging",
+    "to": "Improving",
+    "weekly": "Lagging"
+   },
+   {
+    "sym": "MLBS",
+    "kind": "stock",
+    "sector": "Microfinance",
+    "from": "Lagging",
+    "to": "Improving",
+    "weekly": "Improving"
+   },
+   {
+    "sym": "NICLBSL",
+    "kind": "stock",
+    "sector": "Microfinance",
+    "from": "Lagging",
+    "to": "Improving",
+    "weekly": "Improving"
+   },
+   {
+    "sym": "RFPL",
+    "kind": "stock",
+    "sector": "Hydropower",
+    "from": "Lagging",
+    "to": "Improving",
+    "weekly": "Improving"
+   },
+   {
+    "sym": "SICL",
+    "kind": "stock",
+    "sector": "Non-Life Insurance",
+    "from": "Lagging",
+    "to": "Improving",
+    "weekly": "Lagging"
+   },
+   {
+    "sym": "SIKLES",
+    "kind": "stock",
+    "sector": "Hydropower",
+    "from": "Lagging",
+    "to": "Improving",
+    "weekly": "Leading"
+   },
+   {
+    "sym": "SMATA",
+    "kind": "stock",
+    "sector": "Microfinance",
+    "from": "Lagging",
+    "to": "Improving",
+    "weekly": "Improving"
+   },
+   {
+    "sym": "SMH",
+    "kind": "stock",
+    "sector": "Hydropower",
+    "from": "Lagging",
+    "to": "Improving",
+    "weekly": "Improving"
+   },
+   {
+    "sym": "SMJC",
+    "kind": "stock",
+    "sector": "Hydropower",
+    "from": "Lagging",
+    "to": "Improving",
+    "weekly": "Improving"
+   },
+   {
+    "sym": "SOPL",
+    "kind": "stock",
+    "sector": "Manufacturing & Processing",
+    "from": "Lagging",
+    "to": "Improving",
+    "weekly": ""
+   },
+   {
+    "sym": "TPKHL",
+    "kind": "stock",
+    "sector": "Hydropower",
+    "from": "Lagging",
+    "to": "Improving",
+    "weekly": ""
+   },
+   {
+    "sym": "AHL",
+    "kind": "stock",
+    "sector": "Hydropower",
+    "from": "Weakening",
+    "to": "Lagging",
+    "weekly": "Improving"
+   },
+   {
+    "sym": "BNHC",
+    "kind": "stock",
+    "sector": "Hydropower",
+    "from": "Weakening",
+    "to": "Lagging",
+    "weekly": "Improving"
+   },
+   {
+    "sym": "GILB",
+    "kind": "stock",
+    "sector": "Microfinance",
+    "from": "Weakening",
+    "to": "Lagging",
+    "weekly": "Weakening"
+   },
+   {
+    "sym": "JFL",
+    "kind": "stock",
+    "sector": "Finance",
+    "from": "Improving",
+    "to": "Lagging",
+    "weekly": "Lagging"
+   },
+   {
+    "sym": "KDL",
+    "kind": "stock",
+    "sector": "Hotels & Tourism",
+    "from": "Improving",
+    "to": "Lagging",
+    "weekly": "Lagging"
+   },
+   {
+    "sym": "MCHL",
+    "kind": "stock",
+    "sector": "Hydropower",
+    "from": "Weakening",
+    "to": "Lagging",
+    "weekly": "Improving"
+   },
+   {
+    "sym": "PROFL",
+    "kind": "stock",
+    "sector": "Finance",
+    "from": "Improving",
+    "to": "Lagging",
+    "weekly": "Improving"
+   },
+   {
+    "sym": "PURE",
+    "kind": "stock",
+    "sector": "Others",
+    "from": "Weakening",
+    "to": "Lagging",
+    "weekly": "Improving"
+   },
+   {
+    "sym": "SIFC",
+    "kind": "stock",
+    "sector": "Finance",
+    "from": "Improving",
+    "to": "Lagging",
+    "weekly": "Improving"
+   },
+   {
+    "sym": "BFC",
+    "kind": "stock",
+    "sector": "Finance",
+    "from": "Improving",
+    "to": "Leading",
+    "weekly": "Lagging"
+   },
+   {
+    "sym": "ILI",
+    "kind": "stock",
+    "sector": "Life Insurance",
+    "from": "Weakening",
+    "to": "Leading",
+    "weekly": "Leading"
+   },
+   {
+    "sym": "USHEC",
+    "kind": "stock",
+    "sector": "Hydropower",
+    "from": "Improving",
+    "to": "Leading",
+    "weekly": "Weakening"
+   },
+   {
+    "sym": "USHL",
+    "kind": "stock",
+    "sector": "Hydropower",
+    "from": "Improving",
+    "to": "Leading",
+    "weekly": "Lagging"
+   },
+   {
+    "sym": "GBLBS",
+    "kind": "stock",
+    "sector": "Microfinance",
+    "from": "Leading",
+    "to": "Weakening",
+    "weekly": "Improving"
+   },
+   {
+    "sym": "GCIL",
+    "kind": "stock",
+    "sector": "Manufacturing & Processing",
+    "from": "Leading",
+    "to": "Weakening",
+    "weekly": "Leading"
+   },
+   {
+    "sym": "SADBL",
+    "kind": "stock",
+    "sector": "Development Banks",
+    "from": "Lagging",
+    "to": "Weakening",
+    "weekly": "Weakening"
+   },
+   {
+    "sym": "SAPIL",
+    "kind": "stock",
+    "sector": "Manufacturing & Processing",
+    "from": "Leading",
+    "to": "Weakening",
+    "weekly": ""
+   },
+   {
+    "sym": "SHINE",
+    "kind": "stock",
+    "sector": "Development Banks",
+    "from": "Lagging",
+    "to": "Weakening",
+    "weekly": "Weakening"
+   },
+   {
+    "sym": "SHIVM",
+    "kind": "stock",
+    "sector": "Manufacturing & Processing",
+    "from": "Leading",
+    "to": "Weakening",
+    "weekly": "Leading"
+   },
+   {
+    "sym": "SWBBL",
+    "kind": "stock",
+    "sector": "Microfinance",
+    "from": "Leading",
+    "to": "Weakening",
+    "weekly": "Leading"
+   }
+  ],
+  "rrg_compared": 294
+ }
+}
