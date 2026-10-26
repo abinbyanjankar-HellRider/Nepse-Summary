@@ -8,13 +8,20 @@ import secure_server as S
 
 class Servable(unittest.TestCase):
     def test_allowed(self):
-        for p in ('/', '/index.html', '/data/latest.json', '/data/history/prices/2026-09-24.csv'):
+        for p in ('/', '/index.html', '/app.css', '/app.js', '/app-boot.js',
+                  '/data/latest.json', '/data/history/prices/2026-09-24.csv'):
             self.assertTrue(S.servable(p), p)
+
+    def test_csp_refuses_inline_scripts(self):
+        script_src = next(d for d in S.CSP.split(';') if d.strip().startswith('script-src'))
+        self.assertNotIn("'unsafe-inline'", script_src)
+        self.assertNotIn("'unsafe-eval'", script_src)
 
     def test_refused(self):
         for p in ('/.auth/users.json', '/%2Eauth/users.json', '/%2egit/config', '/data/%2E%2E/.auth/x',
                   '/data/..%2F.auth/users.json', '/data/..%5C.auth', '/logs/auth.log',
-                  '/scripts/secure_server.py', '/docs/study-notes.md', '/data', '/data/x%00.json'):
+                  '/scripts/secure_server.py', '/docs/study-notes.md', '/data', '/data/x%00.json',
+                  '/app.js/x', '/APP.JS.bak', '/nepse_wyckoff_analysis.html'):
             self.assertFalse(S.servable(p), p)
 
 

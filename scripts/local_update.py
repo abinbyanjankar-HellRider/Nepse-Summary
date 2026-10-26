@@ -84,8 +84,20 @@ def roll_back():
         f'ROLLBACK INCOMPLETE — still changed:\n{left}')
 
 
+def trim_log(max_bytes=256 * 1024, keep_lines=1500):
+    """Keep the log bounded: past max_bytes, only the newest lines survive."""
+    try:
+        if LOG.stat().st_size <= max_bytes:
+            return
+        lines = LOG.read_text(encoding='utf-8', errors='replace').splitlines()[-keep_lines:]
+        LOG.write_text('\n'.join(lines) + '\n', encoding='utf-8')
+    except OSError:
+        pass
+
+
 def main():
     LOG.parent.mkdir(exist_ok=True)
+    trim_log()
     if not take_lock():
         log('another update is still running — skipped')
         return 0

@@ -16,3 +16,6 @@ data/*.tmp
 
 # atomic writes (fetch_nepse.write_atomic) — only ever present mid-write
 *.tmp
+
+# encrypted publish build (scripts/build_site.py)
+_site/

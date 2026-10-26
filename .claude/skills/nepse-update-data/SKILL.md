@@ -12,7 +12,7 @@ The data pipeline lives in `scripts/`. Never hand-edit `data/` files, the
 | Script | What it does |
 |---|---|
 | `scripts/fetch_nepse.py` | One trading day: ShareSansar price list + dated NEPSE index (MeroLagani chart API first, then page scrapes, then Claude fallback). Writes `data/latest.json`, `data/history/index.csv`, `data/history/prices/<date>.csv`, and injects the payload into `index.html`. |
-| `scripts/backfill_history.py` | Daily index closes since 2020 from MeroLagani into `index.csv` (existing rows are kept). `--update-chart` regenerates the monthly chart arrays in `index.html`. |
+| `scripts/backfill_history.py` | Daily index closes since 2020 from MeroLagani into `index.csv` (existing rows are kept). `--update-chart` regenerates the monthly chart arrays in `app.js`. |
 | `scripts/validate_data.py` | Sanity checks on everything above. Exit 1 = do not commit. |
 | `scripts/market_views.py` | Sector-index and company histories, heatmap and RRG (`--backfill` the first time), plus the daily RRG snapshot in `data/history/rrg/`. |
 | `scripts/verify_daily.py` | Compares today with the stored previous session and across sources; writes `data/history/checks/<date>.json`. |

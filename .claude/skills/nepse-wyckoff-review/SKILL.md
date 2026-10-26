@@ -5,7 +5,7 @@ description: Check the dashboard's hand-written Wyckoff analysis (ATH, cycle hig
 
 # Review Wyckoff levels against real history
 
-The Wyckoff text and levels in `index.html` are written by hand. The daily
+The Wyckoff text and levels in `index.html` and `app.js` (`WYCKOFF_LEVELS`) are written by hand. The daily
 closes in `data/history/index.csv` are the ground truth. This skill finds where
 they disagree. **The interpretation is the user's analysis**: report
 mismatches with evidence and propose wording, but only edit the analysis after
@@ -27,7 +27,7 @@ If `index.csv` is empty or stale, run the `nepse-update-data` skill first.
 ## 2. Find every hand-written level
 
 ```bash
-grep -n "ATH\|Creek\|JAC\|Ice\|SC \|ST zone\|LPS\|cycle high\|2025 High" index.html
+grep -n "ATH\|Creek\|JAC\|Ice\|SC \|ST zone\|LPS\|cycle high\|2025 High" index.html app.js
 ```
 
 The main places to check:
