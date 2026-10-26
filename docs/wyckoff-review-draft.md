@@ -1,6 +1,6 @@
 # Wyckoff analysis: corrections draft for review
 
-*Draft, 2026-09-24. Nothing in `index.html` has been changed yet.* Every figure
+*Draft, 2026-09-24. **Status (re-checked 2026-09-30): applied.** Parts 1 and 2 are in `index.html` (single `WYCKOFF_LEVELS` object, live ruler, long-only scenarios); all levels still match the data through 2026-09-29.* Every figure
 comes from `data/history/index.csv` (MeroLagani daily closes, 2020-01-01 →
 2026-09-24; turnover in Rs, and 1 Ar = Rs 1 B). You can re-check any level with
 `python .claude/skills/nepse-wyckoff-review/levels.py`.
