@@ -1,16 +1,18 @@
 # Setup guide — GitHub Pages with daily auto-update
 
+**Status (checked 2026-09-30):** steps 1, 2, 4 and 6 are done: the public repo `abinbyanjankar-HellRider/Nepse-Summary` exists and the workflow has run successfully on schedule and by hand (data commits are pushed). Steps 3 (Pages) and 5 (`ANTHROPIC_API_KEY`) are settings only the repo owner can see; confirm them under Settings → Secrets and variables → Actions.
+
 Total time: about 15 minutes, once.
 
 ## 1. Create the repository
 1. Go to https://github.com/new
-2. Name: `nepse-dashboard` · Visibility: **Public** (free GitHub Pages needs a public repo; a private repo with Pages needs a paid plan) · do **not** add a README, .gitignore or licence.
+2. Name: `Nepse-Summary` · Visibility: **Public** (free GitHub Pages needs a public repo; a private repo with Pages needs a paid plan) · do **not** add a README, .gitignore or licence.
 3. Click **Create repository**.
 
 ## 2. Push the project (it's already a git repository with its full history)
 ```bash
-cd "D:/Projects/Technical Analysis/nepse-dashboard"
-git remote add origin https://github.com/YOUR-USERNAME/nepse-dashboard.git
+cd <your local clone>
+git remote add origin https://github.com/abinbyanjankar-HellRider/Nepse-Summary.git
 git push -u origin main
 ```
 Check on GitHub that you can see `.github/workflows/nepse-daily.yml` and `data/history/`.
@@ -48,7 +50,7 @@ the key never reaches the browser. Default model: `claude-opus-5`
 
 ## 6. First run (seeds today's data)
 **Actions → NEPSE daily data → Run workflow → tick "Force update" → Run workflow**.
-Green tick = done. Your site: `https://YOUR-USERNAME.github.io/nepse-dashboard/`
+Green tick = done. Your site: `https://abinbyanjankar-hellrider.github.io/Nepse-Summary/` (once Pages and `PAGES_ENABLED` are on)
 
 If it fails, open the run → `update-data` → *Fetch today's NEPSE close* and read the `[fetch_nepse]` lines. The most common cause is a changed page layout; adding the API key (step 5) covers that.
 
@@ -60,7 +62,7 @@ Before GitHub is set up, the PC task "NEPSE Daily Update" does the same locally 
 ## Changing the dashboard with Claude Code
 ```bash
 npm install -g @anthropic-ai/claude-code
-cd nepse-dashboard
+cd Nepse-Summary
 git pull                    # always pull first — the bot commits data every day
 claude                      # then describe the change you want
 ```
