@@ -1,0 +1,295 @@
+symbol,kind,sector,d_ratio,d_momentum,d_quadrant,d_quadrant_vs_sector,w_ratio,w_momentum,w_quadrant,w_quadrant_vs_sector
+Commercial Banks,sector,Commercial Banks,101.16,100.28,Leading,,101.64,100.33,Leading,
+Development Banks,sector,Development Banks,98.45,98.63,Lagging,,98.57,101.91,Improving,
+Finance,sector,Finance,98.21,99.39,Lagging,,98.37,101.25,Improving,
+Hotels & Tourism,sector,Hotels & Tourism,101.36,101.5,Leading,,98.4,100.65,Improving,
+Hydropower,sector,Hydropower,100.76,98.94,Weakening,,98.8,101.14,Improving,
+Investment,sector,Investment,98.79,102.12,Improving,,97.86,98.88,Lagging,
+Life Insurance,sector,Life Insurance,98.26,100.41,Improving,,99.26,100.44,Improving,
+Manufacturing & Processing,sector,Manufacturing & Processing,98.69,100.84,Improving,,99.56,98.85,Lagging,
+Microfinance,sector,Microfinance,98.62,99.89,Lagging,,97.84,99.06,Lagging,
+Mutual Fund,sector,Mutual Fund,102.27,102.05,Leading,,98.9,101.65,Improving,
+Non-Life Insurance,sector,Non-Life Insurance,98.99,101.6,Improving,,98.61,101.21,Improving,
+Others,sector,Others,101.4,100.41,Leading,,99.01,102.09,Improving,
+Trading,sector,Trading,99.15,101.08,Improving,,98.21,98.87,Lagging,
+ACLBSL,stock,Microfinance,97.86,98.98,Lagging,Lagging,97.8,100.32,Improving,Lagging
+ADBL,stock,Commercial Banks,100.89,99.54,Weakening,Weakening,101.86,100.35,Leading,Leading
+AHL,stock,Hydropower,102.21,102.06,Leading,Leading,99.02,99.93,Lagging,Improving
+AHPC,stock,Hydropower,98.3,99.22,Lagging,Improving,101.03,100.0,Weakening,Weakening
+AKJCL,stock,Hydropower,98.81,100.72,Improving,Improving,97.93,99.7,Lagging,Lagging
+AKPL,stock,Hydropower,98.74,98.69,Lagging,Lagging,99.06,99.52,Lagging,Leading
+ALBSL,stock,Microfinance,97.98,100.8,Improving,Improving,100.72,98.75,Weakening,Weakening
+ALICL,stock,Life Insurance,98.78,100.49,Improving,Improving,99.71,100.1,Improving,Weakening
+ANLB,stock,Microfinance,98.99,100.67,Improving,Lagging,98.71,101.38,Improving,Improving
+APHL,stock,Hydropower,99.71,101.93,Improving,Improving,,,,
+API,stock,Hydropower,98.58,100.83,Improving,Improving,100.02,98.27,Weakening,Weakening
+AVYAN,stock,Microfinance,98.17,99.63,Lagging,Lagging,97.61,98.34,Lagging,Lagging
+BANDIPUR,stock,Hotels & Tourism,98.05,98.18,Lagging,Lagging,98.22,99.05,Lagging,Lagging
+BARUN,stock,Hydropower,101.94,99.47,Weakening,Leading,102.11,100.46,Leading,Weakening
+BBC,stock,Trading,98.76,100.83,Improving,Lagging,98.24,99.15,Lagging,Improving
+BEDC,stock,Hydropower,99.35,100.94,Improving,Improving,98.61,99.15,Lagging,Lagging
+BFC,stock,Finance,102.49,101.14,Leading,Leading,99.16,101.84,Improving,Leading
+BGWT,stock,Hydropower,98.8,99.15,Lagging,Lagging,99.02,101.91,Improving,Improving
+BHCL,stock,Hydropower,101.45,99.81,Weakening,Leading,101.59,99.27,Weakening,Weakening
+BHDC,stock,Hydropower,101.61,99.21,Weakening,Leading,102.47,101.99,Leading,Leading
+BHL,stock,Hydropower,99.1,97.98,Lagging,Lagging,101.54,99.24,Weakening,Weakening
+BHPL,stock,Hydropower,101.18,102.35,Leading,Leading,98.52,100.87,Improving,Improving
+BJHL,stock,Hydropower,98.26,98.27,Lagging,Lagging,98.45,100.79,Improving,Improving
+BNHC,stock,Hydropower,97.74,99.64,Lagging,Improving,98.26,99.06,Lagging,Lagging
+BNL,stock,Manufacturing & Processing,,,,Weakening,,,,Improving
+BNT,stock,Manufacturing & Processing,102.04,102.44,Leading,Leading,101.42,99.0,Weakening,Weakening
+BPCL,stock,Hydropower,100.85,99.04,Weakening,Weakening,102.02,99.65,Weakening,Weakening
+BUNGAL,stock,Hydropower,99.27,102.14,Improving,Improving,98.5,101.29,Improving,Improving
+CBBL,stock,Microfinance,102.0,101.64,Leading,Leading,101.42,99.3,Weakening,Leading
+CFCL,stock,Finance,101.34,99.67,Weakening,Weakening,99.16,100.11,Improving,Leading
+CGH,stock,Hotels & Tourism,98.63,99.96,Lagging,Improving,97.81,98.41,Lagging,Lagging
+CHCL,stock,Hydropower,98.24,98.7,Lagging,Lagging,98.68,101.23,Improving,Improving
+CHDC,stock,Investment,98.42,100.61,Improving,Improving,100.38,98.2,Weakening,Weakening
+CHL,stock,Hydropower,98.28,98.77,Lagging,Improving,97.85,98.31,Lagging,Lagging
+CIT,stock,Investment,98.97,101.48,Improving,Leading,99.96,98.61,Lagging,Weakening
+CITY,stock,Hotels & Tourism,98.14,99.28,Lagging,Improving,98.06,98.33,Lagging,Lagging
+CKHL,stock,Hydropower,98.43,101.01,Improving,Improving,97.68,99.29,Lagging,Lagging
+CLI,stock,Life Insurance,98.03,99.17,Lagging,Lagging,99.74,100.86,Improving,Leading
+CORBL,stock,Development Banks,98.36,100.11,Improving,Improving,98.76,100.49,Improving,Improving
+CREST,stock,Life Insurance,100.3,101.31,Leading,Leading,98.69,101.11,Improving,Improving
+CYCL,stock,Microfinance,98.09,100.95,Improving,Improving,98.8,98.36,Lagging,Lagging
+CZBIL,stock,Commercial Banks,100.72,99.61,Weakening,Lagging,101.65,98.88,Weakening,Weakening
+DDBL,stock,Microfinance,101.01,101.81,Leading,Leading,101.19,98.74,Weakening,Weakening
+DHEL,stock,Hydropower,97.88,98.03,Lagging,Lagging,98.23,101.16,Improving,Improving
+DHPL,stock,Hydropower,98.51,99.77,Lagging,Improving,98.44,101.44,Improving,Improving
+DLBS,stock,Microfinance,98.43,101.01,Improving,Improving,98.28,99.77,Lagging,Lagging
+DOLTI,stock,Hydropower,100.19,102.0,Leading,Improving,99.1,100.82,Improving,Improving
+DORDI,stock,Hydropower,100.75,99.27,Weakening,Weakening,101.84,100.4,Leading,Leading
+EBL,stock,Commercial Banks,99.58,101.76,Improving,Improving,101.17,99.38,Weakening,Lagging
+ECL,stock,Manufacturing & Processing,96.96,97.46,Lagging,Lagging,,,,
+EDBL,stock,Development Banks,98.37,100.88,Improving,Improving,98.61,98.69,Lagging,Weakening
+EHPL,stock,Hydropower,100.57,99.9,Weakening,Improving,98.8,100.05,Improving,Improving
+ENL,stock,Investment,98.87,100.05,Improving,Lagging,98.55,101.62,Improving,Improving
+FMDBL,stock,Microfinance,98.61,99.81,Lagging,Lagging,98.12,99.42,Lagging,Lagging
+FOWAD,stock,Microfinance,97.39,99.59,Lagging,Lagging,98.38,99.93,Lagging,Improving
+GBBL,stock,Development Banks,98.59,100.2,Improving,Improving,101.06,98.84,Weakening,Weakening
+GBIME,stock,Commercial Banks,101.41,98.99,Weakening,Weakening,101.92,102.28,Leading,Leading
+GBLBS,stock,Microfinance,98.14,99.61,Lagging,Lagging,98.42,100.85,Improving,Improving
+GCIL,stock,Manufacturing & Processing,97.59,98.13,Lagging,Lagging,99.84,97.88,Lagging,Lagging
+GFCL,stock,Finance,98.0,98.23,Lagging,Weakening,98.42,101.3,Improving,Leading
+GHL,stock,Hydropower,101.0,98.9,Weakening,Weakening,101.86,98.02,Weakening,Weakening
+GILB,stock,Microfinance,100.3,101.79,Leading,Leading,100.26,98.44,Weakening,Weakening
+GLBSL,stock,Microfinance,98.83,100.45,Improving,Improving,98.0,100.29,Improving,Improving
+GLH,stock,Hydropower,98.31,101.65,Improving,Improving,100.36,98.14,Weakening,Weakening
+GMFBS,stock,Microfinance,98.31,99.79,Lagging,Lagging,98.11,99.14,Lagging,Lagging
+GMFIL,stock,Finance,97.49,98.17,Lagging,Lagging,98.44,101.23,Improving,Improving
+GMLI,stock,Life Insurance,98.62,101.64,Improving,Improving,98.47,100.44,Improving,Improving
+GRDBL,stock,Development Banks,99.36,100.89,Improving,Improving,98.39,101.4,Improving,Improving
+GUFL,stock,Finance,99.33,99.84,Lagging,Leading,98.63,101.18,Improving,Improving
+GVL,stock,Hydropower,100.92,99.69,Weakening,Weakening,101.97,99.41,Weakening,Weakening
+HATHY,stock,Investment,98.72,100.16,Improving,Lagging,98.51,102.01,Improving,Improving
+HBL,stock,Commercial Banks,98.18,98.0,Lagging,Improving,101.57,100.6,Leading,Improving
+HDHPC,stock,Hydropower,98.34,101.65,Improving,Improving,100.38,98.68,Weakening,Weakening
+HDL,stock,Manufacturing & Processing,100.47,101.26,Leading,Leading,101.37,97.82,Weakening,Weakening
+HEI,stock,Non-Life Insurance,98.51,99.47,Lagging,Lagging,98.46,101.43,Improving,Lagging
+HFIN,stock,Hotels & Tourism,98.38,98.0,Lagging,Lagging,98.33,101.21,Improving,Improving
+HHL,stock,Hydropower,98.74,98.98,Lagging,Lagging,101.68,101.15,Leading,Leading
+HIDCL,stock,Investment,98.33,101.34,Improving,Lagging,98.02,98.51,Lagging,Leading
+HIMSTAR,stock,Hydropower,100.39,102.44,Leading,Leading,98.56,99.11,Lagging,Lagging
+HLBSL,stock,Microfinance,98.84,100.79,Improving,Improving,98.62,97.75,Lagging,Weakening
+HLI,stock,Life Insurance,98.4,100.02,Improving,Lagging,98.48,101.03,Improving,Improving
+HPPL,stock,Hydropower,101.39,99.81,Weakening,Leading,101.87,100.0,Weakening,Weakening
+HRL,stock,Others,100.69,100.4,Leading,Lagging,98.61,101.59,Improving,Improving
+HURJA,stock,Hydropower,100.77,99.41,Weakening,Weakening,101.44,98.56,Weakening,Weakening
+ICFC,stock,Finance,98.74,98.84,Lagging,Leading,101.46,101.72,Leading,Weakening
+IGI,stock,Non-Life Insurance,98.55,99.35,Lagging,Lagging,98.64,101.3,Improving,Weakening
+IHL,stock,Hydropower,98.89,101.38,Improving,Improving,98.69,99.68,Lagging,Lagging
+ILBS,stock,Microfinance,101.01,99.2,Weakening,Weakening,101.18,98.81,Weakening,Weakening
+ILI,stock,Life Insurance,99.26,100.57,Improving,Weakening,101.47,99.42,Weakening,Weakening
+JBBL,stock,Development Banks,99.97,98.76,Lagging,Weakening,101.45,99.77,Weakening,Weakening
+JBLB,stock,Microfinance,99.4,101.66,Improving,Leading,100.6,98.73,Weakening,Weakening
+JFL,stock,Finance,98.08,98.53,Lagging,Lagging,98.58,101.69,Improving,Improving
+JHAPA,stock,Others,98.44,98.91,Lagging,Improving,98.21,99.53,Lagging,Lagging
+JOSHI,stock,Hydropower,98.72,101.88,Improving,Improving,98.17,99.01,Lagging,Lagging
+JSLBB,stock,Microfinance,99.12,100.32,Improving,Improving,98.18,98.69,Lagging,Lagging
+KAHL,stock,Hydropower,99.61,101.33,Improving,Improving,,,,
+KBL,stock,Commercial Banks,98.53,99.79,Lagging,Improving,101.29,99.0,Weakening,Lagging
+KBSH,stock,Hydropower,100.44,101.84,Leading,Improving,99.15,100.25,Improving,Improving
+KDL,stock,Hotels & Tourism,98.21,98.68,Lagging,Lagging,98.35,101.51,Improving,Improving
+KHPL,stock,Hydropower,98.82,99.07,Lagging,Lagging,,,,
+KKHC,stock,Hydropower,98.35,100.61,Improving,Improving,98.0,98.84,Lagging,Lagging
+KMCDB,stock,Microfinance,98.62,99.81,Lagging,Lagging,98.65,98.11,Lagging,Lagging
+KPCL,stock,Hydropower,101.2,99.54,Weakening,Leading,102.37,102.51,Leading,Leading
+KSBBL,stock,Development Banks,101.07,99.55,Weakening,Weakening,100.18,101.67,Leading,Leading
+LBBL,stock,Development Banks,101.14,98.86,Weakening,Weakening,102.18,101.97,Leading,Leading
+LEC,stock,Hydropower,98.78,101.05,Improving,Improving,100.46,98.2,Weakening,Weakening
+LICN,stock,Life Insurance,99.04,100.48,Improving,Leading,101.17,99.69,Weakening,Weakening
+LLBS,stock,Microfinance,98.84,101.51,Improving,Improving,98.28,100.84,Improving,Improving
+LSL,stock,Commercial Banks,100.94,100.39,Leading,Lagging,101.6,98.58,Weakening,Weakening
+MABEL,stock,Hydropower,98.59,98.61,Lagging,Lagging,98.17,99.16,Lagging,Lagging
+MAKAR,stock,Hydropower,101.58,98.89,Weakening,Weakening,100.56,101.54,Leading,Leading
+MANDU,stock,Hydropower,101.26,98.81,Weakening,Weakening,101.97,100.62,Leading,Weakening
+MATRI,stock,Microfinance,99.12,100.99,Improving,Leading,98.54,101.09,Improving,Improving
+MBJC,stock,Hydropower,101.03,100.1,Leading,Leading,101.68,99.28,Weakening,Weakening
+MBL,stock,Commercial Banks,99.39,98.45,Lagging,Lagging,101.66,100.34,Leading,Leading
+MCHL,stock,Hydropower,99.13,100.54,Improving,Improving,98.55,98.64,Lagging,Lagging
+MDB,stock,Development Banks,99.87,100.83,Improving,Leading,98.86,101.44,Improving,Leading
+MEHL,stock,Hydropower,99.22,101.0,Improving,Improving,98.8,100.1,Improving,Improving
+MEL,stock,Hydropower,99.15,100.23,Improving,Improving,98.74,98.64,Lagging,Improving
+MEN,stock,Hydropower,100.27,99.31,Weakening,Lagging,101.44,99.3,Weakening,Weakening
+MEPDL,stock,Hydropower,99.64,102.01,Improving,Improving,,,,
+MERO,stock,Microfinance,101.06,98.88,Weakening,Weakening,98.84,100.9,Improving,Improving
+MFIL,stock,Finance,98.46,101.36,Improving,Improving,97.38,99.4,Lagging,Weakening
+MHCL,stock,Hydropower,102.68,102.7,Leading,Leading,98.86,100.66,Improving,Improving
+MHL,stock,Hydropower,101.63,98.51,Weakening,Weakening,102.59,102.85,Leading,Leading
+MHNL,stock,Hydropower,101.75,100.15,Leading,Leading,101.67,99.05,Weakening,Weakening
+MKCL,stock,Others,97.95,97.98,Lagging,Improving,98.41,100.92,Improving,Improving
+MKHC,stock,Hydropower,101.94,100.44,Leading,Leading,99.27,100.87,Improving,Improving
+MKHL,stock,Hydropower,97.37,97.83,Lagging,Lagging,99.0,100.0,Lagging,Leading
+MKJC,stock,Hydropower,98.4,100.58,Improving,Improving,98.71,100.83,Improving,Improving
+MLBBL,stock,Microfinance,98.79,100.47,Improving,Improving,98.63,100.75,Improving,Improving
+MLBL,stock,Development Banks,98.84,97.81,Lagging,Lagging,101.47,99.0,Weakening,Weakening
+MLBS,stock,Microfinance,98.35,99.54,Lagging,Lagging,98.63,101.21,Improving,Improving
+MLBSL,stock,Microfinance,98.97,100.64,Improving,Improving,98.73,100.54,Improving,Improving
+MMKJL,stock,Hydropower,101.0,99.07,Weakening,Weakening,99.15,101.48,Improving,Improving
+MNBBL,stock,Development Banks,101.31,99.64,Weakening,Leading,98.81,101.34,Improving,Improving
+MPFL,stock,Finance,98.13,100.21,Improving,Lagging,98.19,100.19,Improving,Weakening
+MSHL,stock,Hydropower,100.75,101.07,Leading,Improving,98.95,101.54,Improving,Improving
+MSLB,stock,Microfinance,99.37,101.01,Improving,Leading,98.25,99.18,Lagging,Lagging
+NABBC,stock,Development Banks,98.18,98.18,Lagging,Lagging,98.18,99.1,Lagging,Lagging
+NABIL,stock,Commercial Banks,102.32,101.81,Leading,Leading,101.41,99.61,Weakening,Lagging
+NADEP,stock,Microfinance,98.28,100.1,Improving,Lagging,98.24,101.89,Improving,Improving
+NBL,stock,Commercial Banks,102.79,102.7,Leading,Leading,101.47,98.43,Weakening,Weakening
+NESDO,stock,Microfinance,99.75,101.4,Improving,Leading,98.64,101.16,Improving,Improving
+NFS,stock,Finance,98.96,98.45,Lagging,Weakening,98.58,101.53,Improving,Improving
+NGPL,stock,Hydropower,98.66,99.69,Lagging,Improving,98.14,98.56,Lagging,Lagging
+NHDL,stock,Hydropower,101.53,101.79,Leading,Leading,100.77,98.52,Weakening,Weakening
+NHPC,stock,Hydropower,98.54,101.14,Improving,Improving,97.64,98.03,Lagging,Lagging
+NICA,stock,Commercial Banks,101.21,98.41,Weakening,Weakening,101.9,102.39,Leading,Improving
+NICL,stock,Non-Life Insurance,98.51,100.83,Improving,Lagging,98.55,101.28,Improving,Improving
+NICLBSL,stock,Microfinance,98.65,100.99,Improving,Improving,98.38,101.4,Improving,Improving
+NIFRA,stock,Investment,98.54,102.23,Improving,Weakening,98.42,98.11,Lagging,Leading
+NIL,stock,Non-Life Insurance,98.98,100.54,Improving,Leading,98.67,101.27,Improving,Improving
+NIMB,stock,Commercial Banks,100.53,98.76,Weakening,Weakening,101.89,100.42,Leading,Improving
+NLG,stock,Non-Life Insurance,99.19,100.47,Improving,Weakening,98.69,101.28,Improving,Improving
+NLIC,stock,Life Insurance,98.5,100.07,Improving,Weakening,100.04,100.85,Leading,Leading
+NLICL,stock,Life Insurance,98.64,100.71,Improving,Leading,100.74,98.91,Weakening,Weakening
+NMB,stock,Commercial Banks,101.1,99.46,Weakening,Weakening,101.73,98.76,Weakening,Leading
+NMBMF,stock,Microfinance,101.12,101.87,Leading,Leading,98.61,100.48,Improving,Leading
+NMFBS,stock,Microfinance,100.3,101.62,Leading,Leading,101.28,98.2,Weakening,Weakening
+NMIC,stock,Non-Life Insurance,97.86,98.98,Lagging,Lagging,98.42,100.74,Improving,Lagging
+NMLBBL,stock,Microfinance,98.23,100.38,Improving,Improving,98.21,98.38,Lagging,Lagging
+NRIC,stock,Others,101.24,99.77,Weakening,Weakening,99.15,101.38,Improving,Improving
+NRM,stock,Others,101.25,99.03,Weakening,Weakening,99.15,102.75,Improving,Improving
+NRN,stock,Investment,101.02,102.63,Leading,Leading,99.1,98.22,Lagging,Weakening
+NTC,stock,Others,102.23,101.64,Leading,Improving,101.52,99.29,Weakening,Weakening
+NUBL,stock,Microfinance,98.1,98.22,Lagging,Lagging,99.46,100.88,Improving,Leading
+NWCL,stock,Others,97.65,97.49,Lagging,Lagging,98.3,100.69,Improving,Improving
+NYADI,stock,Hydropower,98.5,99.01,Lagging,Lagging,98.31,99.74,Lagging,Lagging
+OHL,stock,Hotels & Tourism,99.52,98.98,Lagging,Lagging,98.89,101.16,Improving,Leading
+OMPL,stock,Manufacturing & Processing,97.96,97.88,Lagging,Lagging,98.13,98.24,Lagging,Lagging
+PCBL,stock,Commercial Banks,99.16,98.54,Lagging,Improving,101.5,99.01,Weakening,Weakening
+PCIL,stock,Manufacturing & Processing,97.39,98.45,Lagging,Lagging,,,,
+PFL,stock,Finance,98.15,98.63,Lagging,Lagging,,,,Lagging
+PHCL,stock,Hydropower,101.81,100.12,Leading,Leading,101.83,98.93,Weakening,Weakening
+PMHPL,stock,Hydropower,100.94,100.93,Leading,Improving,98.67,100.38,Improving,Lagging
+PMLI,stock,Life Insurance,97.24,99.77,Lagging,Lagging,97.99,100.02,Improving,Improving
+PPCL,stock,Hydropower,102.31,101.44,Leading,Leading,102.11,102.29,Leading,Leading
+PPL,stock,Hydropower,98.22,99.78,Lagging,Improving,98.12,98.76,Lagging,Lagging
+PRIN,stock,Non-Life Insurance,101.24,102.21,Leading,Leading,98.83,101.59,Improving,Leading
+PROFL,stock,Finance,97.99,98.64,Lagging,Lagging,98.51,100.9,Improving,Improving
+PRVU,stock,Commercial Banks,98.57,100.09,Improving,Improving,99.61,100.72,Improving,Improving
+PURE,stock,Others,98.53,98.92,Lagging,Improving,98.49,98.69,Lagging,Lagging
+RADHI,stock,Hydropower,98.85,99.87,Lagging,Improving,99.18,100.09,Improving,Leading
+RAWA,stock,Hydropower,99.4,100.43,Improving,Improving,98.7,98.06,Lagging,Lagging
+RBCL,stock,Non-Life Insurance,99.58,101.1,Improving,Leading,99.16,100.73,Improving,Weakening
+RFPL,stock,Hydropower,101.36,98.98,Weakening,Weakening,102.51,102.17,Leading,Leading
+RHGCL,stock,Hydropower,98.86,100.48,Improving,Improving,98.08,97.56,Lagging,Lagging
+RHPL,stock,Hydropower,98.26,97.75,Lagging,Lagging,98.79,101.15,Improving,Improving
+RIDI,stock,Hydropower,98.47,101.31,Improving,Improving,97.94,98.66,Lagging,Lagging
+RLEL,stock,Hydropower,98.9,99.24,Lagging,Lagging,98.33,102.02,Improving,Improving
+RLFL,stock,Finance,97.89,98.71,Lagging,Lagging,98.29,101.45,Improving,Improving
+RNLI,stock,Life Insurance,98.8,100.62,Improving,Improving,101.44,100.92,Leading,Leading
+RSDC,stock,Microfinance,98.52,100.59,Improving,Improving,97.91,100.31,Improving,Improving
+RSML,stock,Manufacturing & Processing,100.68,102.76,Leading,Leading,98.54,100.58,Improving,Improving
+RURU,stock,Hydropower,100.29,98.28,Weakening,Lagging,100.99,101.56,Leading,Leading
+SABBL,stock,Development Banks,98.52,99.87,Lagging,Improving,98.43,101.01,Improving,Improving
+SADBL,stock,Development Banks,98.51,101.11,Improving,Improving,99.98,98.58,Lagging,Weakening
+SAGAR,stock,Manufacturing & Processing,98.76,100.2,Improving,Improving,98.17,99.29,Lagging,Improving
+SAHAS,stock,Hydropower,101.9,98.97,Weakening,Leading,101.45,99.54,Weakening,Weakening
+SAIL,stock,Manufacturing & Processing,98.49,99.15,Lagging,Lagging,98.1,98.74,Lagging,Lagging
+SALICO,stock,Non-Life Insurance,98.64,100.98,Improving,Improving,98.44,101.32,Improving,Lagging
+SANIMA,stock,Commercial Banks,100.84,99.12,Weakening,Weakening,101.88,101.33,Leading,Leading
+SANVI,stock,Hydropower,99.24,100.44,Improving,Improving,98.33,99.34,Lagging,Lagging
+SAPDBL,stock,Development Banks,98.22,98.3,Lagging,Lagging,98.51,100.81,Improving,Improving
+SAPIL,stock,Manufacturing & Processing,97.88,98.86,Lagging,Lagging,,,,
+SARBTM,stock,Manufacturing & Processing,99.08,101.38,Improving,Leading,100.25,98.75,Weakening,Leading
+SBI,stock,Commercial Banks,99.43,98.67,Lagging,Lagging,101.67,99.99,Weakening,Improving
+SBL,stock,Commercial Banks,100.35,98.95,Weakening,Lagging,101.51,98.04,Weakening,Weakening
+SCB,stock,Commercial Banks,100.15,101.96,Leading,Improving,101.32,98.48,Weakening,Improving
+SFCL,stock,Finance,,,,Weakening,,,,Lagging
+SGHC,stock,Hydropower,102.08,98.71,Weakening,Weakening,101.96,102.86,Leading,Leading
+SGHL,stock,Hydropower,102.5,102.1,Leading,Leading,,,,
+SGIC,stock,Non-Life Insurance,98.77,100.71,Improving,Weakening,98.73,101.37,Improving,Improving
+SHEL,stock,Hydropower,100.68,99.56,Weakening,Improving,101.31,98.98,Weakening,Weakening
+SHINE,stock,Development Banks,99.42,101.14,Improving,Improving,101.18,98.55,Weakening,Weakening
+SHIVM,stock,Manufacturing & Processing,98.12,100.23,Improving,Lagging,100.85,98.98,Weakening,Weakening
+SHL,stock,Hotels & Tourism,101.82,99.62,Weakening,Weakening,101.99,100.06,Leading,Weakening
+SHLB,stock,Microfinance,100.99,101.57,Leading,Weakening,98.77,100.94,Improving,Improving
+SHPC,stock,Hydropower,101.7,99.89,Weakening,Leading,101.68,98.96,Weakening,Weakening
+SICL,stock,Non-Life Insurance,99.54,101.61,Improving,Leading,98.58,101.18,Improving,Lagging
+SIFC,stock,Finance,98.63,99.94,Lagging,Leading,98.52,100.92,Improving,Improving
+SIKLES,stock,Hydropower,101.71,102.45,Leading,Leading,101.4,98.78,Weakening,Weakening
+SINDU,stock,Development Banks,98.3,100.02,Improving,Improving,98.65,101.16,Improving,Improving
+SIPD,stock,Hydropower,98.2,98.53,Lagging,Lagging,,,,
+SJCL,stock,Hydropower,99.03,98.59,Lagging,Lagging,98.86,101.02,Improving,Improving
+SJLIC,stock,Life Insurance,99.38,97.58,Lagging,Weakening,101.67,100.38,Leading,Leading
+SKBBL,stock,Microfinance,100.5,102.16,Leading,Leading,100.43,98.31,Weakening,Weakening
+SKHEL,stock,Hydropower,98.22,97.63,Lagging,Lagging,98.51,101.35,Improving,Improving
+SKHL,stock,Hydropower,98.05,98.49,Lagging,Lagging,98.52,101.29,Improving,Improving
+SLBBL,stock,Microfinance,98.83,101.19,Improving,Leading,100.92,97.95,Weakening,Weakening
+SLBSL,stock,Microfinance,97.67,98.17,Lagging,Lagging,98.53,100.24,Improving,Improving
+SMATA,stock,Microfinance,98.64,100.31,Improving,Lagging,98.26,100.35,Improving,Improving
+SMB,stock,Microfinance,99.38,100.63,Improving,Improving,98.11,97.78,Lagging,Lagging
+SMFBS,stock,Microfinance,101.11,98.54,Weakening,Weakening,99.0,101.3,Improving,Improving
+SMH,stock,Hydropower,101.94,101.95,Leading,Leading,102.27,101.62,Leading,Leading
+SMHL,stock,Hydropower,99.92,98.97,Lagging,Lagging,101.38,98.97,Weakening,Weakening
+SMJC,stock,Hydropower,98.93,98.98,Lagging,Lagging,99.09,101.59,Improving,Improving
+SMPDA,stock,Microfinance,98.45,100.12,Improving,Lagging,98.19,98.8,Lagging,Lagging
+SNLI,stock,Life Insurance,98.91,99.53,Lagging,Weakening,99.87,100.65,Improving,Leading
+SNORL,stock,Hydropower,98.39,101.04,Improving,Improving,,,,
+SOHL,stock,Hydropower,98.36,98.55,Lagging,Lagging,99.03,98.7,Lagging,Lagging
+SONA,stock,Manufacturing & Processing,100.17,98.06,Weakening,Weakening,101.76,100.54,Leading,Leading
+SOPL,stock,Manufacturing & Processing,98.7,98.83,Lagging,Lagging,,,,
+SPC,stock,Hydropower,102.13,99.63,Weakening,Leading,99.44,102.63,Improving,Improving
+SPDL,stock,Hydropower,98.34,98.58,Lagging,Lagging,98.58,101.26,Improving,Improving
+SPHL,stock,Hydropower,101.1,102.15,Leading,Leading,98.51,102.05,Improving,Improving
+SPIL,stock,Non-Life Insurance,98.49,101.07,Improving,Improving,98.58,101.16,Improving,Improving
+SPL,stock,Hydropower,98.22,100.0,Lagging,Improving,98.24,101.13,Improving,Improving
+SRLI,stock,Life Insurance,98.19,99.18,Lagging,Lagging,100.74,101.17,Leading,Leading
+SSHL,stock,Hydropower,98.71,101.74,Improving,Improving,100.49,98.82,Weakening,Weakening
+STC,stock,Trading,102.36,101.48,Leading,Leading,101.48,99.13,Weakening,Weakening
+SWASTIK,stock,Microfinance,98.01,98.12,Lagging,Lagging,98.35,99.66,Lagging,Lagging
+SWBBL,stock,Microfinance,99.6,98.3,Lagging,Weakening,101.27,99.7,Weakening,Weakening
+SWMF,stock,Microfinance,101.34,101.87,Leading,Leading,98.74,99.81,Lagging,Leading
+SYPNL,stock,Manufacturing & Processing,98.84,100.66,Improving,Improving,98.01,97.66,Lagging,Lagging
+TAMOR,stock,Hydropower,100.98,99.03,Weakening,Weakening,101.56,99.07,Weakening,Weakening
+TPC,stock,Hydropower,101.34,99.07,Weakening,Weakening,102.09,98.91,Weakening,Weakening
+TPKHL,stock,Hydropower,98.82,99.62,Lagging,Lagging,,,,
+TRH,stock,Hotels & Tourism,101.55,101.69,Leading,Leading,101.39,100.06,Leading,Weakening
+TSHL,stock,Hydropower,98.51,98.26,Lagging,Improving,98.67,98.07,Lagging,Lagging
+TTL,stock,Others,98.07,97.71,Lagging,Improving,97.98,98.52,Lagging,Lagging
+TVCL,stock,Hydropower,99.88,99.69,Lagging,Lagging,98.75,101.21,Improving,Improving
+UAIL,stock,Non-Life Insurance,98.69,101.38,Improving,Weakening,98.64,101.47,Improving,Improving
+UHEWA,stock,Hydropower,101.3,102.25,Leading,Improving,99.88,98.94,Lagging,Weakening
+ULBSL,stock,Microfinance,99.54,100.77,Improving,Leading,98.48,100.37,Improving,Improving
+ULHC,stock,Hydropower,101.86,101.87,Leading,Leading,98.96,98.74,Lagging,Lagging
+UMHL,stock,Hydropower,98.85,100.07,Improving,Improving,98.34,100.86,Improving,Lagging
+UMRH,stock,Hydropower,99.35,100.92,Improving,Improving,98.15,99.27,Lagging,Lagging
+UNHPL,stock,Hydropower,98.38,98.4,Lagging,Improving,98.65,99.25,Lagging,Lagging
+UNL,stock,Manufacturing & Processing,99.45,101.34,Improving,Leading,100.89,97.53,Weakening,Leading
+UNLB,stock,Microfinance,98.36,99.76,Lagging,Lagging,98.16,97.99,Lagging,Lagging
+UPCL,stock,Hydropower,98.67,98.64,Lagging,Lagging,98.28,101.31,Improving,Lagging
+UPPER,stock,Hydropower,99.72,101.59,Improving,Improving,99.6,99.34,Lagging,Weakening
+USHEC,stock,Hydropower,101.63,99.71,Weakening,Leading,101.74,100.09,Leading,Weakening
+USHL,stock,Hydropower,98.88,100.62,Improving,Improving,98.35,98.93,Lagging,Lagging
+USLB,stock,Microfinance,98.68,101.22,Improving,Improving,98.19,99.36,Lagging,Lagging
+VLBS,stock,Microfinance,97.85,97.24,Lagging,Lagging,98.53,101.19,Improving,Improving
+VLUCL,stock,Hydropower,97.33,98.12,Lagging,Lagging,98.48,100.3,Improving,Improving
+WNLB,stock,Microfinance,,,,Improving,,,,Lagging
+YMHL,stock,Hydropower,98.89,100.19,Improving,Improving,,,,
